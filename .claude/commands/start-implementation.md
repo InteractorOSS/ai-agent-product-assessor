@@ -83,6 +83,51 @@ If `docs/planning/tasks.md` exists, show:
 - `doc-generator` - Update documentation
 ```
 
+### 8. Create Development Start Script
+
+Create `./scripts/start.sh` - a comprehensive development startup script that:
+
+1. **Checks all dependencies**:
+   - Elixir/Erlang versions (via asdf or system)
+   - Node.js (if assets pipeline needed)
+   - PostgreSQL running and accessible
+   - Required CLI tools (mix, npm/yarn)
+
+2. **Validates environment setup**:
+   - `.env` file exists with required variables
+   - Database configured and accessible
+   - Required environment variables set
+
+3. **Auto-setup if environment not ready**:
+   - Prompt user to install missing dependencies
+   - Offer to create `.env` from `.env.example`
+   - Run `mix deps.get` if deps missing
+   - Run `mix ecto.setup` if database not initialized
+   - Run `npm install` if node_modules missing (for assets)
+
+4. **Starts the development server**:
+   - Run migrations if pending
+   - Start Phoenix server with IEx shell
+   - Display helpful startup information
+
+```bash
+#!/usr/bin/env bash
+# ./scripts/start.sh - Development environment startup script
+#
+# Usage: ./scripts/start.sh [options]
+# Options:
+#   --check-only    Only check dependencies, don't start server
+#   --setup         Run full setup (deps, db, assets)
+#   --skip-checks   Skip dependency checks and start immediately
+```
+
+**Required behavior**:
+- Exit with clear error messages if critical dependencies missing
+- Offer interactive prompts for fixable issues
+- Support `--help` flag for usage information
+- Be idempotent (safe to run multiple times)
+- Work on macOS and Linux
+
 ## Output
 
 ```markdown
