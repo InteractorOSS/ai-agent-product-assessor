@@ -123,6 +123,31 @@ Use this document to capture your initial project idea. Don't worry about struct
 
 ---
 
+## Deployment Preferences (Optional)
+
+*Where and how should this run? Any infrastructure preferences or constraints?*
+
+```
+[e.g., "Fly.io", "AWS", "self-hosted", "Docker", "Kubernetes"]
+
+
+
+```
+
+### Deployment Considerations
+
+| Consideration | Your Preference |
+|---------------|-----------------|
+| **Hosting** | [Fly.io / Gigalixir / AWS / GCP / Self-hosted / Other] |
+| **Database** | [Managed PostgreSQL / Self-hosted / RDS / etc.] |
+| **CI/CD** | [GitHub Actions / GitLab CI / Other] |
+| **Environments** | [dev / staging / prod] or [just prod] |
+| **Release Strategy** | [Blue-green / Rolling / Canary / Simple] |
+
+*Don't worry if you're unsure - these can be decided during planning. See `docs/phases/06-deployment/` for detailed deployment guidance.*
+
+---
+
 # What Happens Next
 
 Once you've filled this out (even partially), use `/start-discovery` and share this document. Claude will:
