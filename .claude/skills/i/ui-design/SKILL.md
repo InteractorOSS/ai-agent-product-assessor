@@ -36,6 +36,222 @@ Every design decision should embody these three principles:
 
 ---
 
+## Required Global Components
+
+### Light/Dark Mode (System-Aware)
+
+**MANDATORY**: All applications must support light and dark mode that automatically adjusts based on system settings.
+
+#### Implementation
+```html
+<!-- HTML: Add dark class support -->
+<html class="..." x-data :class="{ 'dark': $store.darkMode.on }">
+
+<!-- Tailwind Config: Enable dark mode -->
+<!-- tailwind.config.js -->
+module.exports = {
+  darkMode: 'class', // or 'media' for pure system preference
+  // ...
+}
+```
+
+#### CSS Variable Approach (Recommended)
+```css
+/* Light mode (default) */
+:root {
+  --bg-primary: theme('colors.white');
+  --bg-secondary: theme('colors.gray.50');
+  --text-primary: theme('colors.gray.900');
+  --text-secondary: theme('colors.gray.600');
+  --border-color: theme('colors.gray.200');
+}
+
+/* Dark mode */
+.dark {
+  --bg-primary: theme('colors.gray.900');
+  --bg-secondary: theme('colors.gray.800');
+  --text-primary: theme('colors.gray.100');
+  --text-secondary: theme('colors.gray.400');
+  --border-color: theme('colors.gray.700');
+}
+```
+
+#### Tailwind Dark Mode Classes
+```html
+<!-- Background -->
+bg-white dark:bg-gray-900
+bg-gray-50 dark:bg-gray-800
+
+<!-- Text -->
+text-gray-900 dark:text-gray-100
+text-gray-600 dark:text-gray-400
+text-gray-500 dark:text-gray-500
+
+<!-- Borders -->
+border-gray-200 dark:border-gray-700
+border-gray-300 dark:border-gray-600
+
+<!-- Cards/Panels -->
+bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700
+
+<!-- Inputs -->
+bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100
+
+<!-- Buttons (Primary - stays consistent) -->
+bg-indigo-600 hover:bg-indigo-700 text-white
+
+<!-- Buttons (Secondary) -->
+bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200
+```
+
+#### System Preference Detection (JavaScript/Alpine)
+```javascript
+// Alpine.js store for dark mode
+document.addEventListener('alpine:init', () => {
+  Alpine.store('darkMode', {
+    on: window.matchMedia('(prefers-color-scheme: dark)').matches,
+
+    init() {
+      // Listen for system changes
+      window.matchMedia('(prefers-color-scheme: dark)')
+        .addEventListener('change', e => this.on = e.matches);
+    },
+
+    toggle() {
+      this.on = !this.on;
+    }
+  });
+});
+```
+
+#### LiveView/Phoenix Implementation
+```elixir
+# In app.js
+const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+function updateDarkMode(e) {
+  document.documentElement.classList.toggle('dark', e.matches);
+}
+
+darkModeMediaQuery.addEventListener('change', updateDarkMode);
+updateDarkMode(darkModeMediaQuery);
+```
+
+---
+
+### AI Assistant Chat Widget
+
+**MANDATORY**: All applications must include an AI assistant chat widget positioned in the bottom-right corner.
+
+#### Position & Layout
+```html
+<!-- Fixed position, bottom-right -->
+<div class="fixed bottom-6 right-6 z-50">
+  <!-- Chat toggle button -->
+  <button
+    class="w-14 h-14 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center text-white"
+    @click="chatOpen = !chatOpen"
+  >
+    <!-- Chat icon when closed -->
+    <svg x-show="!chatOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+    </svg>
+    <!-- Close icon when open -->
+    <svg x-show="chatOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+
+  <!-- Chat panel -->
+  <div
+    x-show="chatOpen"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0 translate-y-4"
+    x-transition:enter-end="opacity-100 translate-y-0"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100 translate-y-0"
+    x-transition:leave-end="opacity-0 translate-y-4"
+    class="absolute bottom-20 right-0 w-80 sm:w-96 h-[500px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden"
+  >
+    <!-- Header -->
+    <div class="px-4 py-3 bg-indigo-600 dark:bg-indigo-700 text-white flex items-center gap-3">
+      <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+        </svg>
+      </div>
+      <div>
+        <h3 class="font-semibold text-sm">AI Assistant</h3>
+        <p class="text-xs text-white/70">Ask me anything</p>
+      </div>
+    </div>
+
+    <!-- Messages area -->
+    <div class="flex-1 overflow-y-auto p-4 space-y-4">
+      <!-- Message bubbles go here -->
+    </div>
+
+    <!-- Input area -->
+    <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+      <div class="flex gap-2">
+        <input
+          type="text"
+          placeholder="Type a message..."
+          class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        />
+        <button class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+#### Mobile Responsiveness
+```html
+<!-- Mobile: Full width panel -->
+<div class="
+  absolute bottom-20 right-0
+  w-80 sm:w-96
+  h-[500px]
+  max-h-[calc(100vh-120px)]
+  ...
+">
+```
+
+#### Message Bubble Styles
+```html
+<!-- User message (right-aligned) -->
+<div class="flex justify-end">
+  <div class="max-w-[80%] px-4 py-2 bg-indigo-600 text-white rounded-2xl rounded-br-md">
+    User message here
+  </div>
+</div>
+
+<!-- AI message (left-aligned) -->
+<div class="flex justify-start">
+  <div class="max-w-[80%] px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-2xl rounded-bl-md">
+    AI response here
+  </div>
+</div>
+
+<!-- Typing indicator -->
+<div class="flex justify-start">
+  <div class="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-2xl rounded-bl-md">
+    <div class="flex gap-1">
+      <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+      <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+      <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+    </div>
+  </div>
+</div>
+```
+
+---
+
 ## Color System
 
 ### Primary Brand Colors
@@ -486,6 +702,11 @@ Even then, limit card density and ensure adequate spacing.
 
 ## Checklist Before Completing UI Work
 
+### Required Global Components
+- [ ] **Light/Dark mode implemented** - System preference detection working
+- [ ] **AI Assistant chat widget present** - Bottom-right corner, functional
+- [ ] Dark mode classes applied to all components (`dark:` variants)
+
 ### Visual Design
 - [ ] Consistent color usage from the design system
 - [ ] Typography follows the scale (no arbitrary sizes)
@@ -514,3 +735,9 @@ Verify at these widths:
 - [ ] Buttons are tappable (adequate size and spacing)
 - [ ] Content doesn't overflow horizontally
 - [ ] Layout stacks sensibly on mobile
+
+### Dark Mode Verification
+- [ ] Toggle system theme and verify UI updates
+- [ ] All text remains readable in both modes
+- [ ] Borders and dividers visible in both modes
+- [ ] AI chat widget adapts to dark mode
