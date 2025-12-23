@@ -127,7 +127,7 @@ Projects created from this template can pull in updates:
 
 ```bash
 # Add template as a remote (one-time)
-git remote add template https://github.com/your-org/product-dev-template.git
+git remote add template https://github.com/pulzze/product-dev-template.git
 
 # Fetch template updates
 git fetch template

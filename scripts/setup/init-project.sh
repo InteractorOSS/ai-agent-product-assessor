@@ -165,7 +165,7 @@ Type: $PROJECT_TYPE
 fi
 
 # Store template origin for future updates
-TEMPLATE_ORIGIN=${TEMPLATE_ORIGIN:-"https://github.com/your-org/product-dev-template.git"}
+TEMPLATE_ORIGIN=${TEMPLATE_ORIGIN:-"https://github.com/pulzze/product-dev-template.git"}
 
 print_info "Setting up template sync..."
 if [ -d ".git" ]; then

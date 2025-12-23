@@ -23,7 +23,7 @@ A comprehensive AI-driven product development template for Elixir/Phoenix applic
 
 ```bash
 # Clone the template
-git clone https://github.com/your-org/product-dev-template.git my-project
+git clone https://github.com/pulzze/product-dev-template.git my-project
 cd my-project
 
 # Run the initialization script

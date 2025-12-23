@@ -50,7 +50,7 @@ if ! git remote | grep -q "template"; then
     print_error "Template remote not found"
     echo ""
     echo "Add the template remote first:"
-    echo "  git remote add template https://github.com/your-org/product-dev-template.git"
+    echo "  git remote add template https://github.com/pulzze/product-dev-template.git"
     exit 1
 fi
 
