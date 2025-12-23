@@ -104,6 +104,33 @@ This will guide you through gathering requirements. Then proceed through the pha
    [Validate]        [Validate]          [Validate]
 ```
 
+### Iterative Changes
+
+Real projects aren't linear. Use `/handle-change` when requirements or designs change:
+
+```
+                    ┌─────────────────┐
+                    │  Change Request │
+                    └────────┬────────┘
+                             │
+              ┌──────────────┼──────────────┐
+              ▼              ▼              ▼
+         ┌────────┐    ┌──────────┐   ┌──────────┐
+         │ Small  │    │  Medium  │   │  Large   │
+         │(code)  │    │(design)  │   │(arch)    │
+         └───┬────┘    └────┬─────┘   └────┬─────┘
+             │              │              │
+             ▼              ▼              ▼
+         Continue      Update docs    Go back to
+         coding        Mini-cycle     Planning
+```
+
+- **Small changes**: Update code + tests, continue implementation
+- **Medium changes**: Quick planning, update docs, mini-cycle
+- **Large changes**: Revisit Planning phase, update ADR, re-estimate
+
+See `docs/templates/change-request-template.md` for formal change tracking.
+
 ### Validation at Every Step
 
 The template enforces validation at every phase. After generating any artifact, run:
@@ -133,6 +160,7 @@ MIX_ENV=prod mix release         # Release builds
 | `/start-implementation` | After planning is complete - begin coding |
 | `/run-review` | Before merging - comprehensive code review |
 | `/prepare-release` | Before deployment - release checklist |
+| `/handle-change` | Requirements or design changed - assess and adapt |
 
 ### Using Skills
 
@@ -280,7 +308,25 @@ mix credo --strict && mix test --cover && mix sobelow && mix hex.audit
 
 ## Keeping the Template Updated
 
-Projects created from this template can pull in improvements:
+Projects created from this template can pull in improvements automatically or manually.
+
+### Option 1: GitHub Actions (Recommended)
+
+Set up automatic sync checking with the included workflow:
+
+1. Add the template repo as a secret:
+   ```bash
+   # In your project's GitHub Settings > Secrets > Actions
+   # Add secret: TEMPLATE_REPO = "your-org/product-dev-template"
+   ```
+
+2. The workflow runs weekly and creates a PR when updates are available
+
+3. Or trigger manually:
+   - Go to **Actions** > **Sync Template Updates** > **Run workflow**
+   - Select which component to sync (all, skills, commands, rules, docs, validator)
+
+### Option 2: Manual Sync
 
 ```bash
 # See available updates

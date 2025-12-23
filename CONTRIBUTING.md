@@ -2,6 +2,155 @@
 
 This template is designed to improve over time based on real-world usage. Here's how to contribute improvements back.
 
+---
+
+## Iterative Improvement Process
+
+The template improves through a continuous feedback loop across all projects that use it:
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    Template Improvement Lifecycle                        │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+  │   Project A  │     │   Project B  │     │   Project C  │
+  │  uses template│     │  uses template│     │  uses template│
+  └──────┬───────┘     └──────┬───────┘     └──────┬───────┘
+         │                    │                    │
+         ▼                    ▼                    ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │              Capture Feedback During Development          │
+  │                                                          │
+  │  • What worked well?                                     │
+  │  • What needed modification?                             │
+  │  • What was missing?                                     │
+  │  • What caused friction?                                 │
+  │                                                          │
+  │  Log in: docs/template-feedback.md                       │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+                             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │                  Review at Phase Gates                    │
+  │                                                          │
+  │  After each phase completion, review:                    │
+  │  • Did the phase documentation help?                     │
+  │  • Were the checklists complete?                         │
+  │  • Did skills produce good output?                       │
+  │  • Were validation steps sufficient?                     │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+                             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │              Contribute Back to Template                  │
+  │                                                          │
+  │  At project end (or anytime):                            │
+  │  1. Review docs/template-feedback.md                     │
+  │  2. Extract improvements worth sharing                   │
+  │  3. Submit PR or Issue to template repo                  │
+  │  4. Include: what changed, why, tested on which project  │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+                             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │                Template Repository                        │
+  │                                                          │
+  │  Maintainers:                                            │
+  │  • Review contributions                                  │
+  │  • Merge improvements                                    │
+  │  • Update CHANGELOG.md                                   │
+  │  • Tag new version                                       │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+                             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │              Projects Sync Updates                        │
+  │                                                          │
+  │  ./scripts/setup/sync-template.sh                        │
+  │                                                          │
+  │  Projects pull improvements from template                │
+  └──────────────────────────────────────────────────────────┘
+         │                    │                    │
+         ▼                    ▼                    ▼
+  ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+  │   Project A  │     │   Project B  │     │   Project D  │
+  │  gets updates│     │  gets updates│     │  new project │
+  └──────────────┘     └──────────────┘     └──────────────┘
+```
+
+### When to Capture Feedback
+
+Capture feedback **as you work**, not just at the end:
+
+| Moment | What to Log |
+|--------|-------------|
+| **During Discovery** | Missing intake questions, unclear templates |
+| **During Planning** | Gaps in architecture templates, missing ADR scenarios |
+| **During Implementation** | Code patterns that should be examples, missing rules |
+| **During Testing** | Test patterns worth adding, coverage gaps |
+| **During Review** | Checklist items missing, skill improvements needed |
+| **During Deployment** | CI/CD examples needed, monitoring gaps |
+
+### Where to Log Feedback
+
+Use `docs/template-feedback.md` (created by init-project.sh):
+
+```markdown
+## Phase: Implementation
+**Date**: 2024-01-15
+
+### What Worked
+- Code review skill caught security issue early
+
+### What Needed Modification
+- Added custom Oban job testing pattern to testing.md rule
+
+### What Was Missing
+- No example for testing LiveView components with JS hooks
+
+### Suggested Improvement
+- Add LiveView JS hook testing example to test-generator skill
+```
+
+### Phase Gate Reviews
+
+At each phase transition, take 5 minutes to review:
+
+```
+Discovery → Planning
+├── Were requirements templates comprehensive?
+├── Did stakeholder analysis capture everyone?
+└── Any questions Claude should have asked?
+
+Planning → Implementation
+├── Was architecture template sufficient?
+├── Did task breakdown match actual work?
+└── Any ADR scenarios missing?
+
+Implementation → Testing
+├── Were coding rules helpful?
+├── Any patterns worth adding as examples?
+└── Did AI collaboration guide help?
+
+Testing → Review
+├── Was test coverage guidance clear?
+├── Any test patterns worth sharing?
+└── Quality gates appropriate?
+
+Review → Deployment
+├── Did code review checklist catch issues?
+├── Security audit thorough enough?
+└── Any review steps missing?
+
+Deployment → Done
+├── Was deployment documentation complete?
+├── Rollback procedures accurate?
+└── Monitoring guidance sufficient?
+```
+
+---
+
 ## Template Improvement Workflow
 
 ### 1. Usage Tracking
@@ -121,7 +270,28 @@ All contributions should follow the same validation standards as the template it
 
 ## Syncing Template Updates to Projects
 
-Projects created from this template can pull in updates:
+Projects created from this template can pull in updates automatically or manually.
+
+### Automated Sync (GitHub Actions)
+
+The template includes a workflow that automatically checks for updates:
+
+**Setup (one-time):**
+1. In your project's GitHub repo, go to **Settings** > **Secrets and variables** > **Actions**
+2. Add a secret: `TEMPLATE_REPO` = `your-org/product-dev-template`
+
+**How it works:**
+- Runs weekly (Mondays 9am UTC) to check for updates
+- Creates a PR automatically if updates are found
+- You can also trigger manually via **Actions** > **Sync Template Updates**
+
+**Manual trigger options:**
+- `all` - Sync everything
+- `skills` - Just `.claude/skills/`
+- `commands` - Just `.claude/commands/`
+- `rules` - Just `.claude/rules/`
+- `docs` - Phase docs and checklists
+- `validator` - Validator skill and checklist
 
 ### Manual Sync
 

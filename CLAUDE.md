@@ -38,6 +38,7 @@ This file provides comprehensive guidance to Claude Code for AI-driven product d
 | `/start-implementation` | Begin development phase |
 | `/run-review` | Execute code review workflow |
 | `/prepare-release` | Prepare for deployment |
+| `/handle-change` | Process requirement/design changes mid-project |
 
 ### Skills
 
@@ -179,6 +180,126 @@ When deploying:
 - [ ] Monitoring configured
 
 **Exit criteria**: Successful production deployment, monitoring active.
+
+---
+
+## Iterative Changes & Rework
+
+Real projects rarely follow a linear path. Requirements change, designs evolve, and issues surface late. Here's how to handle changes at any phase.
+
+### Change Triggers
+
+| Trigger | Impact | Action |
+|---------|--------|--------|
+| New requirement discovered | May affect architecture | Assess scope, update docs, possibly re-plan |
+| Bug found in production | Code + possibly design | Fix, add tests, update if pattern issue |
+| Performance issue | Implementation | Profile, fix, document learnings |
+| User feedback | Requirements + UI/UX | Update requirements, prioritize changes |
+| Security vulnerability | Immediate | Hotfix, then root cause analysis |
+| Scope change from stakeholder | All phases | Re-assess, update ADRs, re-plan affected areas |
+
+### Handling Changes by Current Phase
+
+**During Implementation (most common):**
+```
+Change Request
+     │
+     ▼
+┌─────────────────────────────────────────┐
+│  1. Assess Impact                       │
+│     • Does this change the architecture?│
+│     • Does this invalidate existing code│
+│     • What tests need updating?         │
+└─────────────────────────────────────────┘
+     │
+     ├─── Small (same architecture) ───▶ Update code + tests, continue
+     │
+     └─── Large (architecture change) ──▶ Go back to Planning
+                                              │
+                                              ▼
+                                         Update ADR
+                                         Revise design doc
+                                         Re-estimate tasks
+                                         Resume implementation
+```
+
+**After Deployment:**
+```
+Issue/Change Request
+     │
+     ▼
+┌─────────────────────────────────────────┐
+│  Severity Assessment                    │
+│  • P0: Production down → Hotfix NOW     │
+│  • P1: Major bug → Fix this sprint      │
+│  • P2: Minor issue → Backlog            │
+│  • Feature request → New discovery      │
+└─────────────────────────────────────────┘
+     │
+     ├─── Hotfix ──▶ Fix → Test → Deploy → Post-mortem → Update docs
+     │
+     └─── Feature ──▶ Mini-discovery → Planning → Implementation → ...
+```
+
+### When to Loop Back
+
+| Situation | Go Back To | What to Update |
+|-----------|------------|----------------|
+| "We need a completely different approach" | Planning | ADR, design doc, task breakdown |
+| "New stakeholder requirements" | Discovery | Requirements doc, user stories |
+| "This feature is more complex than expected" | Planning | Task breakdown, estimates, possibly ADR |
+| "Tests revealed design flaw" | Planning | Design doc, ADR if architectural |
+| "Performance won't meet SLA" | Planning | ADR for optimization approach |
+| "Security audit failed" | Implementation | Fix code, update security checklist |
+
+### Change Documentation
+
+When making significant changes, document them:
+
+```markdown
+## Change Record
+
+**Date**: YYYY-MM-DD
+**Type**: Requirement / Architecture / Implementation / Hotfix
+**Triggered by**: [What caused this change]
+
+### Original Approach
+[What was planned/built]
+
+### New Approach
+[What changed and why]
+
+### Impact
+- [ ] Requirements doc updated
+- [ ] ADR created/updated
+- [ ] Design doc updated
+- [ ] Affected code refactored
+- [ ] Tests updated
+- [ ] Documentation updated
+
+### Lessons Learned
+[What to do differently next time]
+```
+
+### Mini-Cycles for Changes
+
+For changes that don't require full phase restarts:
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                    Mini-Cycle                            │
+│                                                          │
+│   Assess → Plan (brief) → Implement → Test → Review     │
+│     │                                            │       │
+│     └────────────── Validate ◄───────────────────┘       │
+└──────────────────────────────────────────────────────────┘
+```
+
+1. **Assess**: What's the scope? Does it change architecture?
+2. **Plan**: Quick task list, update ADR if needed
+3. **Implement**: Make changes following existing patterns
+4. **Test**: Run full validation suite
+5. **Review**: Code review, check for regressions
 
 ---
 

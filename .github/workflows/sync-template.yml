@@ -1,0 +1,208 @@
+# Sync Template Updates
+#
+# This workflow checks for updates from the template repository and creates
+# a PR if updates are available. Run manually or on a schedule.
+#
+# Setup:
+# 1. Set TEMPLATE_REPO secret to the template repository URL
+#    (e.g., "your-org/product-dev-template")
+# 2. Optionally configure schedule frequency
+#
+name: Sync Template Updates
+
+on:
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      component:
+        description: 'Component to sync'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - skills
+          - commands
+          - rules
+          - docs
+          - validator
+
+  # Weekly check (Mondays at 9am UTC)
+  schedule:
+    - cron: '0 9 * * 1'
+
+env:
+  TEMPLATE_REPO: ${{ secrets.TEMPLATE_REPO || 'your-org/product-dev-template' }}
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+    outputs:
+      has_updates: ${{ steps.check.outputs.has_updates }}
+      update_summary: ${{ steps.check.outputs.summary }}
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add template remote
+        run: |
+          git remote add template "https://github.com/${{ env.TEMPLATE_REPO }}.git" 2>/dev/null || true
+          git fetch template main
+
+      - name: Check for updates
+        id: check
+        run: |
+          # Get list of changed files
+          CHANGED_FILES=$(git diff --name-only HEAD template/main -- .claude/ docs/phases/ docs/checklists/ 2>/dev/null || echo "")
+
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "has_updates=false" >> $GITHUB_OUTPUT
+            echo "No template updates available"
+          else
+            echo "has_updates=true" >> $GITHUB_OUTPUT
+
+            # Create summary
+            SKILLS_COUNT=$(echo "$CHANGED_FILES" | grep -c "^\.claude/skills/" || echo "0")
+            COMMANDS_COUNT=$(echo "$CHANGED_FILES" | grep -c "^\.claude/commands/" || echo "0")
+            RULES_COUNT=$(echo "$CHANGED_FILES" | grep -c "^\.claude/rules/" || echo "0")
+            DOCS_COUNT=$(echo "$CHANGED_FILES" | grep -c "^docs/" || echo "0")
+
+            SUMMARY="Skills: $SKILLS_COUNT, Commands: $COMMANDS_COUNT, Rules: $RULES_COUNT, Docs: $DOCS_COUNT"
+            echo "summary=$SUMMARY" >> $GITHUB_OUTPUT
+
+            echo "Template updates available:"
+            echo "$CHANGED_FILES"
+          fi
+
+  create-pr:
+    needs: check-updates
+    if: needs.check-updates.outputs.has_updates == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add template remote
+        run: |
+          git remote add template "https://github.com/${{ env.TEMPLATE_REPO }}.git" 2>/dev/null || true
+          git fetch template main
+
+      - name: Create sync branch
+        id: branch
+        run: |
+          BRANCH_NAME="template-sync/$(date +%Y-%m-%d)"
+          echo "branch=$BRANCH_NAME" >> $GITHUB_OUTPUT
+
+          # Delete existing branch if it exists
+          git push origin --delete "$BRANCH_NAME" 2>/dev/null || true
+          git checkout -b "$BRANCH_NAME"
+
+      - name: Sync template files
+        run: |
+          COMPONENT="${{ github.event.inputs.component || 'all' }}"
+
+          case $COMPONENT in
+            all)
+              git checkout template/main -- .claude/skills/ 2>/dev/null || true
+              git checkout template/main -- .claude/commands/ 2>/dev/null || true
+              git checkout template/main -- .claude/rules/ 2>/dev/null || true
+              git checkout template/main -- docs/phases/ 2>/dev/null || true
+              git checkout template/main -- docs/checklists/ 2>/dev/null || true
+              ;;
+            skills)
+              git checkout template/main -- .claude/skills/
+              ;;
+            commands)
+              git checkout template/main -- .claude/commands/
+              ;;
+            rules)
+              git checkout template/main -- .claude/rules/
+              ;;
+            docs)
+              git checkout template/main -- docs/phases/
+              git checkout template/main -- docs/checklists/
+              ;;
+            validator)
+              git checkout template/main -- .claude/skills/validator/
+              git checkout template/main -- docs/checklists/validation-checklist.md
+              ;;
+          esac
+
+      - name: Commit changes
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git commit -m "chore: sync template updates
+
+          Component: ${{ github.event.inputs.component || 'all' }}
+          Summary: ${{ needs.check-updates.outputs.update_summary }}
+
+          Updates from: ${{ env.TEMPLATE_REPO }}
+
+          Run \`./scripts/setup/sync-template.sh\` locally to review changes before merging."
+
+      - name: Push branch
+        run: git push -u origin ${{ steps.branch.outputs.branch }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: ${{ steps.branch.outputs.branch }}
+          base: main
+          title: "chore: Template updates available"
+          body: |
+            ## Template Updates Available
+
+            This PR syncs updates from the template repository.
+
+            **Component synced**: ${{ github.event.inputs.component || 'all' }}
+            **Summary**: ${{ needs.check-updates.outputs.update_summary }}
+
+            ### What to Review
+
+            - [ ] Check for breaking changes in skills
+            - [ ] Review updated documentation
+            - [ ] Verify rules still match project conventions
+            - [ ] Test any modified commands
+
+            ### Files Changed
+
+            Review the diff to understand what's being updated from the template.
+
+            ---
+
+            > To sync manually instead: `./scripts/setup/sync-template.sh`
+            >
+            > Template repo: [${{ env.TEMPLATE_REPO }}](https://github.com/${{ env.TEMPLATE_REPO }})
+          labels: |
+            template-sync
+            automated
+          draft: false
+
+  notify-no-updates:
+    needs: check-updates
+    if: needs.check-updates.outputs.has_updates == 'false' && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: No updates message
+        run: |
+          echo "::notice::No template updates available. Your project is up to date with the template."

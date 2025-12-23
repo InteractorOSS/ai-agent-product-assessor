@@ -1,0 +1,201 @@
+# Template Release Workflow
+#
+# Runs when changes are pushed to the template repository.
+# Creates a release and optionally notifies downstream projects.
+#
+name: Template Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.claude/**'
+      - 'docs/phases/**'
+      - 'docs/checklists/**'
+      - 'docs/templates/**'
+
+  # Manual release
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  analyze-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      change_summary: ${{ steps.analyze.outputs.summary }}
+      suggested_bump: ${{ steps.analyze.outputs.bump }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Analyze changes
+        id: analyze
+        run: |
+          # Get changed files since last tag
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          if [ -z "$LAST_TAG" ]; then
+            CHANGED_FILES=$(git diff --name-only HEAD~10 HEAD 2>/dev/null || echo "")
+          else
+            CHANGED_FILES=$(git diff --name-only "$LAST_TAG" HEAD 2>/dev/null || echo "")
+          fi
+
+          # Categorize changes
+          SKILLS=$(echo "$CHANGED_FILES" | grep "^\.claude/skills/" | wc -l || echo "0")
+          COMMANDS=$(echo "$CHANGED_FILES" | grep "^\.claude/commands/" | wc -l || echo "0")
+          RULES=$(echo "$CHANGED_FILES" | grep "^\.claude/rules/" | wc -l || echo "0")
+          DOCS=$(echo "$CHANGED_FILES" | grep "^docs/" | wc -l || echo "0")
+
+          SUMMARY="Skills: $SKILLS files, Commands: $COMMANDS files, Rules: $RULES files, Docs: $DOCS files"
+          echo "summary=$SUMMARY" >> $GITHUB_OUTPUT
+
+          # Suggest version bump
+          # Major: breaking changes (structure changes)
+          # Minor: new skills/commands
+          # Patch: documentation, fixes
+          if echo "$CHANGED_FILES" | grep -q "settings\.json\|CLAUDE\.md"; then
+            echo "bump=minor" >> $GITHUB_OUTPUT
+          elif [ "$SKILLS" -gt 0 ] || [ "$COMMANDS" -gt 0 ]; then
+            echo "bump=minor" >> $GITHUB_OUTPUT
+          else
+            echo "bump=patch" >> $GITHUB_OUTPUT
+          fi
+
+          echo "Changes since last release:"
+          echo "$CHANGED_FILES"
+
+  create-release:
+    needs: analyze-changes
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[release]')
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get current version
+        id: version
+        run: |
+          # Get latest tag or default to v0.0.0
+          CURRENT=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "current=$CURRENT" >> $GITHUB_OUTPUT
+
+          # Parse version
+          VERSION=${CURRENT#v}
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          MINOR=$(echo "$VERSION" | cut -d. -f2)
+          PATCH=$(echo "$VERSION" | cut -d. -f3)
+
+          # Determine bump type
+          BUMP="${{ github.event.inputs.version_bump || needs.analyze-changes.outputs.suggested_bump }}"
+
+          case $BUMP in
+            major)
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            minor)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            patch)
+              PATCH=$((PATCH + 1))
+              ;;
+          esac
+
+          NEW_VERSION="v$MAJOR.$MINOR.$PATCH"
+          echo "new=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $NEW_VERSION"
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          if [ -z "$LAST_TAG" ]; then
+            COMMITS=$(git log --oneline -20)
+          else
+            COMMITS=$(git log --oneline "$LAST_TAG"..HEAD)
+          fi
+
+          # Create changelog content
+          cat << EOF > RELEASE_NOTES.md
+          ## What's Changed
+
+          ${{ needs.analyze-changes.outputs.change_summary }}
+
+          ### Commits
+
+          $COMMITS
+
+          ---
+
+          ### For Projects Using This Template
+
+          To sync these updates to your project:
+
+          \`\`\`bash
+          # Option 1: Use the sync script
+          ./scripts/setup/sync-template.sh
+
+          # Option 2: Manual sync
+          git fetch template
+          git diff HEAD template/main -- .claude/ docs/
+
+          # Option 3: GitHub Actions (if configured)
+          # Go to Actions > Sync Template Updates > Run workflow
+          \`\`\`
+
+          See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed sync instructions.
+          EOF
+
+          echo "Generated release notes"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.new }}
+          name: Template ${{ steps.version.outputs.new }}
+          body_path: RELEASE_NOTES.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update CHANGELOG
+        run: |
+          NEW_VERSION="${{ steps.version.outputs.new }}"
+          DATE=$(date +%Y-%m-%d)
+
+          # Prepend to CHANGELOG.md if it exists
+          if [ -f "CHANGELOG.md" ]; then
+            cat << EOF > CHANGELOG_NEW.md
+          ## [$NEW_VERSION] - $DATE
+
+          ${{ needs.analyze-changes.outputs.change_summary }}
+
+          EOF
+            cat CHANGELOG.md >> CHANGELOG_NEW.md
+            mv CHANGELOG_NEW.md CHANGELOG.md
+
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add CHANGELOG.md
+            git commit -m "chore: update CHANGELOG for $NEW_VERSION" || true
+            git push || true
+          fi
