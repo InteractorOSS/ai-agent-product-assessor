@@ -23,6 +23,8 @@
       "Bash(npm install:*)",
       "Bash(npm uninstall:*)",
       "Bash(rm:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
       "Write(.env*)",
       "Write(**/secrets/**)",
       "Edit(package.json)",
@@ -39,9 +41,7 @@
       "Read(.env.production)",
       "Bash(rm -rf /)",
       "Bash(rm -rf ~)",
-      "Bash(sudo:*)",
-      "Bash(curl:* | bash)",
-      "Bash(wget:* | bash)"
+      "Bash(sudo:*)"
     ],
     "additionalDirectories": []
   },
