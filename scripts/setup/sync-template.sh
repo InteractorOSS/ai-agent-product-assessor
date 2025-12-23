@@ -45,13 +45,15 @@ echo -e "${GREEN}║         Product Dev Template - Sync Updates               �
 echo -e "${GREEN}╚═══════════════════════════════════════════════════════════╝${NC}"
 echo ""
 
-# Check if template remote exists
+# Template repository URL
+TEMPLATE_REPO_URL="https://github.com/pulzze/product-dev-template.git"
+
+# Check if template remote exists, add if missing
 if ! git remote | grep -q "template"; then
-    print_error "Template remote not found"
+    print_info "Adding template remote..."
+    git remote add template "$TEMPLATE_REPO_URL"
+    print_success "Added template remote: $TEMPLATE_REPO_URL"
     echo ""
-    echo "Add the template remote first:"
-    echo "  git remote add template https://github.com/pulzze/product-dev-template.git"
-    exit 1
 fi
 
 COMPONENT=${1:-"interactive"}
