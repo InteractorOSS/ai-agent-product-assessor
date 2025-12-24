@@ -741,3 +741,324 @@ Verify at these widths:
 - [ ] All text remains readable in both modes
 - [ ] Borders and dividers visible in both modes
 - [ ] AI chat widget adapts to dark mode
+
+### Visual Testing with Playwright
+- [ ] Run Playwright visual tests for all modified pages
+- [ ] Verify responsive layouts at all breakpoints
+- [ ] Check dark mode screenshots
+- [ ] Validate AI chat widget visibility and positioning
+
+---
+
+## Visual Testing with Playwright
+
+**MANDATORY**: Use Playwright for visual verification of all UI changes.
+
+### When to Run Visual Tests
+
+Run Playwright visual checks:
+- After implementing new pages or components
+- After modifying existing UI elements
+- Before completing any UI-related PR
+- When verifying responsive design
+- When testing light/dark mode appearance
+
+### Visual Test Commands
+
+#### Basic Screenshot Capture
+```bash
+# Capture screenshot of a page
+npx playwright screenshot http://localhost:4000/page --output=screenshot.png
+
+# Capture full page
+npx playwright screenshot http://localhost:4000/page --full-page --output=full-page.png
+```
+
+#### Multi-Viewport Testing Script
+```javascript
+// visual-test.js
+const { chromium } = require('playwright');
+
+const viewports = [
+  { name: 'mobile', width: 375, height: 812 },
+  { name: 'tablet', width: 768, height: 1024 },
+  { name: 'laptop', width: 1024, height: 768 },
+  { name: 'desktop', width: 1440, height: 900 },
+];
+
+const pages = [
+  '/',
+  '/dashboard',
+  '/users',
+  // Add your pages here
+];
+
+async function runVisualTests() {
+  const browser = await chromium.launch();
+
+  for (const viewport of viewports) {
+    const context = await browser.newContext({
+      viewport: { width: viewport.width, height: viewport.height },
+    });
+    const page = await context.newPage();
+
+    for (const url of pages) {
+      await page.goto(`http://localhost:4000${url}`);
+      await page.screenshot({
+        path: `screenshots/${viewport.name}-${url.replace(/\//g, '-') || 'home'}.png`,
+        fullPage: true,
+      });
+    }
+
+    await context.close();
+  }
+
+  await browser.close();
+}
+
+runVisualTests();
+```
+
+### Dark Mode Visual Testing
+
+```javascript
+// dark-mode-test.js
+const { chromium } = require('playwright');
+
+async function testDarkMode(url) {
+  const browser = await chromium.launch();
+
+  // Test Light Mode
+  const lightContext = await browser.newContext({
+    colorScheme: 'light',
+    viewport: { width: 1440, height: 900 },
+  });
+  const lightPage = await lightContext.newPage();
+  await lightPage.goto(url);
+  await lightPage.screenshot({ path: 'screenshots/light-mode.png', fullPage: true });
+
+  // Test Dark Mode
+  const darkContext = await browser.newContext({
+    colorScheme: 'dark',
+    viewport: { width: 1440, height: 900 },
+  });
+  const darkPage = await darkContext.newPage();
+  await darkPage.goto(url);
+  await darkPage.screenshot({ path: 'screenshots/dark-mode.png', fullPage: true });
+
+  await browser.close();
+  console.log('Dark mode screenshots captured!');
+}
+
+testDarkMode('http://localhost:4000');
+```
+
+### Component Visual Testing
+
+```javascript
+// component-test.js
+const { chromium } = require('playwright');
+
+async function testComponent(url, selector, name) {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  await page.goto(url);
+
+  // Wait for component to be visible
+  await page.waitForSelector(selector);
+
+  // Screenshot specific component
+  const element = await page.$(selector);
+  await element.screenshot({ path: `screenshots/component-${name}.png` });
+
+  await browser.close();
+}
+
+// Example: Test AI Chat Widget
+testComponent('http://localhost:4000', '.fixed.bottom-6.right-6', 'ai-chat-widget');
+```
+
+### AI Chat Widget Visual Test
+
+```javascript
+// chat-widget-test.js
+const { chromium } = require('playwright');
+
+async function testChatWidget() {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  await page.goto('http://localhost:4000');
+
+  // Screenshot closed state
+  await page.screenshot({ path: 'screenshots/chat-closed.png' });
+
+  // Click to open chat
+  await page.click('[data-chat-toggle]'); // or '.fixed.bottom-6.right-6 button'
+  await page.waitForTimeout(300); // Wait for animation
+
+  // Screenshot open state
+  await page.screenshot({ path: 'screenshots/chat-open.png' });
+
+  // Test on mobile viewport
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.screenshot({ path: 'screenshots/chat-mobile.png' });
+
+  await browser.close();
+}
+
+testChatWidget();
+```
+
+### Responsive Breakpoint Testing
+
+```javascript
+// responsive-test.js
+const { chromium } = require('playwright');
+
+const breakpoints = {
+  'mobile-sm': { width: 320, height: 568 },
+  'mobile': { width: 375, height: 812 },
+  'mobile-lg': { width: 428, height: 926 },
+  'tablet': { width: 768, height: 1024 },
+  'laptop': { width: 1024, height: 768 },
+  'desktop': { width: 1280, height: 800 },
+  'desktop-lg': { width: 1440, height: 900 },
+  'desktop-xl': { width: 1920, height: 1080 },
+};
+
+async function testResponsive(url) {
+  const browser = await chromium.launch();
+
+  for (const [name, size] of Object.entries(breakpoints)) {
+    const page = await browser.newPage();
+    await page.setViewportSize(size);
+    await page.goto(url);
+    await page.screenshot({
+      path: `screenshots/responsive-${name}.png`,
+      fullPage: true
+    });
+    await page.close();
+  }
+
+  await browser.close();
+  console.log('Responsive screenshots captured for all breakpoints!');
+}
+
+testResponsive('http://localhost:4000');
+```
+
+### Visual Regression Testing
+
+```javascript
+// visual-regression.js
+const { chromium } = require('playwright');
+const { PNG } = require('pngjs');
+const pixelmatch = require('pixelmatch');
+const fs = require('fs');
+
+async function compareScreenshots(baselinePath, currentPath, diffPath) {
+  const baseline = PNG.sync.read(fs.readFileSync(baselinePath));
+  const current = PNG.sync.read(fs.readFileSync(currentPath));
+  const { width, height } = baseline;
+  const diff = new PNG({ width, height });
+
+  const numDiffPixels = pixelmatch(
+    baseline.data, current.data, diff.data, width, height,
+    { threshold: 0.1 }
+  );
+
+  fs.writeFileSync(diffPath, PNG.sync.write(diff));
+
+  const diffPercentage = (numDiffPixels / (width * height)) * 100;
+  console.log(`Difference: ${diffPercentage.toFixed(2)}%`);
+
+  return diffPercentage < 1; // Pass if less than 1% different
+}
+```
+
+### Integration with ExUnit
+
+```elixir
+# test/visual/visual_test.exs
+defmodule MyAppWeb.VisualTest do
+  use ExUnit.Case, async: false
+
+  @moduletag :visual
+
+  setup_all do
+    # Start the app if not running
+    {:ok, _} = Application.ensure_all_started(:my_app)
+    :ok
+  end
+
+  test "homepage renders correctly at all breakpoints" do
+    {output, 0} = System.cmd("node", ["visual-test.js"])
+    assert output =~ "screenshots captured"
+  end
+
+  test "dark mode renders correctly" do
+    {output, 0} = System.cmd("node", ["dark-mode-test.js"])
+    assert output =~ "Dark mode screenshots captured"
+  end
+
+  test "chat widget renders correctly" do
+    {output, 0} = System.cmd("node", ["chat-widget-test.js"])
+    assert File.exists?("screenshots/chat-open.png")
+    assert File.exists?("screenshots/chat-closed.png")
+  end
+end
+```
+
+Run with: `mix test --only visual`
+
+### Playwright MCP Integration
+
+When using Claude Code with Playwright MCP server (`--play` flag):
+
+```
+# Request visual verification
+"Use Playwright to screenshot the homepage at mobile, tablet, and desktop sizes"
+
+# Request dark mode check
+"Use Playwright to capture screenshots in both light and dark color schemes"
+
+# Request component check
+"Use Playwright to verify the AI chat widget opens and closes correctly"
+
+# Request responsive check
+"Use Playwright to verify the layout doesn't overflow at 375px width"
+```
+
+### Visual Testing Checklist
+
+Before completing UI work, run these Playwright checks:
+
+1. **Responsive Screenshots**
+   ```bash
+   node responsive-test.js
+   ```
+   - Review all breakpoint screenshots
+   - Check for overflow, misalignment, or cut-off content
+
+2. **Dark Mode Screenshots**
+   ```bash
+   node dark-mode-test.js
+   ```
+   - Compare light vs dark mode
+   - Verify text readability
+   - Check border visibility
+
+3. **Component Screenshots**
+   ```bash
+   node component-test.js
+   ```
+   - Verify specific component appearance
+   - Check interaction states
+
+4. **AI Chat Widget**
+   ```bash
+   node chat-widget-test.js
+   ```
+   - Verify closed state (FAB button visible)
+   - Verify open state (panel renders correctly)
+   - Check mobile responsiveness

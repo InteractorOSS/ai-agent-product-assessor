@@ -10,6 +10,7 @@ Specialized agents for delegating heavy operations to reduce main context usage.
 | `test-coverage` | Test execution & coverage analysis | 50-60% | Implementation, review |
 | `release-validator` | Comprehensive pre-release validation | 70-80% | Before releases |
 | `architecture-planner` | Architecture design & ADRs | 50-60% | Planning phase |
+| `visual-tester` | Playwright visual UI/UX testing | 80%+ | UI changes, design review |
 
 ## Usage Pattern
 
@@ -55,9 +56,10 @@ Agent returns: Structured pass/fail summary only
 | Command | Delegates To |
 |---------|-------------|
 | `/prepare-release` | `release-validator`, `security-auditor` |
-| `/run-review` | `security-auditor`, `test-coverage` |
+| `/run-review` | `security-auditor`, `test-coverage`, `visual-tester` |
 | `/start-planning` | `architecture-planner` |
 | `/start-implementation` | `test-coverage` (for TDD) |
+| UI changes | `visual-tester` (Playwright visual tests) |
 
 ### Skills → Agents
 
@@ -67,14 +69,32 @@ Agent returns: Structured pass/fail summary only
 | `test-generator` | `test-coverage` agent |
 | `validator` | `release-validator` agent |
 | `architecture-planner` | `architecture-planner` agent |
+| `ui-design` (visual testing) | `visual-tester` agent |
 
 ### Skills That Stay Inline
 
 These skills need context awareness and should NOT be delegated:
 
 - `code-review` - Needs to see code being reviewed
-- `ui-design` - Needs to apply patterns while writing code
+- `ui-design` (patterns) - Needs to apply patterns while writing code
 - `doc-generator` - Can use `documentation-manager` (built-in agent)
+
+### Visual Testing Workflow
+
+When making UI changes:
+
+```
+1. Write UI code (ui-design skill in context)
+2. Delegate to visual-tester agent for Playwright verification
+3. Review screenshot results
+4. Fix issues and re-test
+```
+
+The `visual-tester` agent uses Playwright (`--play` flag) to:
+- Capture responsive screenshots (mobile, tablet, desktop)
+- Test light/dark mode rendering
+- Verify AI chat widget functionality
+- Check for overflow and layout issues
 
 ## Token Efficiency Strategy
 
