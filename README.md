@@ -39,6 +39,10 @@ The init script will:
 - Set up git repository
 - Add template remote for future updates
 
+#### Enter your product idea
+
+Update `docs/phases/01-discovery/project-idea-intake.md` with your idea.
+
 ### Step 2: Configure Your Environment
 
 ```bash
