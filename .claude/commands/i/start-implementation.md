@@ -25,6 +25,29 @@ Verify development setup:
 - [ ] Environment variables configured (`.env`)
 - [ ] Development server runs
 - [ ] Tests can execute
+- [ ] Development port configured (4005 or higher)
+
+### Port Configuration
+
+**Development**: Use port **4005 or higher** to avoid conflicts with other services.
+**Production**: Use port **4000** (standard Phoenix default).
+
+Configure in `config/dev.exs`:
+```elixir
+config :my_app, MyAppWeb.Endpoint,
+  http: [ip: {127, 0, 0, 1}, port: 4005],
+  # ... rest of config
+```
+
+Or via environment variable in `.env`:
+```bash
+PORT=4005  # Development
+```
+
+For production (`config/runtime.exs`):
+```elixir
+port = String.to_integer(System.get_env("PORT") || "4000")
+```
 
 ### 4. Display Implementation Guidelines
 
@@ -160,11 +183,13 @@ Create `./scripts/start.sh` - a comprehensive development startup script that:
 
 ### Quick Commands
 ```bash
-mix phx.server   # Start development server
+mix phx.server   # Start development server (port 4005+)
 mix test         # Run tests
 mix format       # Format code
 mix credo        # Static analysis
 ```
+
+> **Note**: Development runs on port 4005+ (localhost:4005). Production uses port 4000.
 
 What would you like to implement first?
 ```
