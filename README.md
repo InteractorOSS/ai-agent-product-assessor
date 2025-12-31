@@ -19,6 +19,13 @@ A comprehensive AI-driven product development template for Elixir/Phoenix applic
 
 ## Quick Start
 
+#### Enter your product idea
+
+Update `docs/phases/01-discovery/project-idea-intake.md` with your idea.
+
+| You can write your ideas in a notepad and instruct Claude to fill in the `project-idea-intake.md`
+| Having screenshots or mock of page drawn up helps. Save it in a file and let Claude know the location.
+
 ### Step 1: Create Your Project
 
 ```bash
@@ -27,7 +34,7 @@ git clone https://github.com/pulzze/product-dev-template.git my-project
 cd my-project
 
 # Run the initialization script
-./scripts/setup/init-project.sh my-project backend
+./scripts/setup/init-project.sh my-project web mobile backend
 
 # Project types: web, mobile, backend, cli
 ```
@@ -39,9 +46,6 @@ The init script will:
 - Set up git repository
 - Add template remote for future updates
 
-#### Enter your product idea
-
-Update `docs/phases/01-discovery/project-idea-intake.md` with your idea.
 
 ### Step 2: Configure Your Environment
 
