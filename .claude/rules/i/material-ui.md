@@ -338,6 +338,608 @@ const SettingsPage = () => {
 };
 ```
 
+### Preferences Page
+
+The Preferences page shows user preference settings with dropdown selectors.
+
+#### Layout Structure
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│ Preferences                                                              │
+│                                                                          │
+│ ┌────────────────────────────────────────────────────────────────────┐  │
+│ │                                                                    │  │
+│ │  Appearance                                        ☀ Light    ▼   │  │
+│ │  Customize the look and feel on this device.                      │  │
+│ │                                                                    │  │
+│ │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │  │
+│ │                                                                    │  │
+│ │  Timezone                                    🌐 Los Angeles (PST) ▼│  │
+│ │  Used as the default timezone for new connected channels...       │  │
+│ │                                                                    │  │
+│ │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │  │
+│ │                                                                    │  │
+│ │  Time Format                                         24-hour   ▼  │  │
+│ │  Set the time format for the Calendar and Queue.                  │  │
+│ │                                                                    │  │
+│ │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │  │
+│ │                                                                    │  │
+│ │  Start of Week                                        Monday   ▼  │  │
+│ │  Set the first day of the week for the Calendar, date picker...   │  │
+│ │                                                                    │  │
+│ │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │  │
+│ │                                                                    │  │
+│ │  Default Posting Action                         Next Available ▼  │  │
+│ │  Set a default time to post for the composer...                   │  │
+│ │                                                                    │  │
+│ └────────────────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+#### Preference Row Component Pattern
+
+| Element | Styling |
+|---------|---------|
+| Container | Card with rounded corners, subtle border |
+| Row separator | Divider between rows (light gray) |
+| Title | `variant="body1"`, `fontWeight="medium"` |
+| Description | `variant="body2"`, `color="text.secondary"` |
+| Selector | `Select` component, right-aligned, min-width for consistency |
+
+#### Common Preference Settings
+
+| Setting | Description | Selector Options |
+|---------|-------------|------------------|
+| Appearance | Theme mode | Light, Dark, System |
+| Timezone | Default timezone | Timezone list with globe icon |
+| Time Format | Clock format | 12-hour, 24-hour |
+| Start of Week | Calendar start | Sunday, Monday |
+| Default Posting Action | Composer default | Next Available, Custom time |
+
+```jsx
+// Preferences page structure
+const PreferencesPage = () => {
+  return (
+    <Box sx={{ flex: 1, p: 4 }}>
+      <Typography variant="h5" gutterBottom>Preferences</Typography>
+
+      <Card sx={{ borderRadius: 2 }}>
+        {/* Appearance Setting */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Appearance
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Customize the look and feel on this device.
+              </Typography>
+            </Box>
+            <Select
+              value={appearance}
+              onChange={(e) => setAppearance(e.target.value)}
+              size="small"
+              sx={{ minWidth: 150 }}
+              startAdornment={
+                <InputAdornment position="start">
+                  <LightModeIcon fontSize="small" />
+                </InputAdornment>
+              }
+            >
+              <MenuItem value="light">Light</MenuItem>
+              <MenuItem value="dark">Dark</MenuItem>
+              <MenuItem value="system">System</MenuItem>
+            </Select>
+          </Box>
+        </Box>
+
+        <Divider />
+
+        {/* Timezone Setting */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Timezone
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 500 }}>
+                Used as the default timezone for new connected channels and for sending
+                email notifications. Also used for calculating your posting streaks.
+              </Typography>
+            </Box>
+            <Select
+              value={timezone}
+              onChange={(e) => setTimezone(e.target.value)}
+              size="small"
+              sx={{ minWidth: 180 }}
+              startAdornment={
+                <InputAdornment position="start">
+                  <PublicIcon fontSize="small" />
+                </InputAdornment>
+              }
+            >
+              <MenuItem value="America/Los_Angeles">Los Angeles (PST)</MenuItem>
+              <MenuItem value="America/New_York">New York (EST)</MenuItem>
+              {/* Other timezone options */}
+            </Select>
+          </Box>
+        </Box>
+
+        <Divider />
+
+        {/* Time Format Setting */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Time Format
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Set the time format for the Calendar and Queue.
+              </Typography>
+            </Box>
+            <Select
+              value={timeFormat}
+              onChange={(e) => setTimeFormat(e.target.value)}
+              size="small"
+              sx={{ minWidth: 120 }}
+            >
+              <MenuItem value="12h">12-hour</MenuItem>
+              <MenuItem value="24h">24-hour</MenuItem>
+            </Select>
+          </Box>
+        </Box>
+
+        <Divider />
+
+        {/* Start of Week Setting */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Start of Week
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 500 }}>
+                Set the first day of the week for the Calendar, date picker, and your posting streaks.
+              </Typography>
+            </Box>
+            <Select
+              value={startOfWeek}
+              onChange={(e) => setStartOfWeek(e.target.value)}
+              size="small"
+              sx={{ minWidth: 120 }}
+            >
+              <MenuItem value="sunday">Sunday</MenuItem>
+              <MenuItem value="monday">Monday</MenuItem>
+            </Select>
+          </Box>
+        </Box>
+
+        <Divider />
+
+        {/* Default Posting Action Setting */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Default Posting Action
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 500 }}>
+                Set a default time to post for the composer. We will use it whenever the
+                composer is triggered without a specific time.
+              </Typography>
+            </Box>
+            <Select
+              value={postingAction}
+              onChange={(e) => setPostingAction(e.target.value)}
+              size="small"
+              sx={{ minWidth: 150 }}
+            >
+              <MenuItem value="next">Next Available</MenuItem>
+              <MenuItem value="custom">Custom Time</MenuItem>
+            </Select>
+          </Box>
+        </Box>
+      </Card>
+    </Box>
+  );
+};
+```
+
+### Notifications Page
+
+The Notifications page shows notification settings organized by category with toggle switches.
+
+#### Layout Structure
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│ Notifications                                                            │
+│                                                                          │
+│ Account activities                                                       │
+│ ┌────────────────────────────────────────────────────────────────────┐  │
+│ │                                                                    │  │
+│ │  Daily Recap                                               [×━━━] │  │
+│ │  Receive a daily summary of post performance, comments...         │  │
+│ │                                                                    │  │
+│ │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │  │
+│ │                                                                    │  │
+│ │  Weekly Post Recap                                         [×━━━] │  │
+│ │  A weekly report on the performance of your channels...           │  │
+│ │                                                                    │  │
+│ │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │  │
+│ │                                                                    │  │
+│ │  Published Post Confirmations                              [×━━━] │  │
+│ │  Receive an email for any post that is successfully published...  │  │
+│ │                                                                    │  │
+│ │  ... more notification rows ...                                   │  │
+│ └────────────────────────────────────────────────────────────────────┘  │
+│                                                                          │
+│ From Us                                                                  │
+│ ┌────────────────────────────────────────────────────────────────────┐  │
+│ │                                                                    │  │
+│ │  Getting Started                                           [×━━━] │  │
+│ │  Useful tips and best practices for getting the most out...       │  │
+│ │                                                                    │  │
+│ │  ... more notification rows ...                                   │  │
+│ └────────────────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+#### Notification Row Component Pattern
+
+| Element | Styling |
+|---------|---------|
+| Section header | `variant="h6"`, `fontWeight="medium"`, `mb: 2` |
+| Container | Card with rounded corners, subtle border |
+| Row separator | Divider between rows (light gray) |
+| Title | `variant="body1"`, `fontWeight="medium"` |
+| Description | `variant="body2"`, `color="text.secondary"` |
+| Toggle | `Switch` component, right-aligned |
+
+#### Notification Categories
+
+**Account Activities:**
+| Notification | Description |
+|--------------|-------------|
+| Daily Recap | Daily summary of post performance, comments, and schedule |
+| Weekly Post Recap | Weekly report on channel and post performance |
+| Published Post Confirmations | Email when posts are successfully published |
+| Post Failures | Email when a post fails to publish |
+| Empty Queue Alerts | Alert when no content is scheduled |
+| Reminders | Reminders to post and build content habit |
+| Collaboration | Team member contribution notifications |
+| Channel Connection Updates | Channel connection status changes |
+| Billing and Payment Reminders | Billing-related emails |
+
+**From Us:**
+| Notification | Description |
+|--------------|-------------|
+| Getting Started | Tips and best practices |
+| User Feedback and Research | Participation in feedback and research |
+| Product Updates and News | New features and announcements |
+
+```jsx
+// Notifications page structure
+const NotificationsPage = () => {
+  return (
+    <Box sx={{ flex: 1, p: 4 }}>
+      <Typography variant="h5" gutterBottom>Notifications</Typography>
+
+      {/* Account Activities Section */}
+      <Typography variant="h6" fontWeight="medium" sx={{ mb: 2 }}>
+        Account activities
+      </Typography>
+
+      <Card sx={{ borderRadius: 2, mb: 4 }}>
+        {/* Daily Recap */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Daily Recap
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Receive a daily summary of post performance, comments, and what's scheduled next.
+              </Typography>
+            </Box>
+            <Switch
+              checked={notifications.dailyRecap}
+              onChange={(e) => setNotifications({ ...notifications, dailyRecap: e.target.checked })}
+            />
+          </Box>
+        </Box>
+
+        <Divider />
+
+        {/* Weekly Post Recap */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Weekly Post Recap
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                A weekly report on the performance of your channels and posts.
+              </Typography>
+            </Box>
+            <Switch
+              checked={notifications.weeklyRecap}
+              onChange={(e) => setNotifications({ ...notifications, weeklyRecap: e.target.checked })}
+            />
+          </Box>
+        </Box>
+
+        <Divider />
+
+        {/* Published Post Confirmations */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Published Post Confirmations
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Receive an email for any post that is successfully published to one of your channels.
+              </Typography>
+            </Box>
+            <Switch
+              checked={notifications.postConfirmations}
+              onChange={(e) => setNotifications({ ...notifications, postConfirmations: e.target.checked })}
+            />
+          </Box>
+        </Box>
+
+        <Divider />
+
+        {/* Post Failures */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Post Failures
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                An email if a post in your queue fails to be published.
+              </Typography>
+            </Box>
+            <Switch
+              checked={notifications.postFailures}
+              onChange={(e) => setNotifications({ ...notifications, postFailures: e.target.checked })}
+            />
+          </Box>
+        </Box>
+
+        <Divider />
+
+        {/* Empty Queue Alerts */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Empty Queue Alerts
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Receive an alert when you have no more content scheduled for one of your channels.
+              </Typography>
+            </Box>
+            <Switch
+              checked={notifications.emptyQueue}
+              onChange={(e) => setNotifications({ ...notifications, emptyQueue: e.target.checked })}
+            />
+          </Box>
+        </Box>
+
+        <Divider />
+
+        {/* Reminders */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Reminders
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Receive reminders to post and build a consistent content creation habit.
+              </Typography>
+            </Box>
+            <Switch
+              checked={notifications.reminders}
+              onChange={(e) => setNotifications({ ...notifications, reminders: e.target.checked })}
+            />
+          </Box>
+        </Box>
+
+        <Divider />
+
+        {/* Collaboration */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Collaboration
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Emails about contributions from team members. For example, if a post is awaiting approval.
+              </Typography>
+            </Box>
+            <Switch
+              checked={notifications.collaboration}
+              onChange={(e) => setNotifications({ ...notifications, collaboration: e.target.checked })}
+            />
+          </Box>
+        </Box>
+
+        <Divider />
+
+        {/* Channel Connection Updates */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Channel Connection Updates
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Emails about your connected channels. For example, when a channel is disconnected.
+              </Typography>
+            </Box>
+            <Switch
+              checked={notifications.channelUpdates}
+              onChange={(e) => setNotifications({ ...notifications, channelUpdates: e.target.checked })}
+            />
+          </Box>
+        </Box>
+
+        <Divider />
+
+        {/* Billing and Payment Reminders */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Billing and Payment Reminders
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Emails relating to billing and payment reminders.
+              </Typography>
+            </Box>
+            <Switch
+              checked={notifications.billing}
+              onChange={(e) => setNotifications({ ...notifications, billing: e.target.checked })}
+            />
+          </Box>
+        </Box>
+      </Card>
+
+      {/* From Us Section */}
+      <Typography variant="h6" fontWeight="medium" sx={{ mb: 2 }}>
+        From Us
+      </Typography>
+
+      <Card sx={{ borderRadius: 2 }}>
+        {/* Getting Started */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Getting Started
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Useful tips and best practices for getting the most out of the platform.
+              </Typography>
+            </Box>
+            <Switch
+              checked={notifications.gettingStarted}
+              onChange={(e) => setNotifications({ ...notifications, gettingStarted: e.target.checked })}
+            />
+          </Box>
+        </Box>
+
+        <Divider />
+
+        {/* User Feedback and Research */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                User Feedback and Research
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Emails to participate in user feedback and research to help make the platform better.
+              </Typography>
+            </Box>
+            <Switch
+              checked={notifications.feedback}
+              onChange={(e) => setNotifications({ ...notifications, feedback: e.target.checked })}
+            />
+          </Box>
+        </Box>
+
+        <Divider />
+
+        {/* Product Updates and News */}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                Product Updates and News
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Occasional emails to help you get the most out of the platform, including new features and product announcements.
+              </Typography>
+            </Box>
+            <Switch
+              checked={notifications.productUpdates}
+              onChange={(e) => setNotifications({ ...notifications, productUpdates: e.target.checked })}
+            />
+          </Box>
+        </Box>
+      </Card>
+    </Box>
+  );
+};
+```
+
+### Reusable Settings Row Components
+
+For consistency across all settings pages (Profile, Preferences, Notifications), use these reusable patterns:
+
+#### SettingsRowWithInput (Profile page pattern)
+```jsx
+const SettingsRowWithInput = ({ label, value, onChange, buttonText, buttonAction }) => (
+  <Box sx={{ mb: 3 }}>
+    <Typography variant="body2" color="text.secondary" gutterBottom>
+      {label}
+    </Typography>
+    <Box sx={{ display: 'flex', gap: 2 }}>
+      <TextField value={value} onChange={onChange} fullWidth sx={{ maxWidth: 400 }} />
+      <Button variant="outlined" onClick={buttonAction}>{buttonText}</Button>
+    </Box>
+  </Box>
+);
+```
+
+#### SettingsRowWithSelect (Preferences page pattern)
+```jsx
+const SettingsRowWithSelect = ({ title, description, value, onChange, options, icon }) => (
+  <Box sx={{ p: 3 }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <Box>
+        <Typography variant="body1" fontWeight="medium">{title}</Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 500 }}>
+          {description}
+        </Typography>
+      </Box>
+      <Select
+        value={value}
+        onChange={onChange}
+        size="small"
+        sx={{ minWidth: 150 }}
+        startAdornment={icon && <InputAdornment position="start">{icon}</InputAdornment>}
+      >
+        {options.map((opt) => (
+          <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
+        ))}
+      </Select>
+    </Box>
+  </Box>
+);
+```
+
+#### SettingsRowWithToggle (Notifications page pattern)
+```jsx
+const SettingsRowWithToggle = ({ title, description, checked, onChange }) => (
+  <Box sx={{ p: 3 }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <Box>
+        <Typography variant="body1" fontWeight="medium">{title}</Typography>
+        <Typography variant="body2" color="text.secondary">{description}</Typography>
+      </Box>
+      <Switch checked={checked} onChange={onChange} />
+    </Box>
+  </Box>
+);
+```
+
 ### Left Navigation Bar (Drawer/Sidebar)
 
 The left navigation has four distinct zones:
@@ -877,12 +1479,53 @@ When implementing navigation with Material UI:
 - [ ] **ORGANIZATION section** includes: General, Channels (with count badge), Billing
 - [ ] **FEATURES section** includes: Tags, Post Goal
 - [ ] **OTHER section** includes: Apps & Extras, Beta Features, Refer a Friend
-- [ ] Active item has green left border bar (`borderLeft: 4px solid #4CD964`)
+- [ ] Active item has filled background highlight (not just border)
 - [ ] Main content shows form fields with labels above
 - [ ] Info banner (blue Alert) at top of content area
 - [ ] Form rows: input field + action button (Save Changes)
 - [ ] Two Factor Authentication toggle with description
 - [ ] Delete Account section with red button at bottom
+
+### Preferences Page (Settings Sub-page)
+- [ ] Page title: "Preferences"
+- [ ] Settings grouped in Card with rounded corners (`borderRadius: 2`)
+- [ ] Each row contains: Title (`fontWeight="medium"`) + Description + Selector
+- [ ] Rows separated by Dividers (light gray)
+- [ ] **Appearance** setting with theme selector (Light/Dark/System) and sun icon
+- [ ] **Timezone** setting with timezone dropdown and globe icon
+- [ ] **Time Format** setting (12-hour/24-hour)
+- [ ] **Start of Week** setting (Sunday/Monday)
+- [ ] **Default Posting Action** setting (Next Available/Custom)
+- [ ] Selectors are right-aligned with consistent min-width
+- [ ] Descriptions use `color="text.secondary"` and `maxWidth: 500`
+
+### Notifications Page (Settings Sub-page)
+- [ ] Page title: "Notifications"
+- [ ] **Account activities** section header (`variant="h6"`, `fontWeight="medium"`)
+- [ ] Account activities Card with notification rows
+- [ ] **From Us** section header below Account activities
+- [ ] From Us Card with notification rows
+- [ ] Each row contains: Title (`fontWeight="medium"`) + Description + Toggle
+- [ ] Rows separated by Dividers (light gray)
+- [ ] Toggles (Switch) are right-aligned
+- [ ] Cards have rounded corners (`borderRadius: 2`)
+- [ ] Section spacing: `mb: 4` between sections, `mb: 2` below headers
+
+**Account Activities Notifications:**
+- [ ] Daily Recap
+- [ ] Weekly Post Recap
+- [ ] Published Post Confirmations
+- [ ] Post Failures
+- [ ] Empty Queue Alerts
+- [ ] Reminders
+- [ ] Collaboration
+- [ ] Channel Connection Updates
+- [ ] Billing and Payment Reminders
+
+**From Us Notifications:**
+- [ ] Getting Started
+- [ ] User Feedback and Research
+- [ ] Product Updates and News
 
 ### Left Navigation (Drawer) - AutoFlow Style
 
@@ -985,11 +1628,81 @@ Before completing any MUI navigation implementation, verify:
 1. **Layout**: Split layout with 240px sidebar + main content area
 2. **Header**: "Settings" title with close (✕) button
 3. **Sidebar Sections**: ACCOUNT, ORGANIZATION, FEATURES, OTHER
-4. **Active Item**: Green left border bar (`4px solid #4CD964`)
+4. **Active Item**: Filled background highlight on selected item
 5. **Form Pattern**: Label above input, action button beside input
 6. **Info Banner**: Blue Alert component at top of content
 7. **Toggles**: Right-aligned with description text
 8. **Danger Zone**: Delete Account section with red button at bottom
+
+### Preferences Page Visual Check
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│ Preferences                                                              │
+│                                                                          │
+│ ┌────────────────────────────────────────────────────────────────────┐  │
+│ │                                                                    │  │
+│ │  Appearance                                        ☀ Light    ▼   │  │
+│ │  Customize the look and feel on this device.                      │  │
+│ │                                                                    │  │
+│ │──────────────────────────────────────────────────────────────────│  │
+│ │                                                                    │  │
+│ │  Timezone                                    🌐 Los Angeles (PST) ▼│  │
+│ │  Used as the default timezone for new connected channels...       │  │
+│ │                                                                    │  │
+│ │──────────────────────────────────────────────────────────────────│  │
+│ │                                                                    │  │
+│ │  Time Format                                         24-hour   ▼  │  │
+│ │  Set the time format for the Calendar and Queue.                  │  │
+│ │                                                                    │  │
+│ │  ... more settings ...                                            │  │
+│ └────────────────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+1. **Card Container**: Settings in a Card with rounded corners
+2. **Row Pattern**: Title + Description (left) | Selector (right)
+3. **Title**: `fontWeight="medium"`
+4. **Description**: `color="text.secondary"`, limited width
+5. **Dividers**: Light gray dividers between each setting row
+6. **Selectors**: Right-aligned, consistent width, some with icons
+
+### Notifications Page Visual Check
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│ Notifications                                                            │
+│                                                                          │
+│ Account activities                                                       │
+│ ┌────────────────────────────────────────────────────────────────────┐  │
+│ │                                                                    │  │
+│ │  Daily Recap                                               [×━━━] │  │
+│ │  Receive a daily summary of post performance...                   │  │
+│ │                                                                    │  │
+│ │──────────────────────────────────────────────────────────────────│  │
+│ │                                                                    │  │
+│ │  Weekly Post Recap                                         [×━━━] │  │
+│ │  A weekly report on the performance of your channels...           │  │
+│ │                                                                    │  │
+│ │  ... more notifications ...                                       │  │
+│ └────────────────────────────────────────────────────────────────────┘  │
+│                                                                          │
+│ From Us                                                                  │
+│ ┌────────────────────────────────────────────────────────────────────┐  │
+│ │                                                                    │  │
+│ │  Getting Started                                           [×━━━] │  │
+│ │  Useful tips and best practices...                                │  │
+│ │                                                                    │  │
+│ │  ... more notifications ...                                       │  │
+│ └────────────────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+1. **Page Title**: "Notifications" at top
+2. **Section Headers**: `variant="h6"`, `fontWeight="medium"` (e.g., "Account activities", "From Us")
+3. **Card Containers**: Each section in a Card with rounded corners
+4. **Row Pattern**: Title + Description (left) | Toggle Switch (right)
+5. **Dividers**: Light gray dividers between each notification row
+6. **Toggles**: MUI Switch components, right-aligned
+7. **Section Spacing**: `mb: 4` between sections
 
 ### Drawer Visual Check
 ```
