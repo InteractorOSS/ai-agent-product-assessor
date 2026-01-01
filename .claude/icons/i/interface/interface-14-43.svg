@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.00 -2.00 713.33 712.33" width="64" height="64">
+  <ellipse cx="354.67" cy="354.17" rx="354.67" ry="354.17" fill="#338AF3"/>
+  <path d="M 0.00 307.83 L 261.83 307.83 L 131.00 0.00 L 0.00 307.83 Z" fill="#F3F3F3" transform="translate(223.66, 169.50)"/>
+  <path d="M 0.00 194.33 L 85.50 0.00 L 171.00 194.33 L 0.00 194.33 Z" fill="#333333" transform="translate(269.16, 252.17)"/>
+  <path d="M 0.00 123.17 L 261.83 123.17 L 131.00 0.00 L 0.00 123.17 Z" fill="#FFDA44" transform="translate(223.66, 354.17)"/>
+</svg>

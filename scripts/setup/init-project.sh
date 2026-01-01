@@ -227,6 +227,7 @@ echo "  docs/templates/       Document templates"
 echo "  docs/checklists/      Project checklists"
 echo "  .claude/skills/       AI-powered skills"
 echo "  .claude/rules/        Development rules"
+echo "  .claude/icons/i/      2600+ SVG icons (browse: gallery.html)"
 echo ""
 
 echo -e "${BLUE}Template Improvement:${NC}"

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.00 -2.00 713.33 476.67" width="64" height="64">
+  <rect x="0.00" y="0.00" width="709.33" height="472.67" fill="#F0F0F0"/>
+  <rect x="0.00" y="59.17" width="709.33" height="59.17" fill="#D80027"/>
+  <rect x="0.00" y="118.34" width="709.33" height="58.83" fill="#0052B4"/>
+  <rect x="0.00" y="236.34" width="709.33" height="59.17" fill="#D80027"/>
+  <rect x="0.00" y="295.50" width="709.33" height="58.83" fill="#0052B4"/>
+  <rect x="0.00" y="413.50" width="709.33" height="59.17" fill="#D80027"/>
+  <rect x="0.00" y="0.00" width="354.67" height="236.33" fill="#F0F0F0"/>
+  <path d="M 199.50 0.00 L 155.17 0.00 L 155.17 96.17 L 0.00 96.17 L 0.00 140.50 L 155.17 140.50 L 155.17 236.33 L 199.50 236.33 L 199.50 140.50 L 354.67 140.50 L 354.67 96.17 L 199.50 96.17 L 199.50 0.00 Z" fill="#D80027" transform="translate(0.00, 0.00)"/>
+  <path d="M 0.00 0.00 L 81.67 45.67 L 81.67 0.00 L 0.00 0.00 Z" fill="#0052B4" transform="translate(273.00, 159.17)"/>
+  <path d="M 0.00 0.00 L 138.83 77.17 L 138.83 55.33 L 39.50 0.00 L 0.00 0.00 Z" fill="#0052B4" transform="translate(215.83, 159.17)"/>
+  <path d="M 101.83 56.33 L 0.00 0.00 L 0.00 56.33 L 101.83 56.33 Z" fill="#0052B4" transform="translate(215.83, 180.00)"/>
+  <path d="M 0.00 0.00 L 138.83 77.17 L 138.83 55.33 L 39.50 0.00 L 0.00 0.00 Z" fill="#F0F0F0" transform="translate(215.83, 159.17)"/>
+  <path d="M 0.00 0.00 L 138.83 77.17 L 138.83 55.33 L 39.50 0.00 L 0.00 0.00 Z" fill="#D80027" transform="translate(215.83, 159.17)"/>
+  <path d="M 62.67 0.00 L 0.00 35.00 L 0.00 0.00 L 62.67 0.00 Z" fill="#0052B4" transform="translate(0.00, 159.17)"/>
+  <path d="M 121.17 0.00 L 121.17 67.17 L 0.00 67.17 L 121.17 0.00 Z" fill="#0052B4" transform="translate(17.66, 169.17)"/>
+  <path d="M 99.33 0.00 L 0.00 55.33 L 0.00 77.17 L 0.00 77.17 L 138.83 0.00 L 99.33 0.00 Z" fill="#D80027" transform="translate(0.00, 159.17)"/>
+  <path d="M 81.67 45.33 L 0.00 0.00 L 0.00 45.33 L 81.67 45.33 Z" fill="#0052B4" transform="translate(0.00, 31.84)"/>
+  <path d="M 138.83 77.17 L 0.00 0.00 L 0.00 21.83 L 99.33 77.17 L 138.83 77.17 Z" fill="#0052B4" transform="translate(0.00, 0.00)"/>
+  <path d="M 0.00 0.00 L 101.83 56.83 L 101.83 0.00 L 0.00 0.00 Z" fill="#0052B4" transform="translate(37.00, 0.00)"/>
+  <path d="M 138.83 77.17 L 0.00 0.00 L 0.00 21.83 L 99.33 77.17 L 138.83 77.17 Z" fill="#F0F0F0" transform="translate(0.00, 0.00)"/>
+  <path d="M 138.83 77.17 L 0.00 0.00 L 0.00 21.83 L 99.33 77.17 L 138.83 77.17 Z" fill="#D80027" transform="translate(0.00, 0.00)"/>
+  <path d="M 0.00 34.67 L 62.67 0.00 L 62.67 34.67 L 0.00 34.67 Z" fill="#0052B4" transform="translate(292.00, 42.50)"/>
+  <path d="M 0.00 67.50 L 0.00 0.00 L 121.17 0.00 L 0.00 67.50 Z" fill="#0052B4" transform="translate(215.83, 0.00)"/>
+  <path d="M 39.50 77.17 L 138.83 21.83 L 138.83 0.00 L 138.83 0.00 L 0.00 77.17 L 39.50 77.17 Z" fill="#D80027" transform="translate(215.83, 0.00)"/>
+</svg>

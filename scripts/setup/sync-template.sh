@@ -9,6 +9,7 @@
 #   skills    - Sync .claude/skills/
 #   commands  - Sync .claude/commands/
 #   rules     - Sync .claude/rules/
+#   icons     - Sync .claude/icons/i/ (2600+ SVG icons)
 #   docs      - Sync docs/phases/ and docs/checklists/
 #   validator - Sync validator skill and validation checklist
 #
@@ -115,6 +116,9 @@ case $COMPONENT in
     rules)
         sync_component "rules" ".claude/rules/"
         ;;
+    icons)
+        sync_component "icons" ".claude/icons/i/"
+        ;;
     docs)
         sync_component "phase documentation" "docs/phases/"
         sync_component "checklists" "docs/checklists/"
@@ -129,12 +133,13 @@ case $COMPONENT in
         echo "  1) Skills (.claude/skills/)"
         echo "  2) Commands (.claude/commands/)"
         echo "  3) Rules (.claude/rules/)"
-        echo "  4) Documentation (docs/phases/, docs/checklists/)"
-        echo "  5) Validator only"
-        echo "  6) All (use with caution)"
-        echo "  7) Cancel"
+        echo "  4) Icons (.claude/icons/i/) - 2600+ SVG icons"
+        echo "  5) Documentation (docs/phases/, docs/checklists/)"
+        echo "  6) Validator only"
+        echo "  7) All (use with caution)"
+        echo "  8) Cancel"
         echo ""
-        read -p "Select option (1-7): " -n 1 -r
+        read -p "Select option (1-8): " -n 1 -r
         echo ""
         echo ""
 
@@ -142,15 +147,16 @@ case $COMPONENT in
             1) sync_component "skills" ".claude/skills/" ;;
             2) sync_component "commands" ".claude/commands/" ;;
             3) sync_component "rules" ".claude/rules/" ;;
-            4)
+            4) sync_component "icons" ".claude/icons/i/" ;;
+            5)
                 sync_component "phase documentation" "docs/phases/"
                 sync_component "checklists" "docs/checklists/"
                 ;;
-            5)
+            6)
                 sync_component "validator skill" ".claude/skills/validator/"
                 sync_component "validation checklist" "docs/checklists/validation-checklist.md"
                 ;;
-            6)
+            7)
                 print_warning "Syncing ALL template files. This may overwrite your customizations."
                 read -p "Are you sure? (y/n) " -n 1 -r
                 echo ""
@@ -161,7 +167,7 @@ case $COMPONENT in
                     print_success "Synced all template files"
                 fi
                 ;;
-            7)
+            8)
                 print_info "Cancelled"
                 exit 0
                 ;;
@@ -174,7 +180,7 @@ case $COMPONENT in
     *)
         print_error "Unknown component: $COMPONENT"
         echo ""
-        echo "Valid components: all, skills, commands, rules, docs, validator"
+        echo "Valid components: all, skills, commands, rules, icons, docs, validator"
         exit 1
         ;;
 esac
