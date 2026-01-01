@@ -1,4 +1,4 @@
-# AutoFlow Design System - Navigation Components
+# Interactor Design System - Navigation Components
 
 Navigation elements including sidebar, header, and breadcrumbs.
 
@@ -13,7 +13,7 @@ Navigation elements including sidebar, header, and breadcrumbs.
   <div class="px-4 py-5 border-b border-[#E5E5EA] dark:border-[#3A3A3C]">
     <a href="/" class="flex items-center gap-2">
       <svg class="w-8 h-8 text-[#4CD964]"><!-- Logo icon --></svg>
-      <span class="text-xl font-bold text-[#4CD964]">AutoFlow</span>
+      <span class="text-xl font-bold text-[#4CD964]">Interactor</span>
     </a>
   </div>
 
@@ -116,13 +116,13 @@ Navigation elements including sidebar, header, and breadcrumbs.
     </button>
     <a href="/" class="flex items-center gap-2">
       <svg class="w-8 h-8 text-[#4CD964]"><!-- Logo SVG --></svg>
-      <span class="text-xl font-bold text-[#4CD964]">AutoFlow</span>
+      <span class="text-xl font-bold text-[#4CD964]">Interactor</span>
     </a>
   </div>
 
   <!-- Center: Project selector -->
   <button class="flex items-center gap-2 px-4 py-2 text-[#1C1C1E] dark:text-white hover:bg-[#F5F5F7] dark:hover:bg-[#2C2C2E] rounded-lg transition-colors">
-    <span class="font-medium">Autoflow_project01</span>
+    <span class="font-medium">Interactor_project01</span>
     <svg class="w-4 h-4 text-[#8E8E93]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
     </svg>

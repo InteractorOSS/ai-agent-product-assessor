@@ -1,4 +1,4 @@
-# AutoFlow Design System - Authentication Pages
+# Interactor Design System - Authentication Pages
 
 Sign in, sign up, and password reset page layouts.
 
@@ -13,7 +13,7 @@ Sign in, sign up, and password reset page layouts.
     <div class="mb-12">
       <a href="/" class="flex items-center gap-2">
         <svg class="w-8 h-8 text-[#4CD964]"><!-- Logo --></svg>
-        <span class="text-xl font-bold text-[#4CD964]">AutoFlow</span>
+        <span class="text-xl font-bold text-[#4CD964]">Interactor</span>
       </a>
     </div>
 
@@ -117,7 +117,7 @@ Sign in, sign up, and password reset page layouts.
     <div class="mb-12">
       <a href="/" class="flex items-center gap-2">
         <svg class="w-8 h-8 text-[#4CD964]"><!-- Logo --></svg>
-        <span class="text-xl font-bold text-[#4CD964]">AutoFlow</span>
+        <span class="text-xl font-bold text-[#4CD964]">Interactor</span>
       </a>
     </div>
 

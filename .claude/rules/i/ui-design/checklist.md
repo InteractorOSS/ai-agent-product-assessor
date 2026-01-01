@@ -1,4 +1,4 @@
-# AutoFlow Design System - Compliance Checklist
+# Interactor Design System - Compliance Checklist
 
 Use this checklist before completing any UI work to ensure design system compliance.
 
@@ -6,7 +6,7 @@ Use this checklist before completing any UI work to ensure design system complia
 
 ## Design System Compliance
 
-- [ ] Uses AutoFlow green (`#4CD964`) as primary accent color
+- [ ] Uses Interactor green (`#4CD964`) as primary accent color
 - [ ] Buttons are pill-shaped (`rounded-full`)
 - [ ] Inputs are pill-shaped (`rounded-full`)
 - [ ] Dark mode uses correct background colors (`#1C1C1E`, `#2C2C2E`)

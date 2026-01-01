@@ -1,6 +1,6 @@
-# AutoFlow Design System - Button Styles
+# Interactor Design System - Button Styles
 
-All buttons in AutoFlow use pill-shaped (fully rounded) design with green accent colors.
+All buttons in Interactor use pill-shaped (fully rounded) design with green accent colors.
 
 ---
 

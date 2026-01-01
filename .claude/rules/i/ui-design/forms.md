@@ -1,6 +1,6 @@
-# AutoFlow Design System - Form Elements
+# Interactor Design System - Form Elements
 
-Form inputs in AutoFlow use pill-shaped design with floating labels and green focus states.
+Form inputs in Interactor use pill-shaped design with floating labels and green focus states.
 
 ---
 

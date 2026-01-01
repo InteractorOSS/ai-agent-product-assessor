@@ -1,4 +1,4 @@
-# AutoFlow Design System - Icons & Spacing
+# Interactor Design System - Icons & Spacing
 
 Icon styles and spacing system specifications.
 

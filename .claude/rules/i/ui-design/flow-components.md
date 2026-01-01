@@ -1,4 +1,4 @@
-# AutoFlow Design System - Flow Diagram Components
+# Interactor Design System - Flow Diagram Components
 
 Flow diagram components for visual builders including nodes, connectors, and endpoints.
 

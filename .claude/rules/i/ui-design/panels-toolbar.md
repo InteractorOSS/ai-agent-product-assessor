@@ -1,4 +1,4 @@
-# AutoFlow Design System - Panels & Toolbar
+# Interactor Design System - Panels & Toolbar
 
 Settings panels, properties forms, and toolbar components.
 

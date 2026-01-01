@@ -1,6 +1,6 @@
-# AutoFlow Design System - Color System
+# Interactor Design System - Color System
 
-This file defines the complete color palette for the AutoFlow design system.
+This file defines the complete color palette for the Interactor design system.
 
 ---
 
@@ -12,8 +12,8 @@ This file defines the complete color palette for the AutoFlow design system.
 --color-primary-light: #E8F8EB;     /* Light green for backgrounds, badges */
 
 /* Exact hex values from design */
---autoflow-green: #4CD964;          /* Primary action green */
---autoflow-green-dark: #3DBF55;     /* Hover state */
+--Interactor-green: #4CD964;          /* Primary action green */
+--Interactor-green-dark: #3DBF55;     /* Hover state */
 ```
 
 ## Secondary Colors
@@ -58,7 +58,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'autoflow': {
+        'Interactor': {
           'green': '#4CD964',
           'green-hover': '#3DBF55',
           'green-light': '#E8F8EB',

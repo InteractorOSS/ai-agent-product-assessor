@@ -1,4 +1,4 @@
-# AutoFlow Design System - Modals & Dropdowns
+# Interactor Design System - Modals & Dropdowns
 
 Modal dialogs, dropdown menus, and overlay components.
 

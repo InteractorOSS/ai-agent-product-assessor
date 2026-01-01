@@ -1,14 +1,14 @@
 ---
 name: ui-design
-description: Enforces consistent UI/UX patterns based on the AutoFlow design system. Use this skill when creating or modifying UI components to ensure visual consistency across all applications.
+description: Enforces consistent UI/UX patterns based on the Interactor design system. Use this skill when creating or modifying UI components to ensure visual consistency across all applications.
 allowed-tools: [Read, Grep, Glob, Edit, MultiEdit, Write]
 ---
 
-# UI Design Skill - AutoFlow Design System
+# UI Design Skill - Interactor Design System
 
-**Reference Design**: `/Users/peterjung/Downloads/20220502_autoflow_dashboard_new/`
+**Reference Design**: `/Users/peterjung/Downloads/20220502_Interactor_dashboard_new/`
 
-This design system ensures all applications built with product-dev-template look and feel exactly like the AutoFlow dashboard. Every component, spacing, and interaction must match these specifications.
+This design system ensures all applications built with product-dev-template look and feel exactly like the Interactor dashboard. Every component, spacing, and interaction must match these specifications.
 
 ---
 
@@ -58,7 +58,7 @@ The complete design system is split into modular rule files for easy reference:
 - **@flow-components.md** - Flow diagram nodes, connection lines, endpoint markers, conditional nodes
 
 ### Framework Integration
-- **@material-ui.md** - Material UI (MUI) specific implementation rules, navigation layouts, settings pages (Profile, Preferences, Notifications)
+- **@material-ui/index.md** - Material UI (MUI) specific implementation rules, navigation layouts, settings pages (Profile, Preferences, Notifications)
 
 ### Quality Assurance
 - **@checklist.md** - Complete design system compliance checklist
@@ -134,7 +134,7 @@ gap-6  → 24px  (major sections)
 
 Before finalizing any UI changes, verify against **@checklist.md**:
 
-1. ✅ Uses AutoFlow green (`#4CD964`) as primary accent
+1. ✅ Uses Interactor green (`#4CD964`) as primary accent
 2. ✅ Buttons and inputs are pill-shaped (`rounded-full`)
 3. ✅ Dark mode colors are correct
 4. ✅ Icons use outlined/stroke style
@@ -147,7 +147,7 @@ Before finalizing any UI changes, verify against **@checklist.md**:
 ## Reference Images
 
 All design specifications are derived from:
-`/Users/peterjung/Downloads/20220502_autoflow_dashboard_new/`
+`/Users/peterjung/Downloads/20220502_Interactor_dashboard_new/`
 
 Key reference files:
 - `buttons.png` - Button styles and states
@@ -158,6 +158,6 @@ Key reference files:
 - `flows.png` / `flows-1.png` - Flow connector lines
 - `End Points.png` / `End Points-1.png` - Endpoint markers
 - `dashboard01.png` - `dashboard05.png` - Dashboard layouts
-- `autoflow_board.png` - `autoflow_board-37.png` - Application screens
-- `autoflow_Sign In_1.png` - Authentication pages
+- `Interactor_board.png` - `Interactor_board-37.png` - Application screens
+- `Interactor_Sign In_1.png` - Authentication pages
 - `my_profile01.png` - Modal dialogs
