@@ -13,6 +13,74 @@ Apply these rules when:
 
 ---
 
+## Interactor Brand Assets
+
+**IMPORTANT**: Always use the centralized brand assets located in `.claude/assets/brand/`:
+
+```
+.claude/assets/brand/
+├── brand-config.json          # Configuration and asset mappings
+├── icons/                     # Interactor icons (PNG)
+│   ├── icon_simple_green_v1.png   # Primary icon (recommended for nav)
+│   ├── icon_simple_grey_v1.png
+│   ├── icon_simple_white_v1.png
+│   └── interactor_symbol_*.png    # Various sizes (5, 25, 50, 100)
+├── logos/                     # Interactor logos (PNG, SVG)
+│   ├── logo_green.png
+│   ├── logo_blue.png
+│   ├── logo_white_with_icon.png
+│   ├── 20221116_interactor_BI.svg
+│   └── 20221116_interactor_BI_text_*.svg
+├── lottie/                    # Animated logos (JSON, .lottie)
+│   ├── InteractorLogo_Light.json  # For light backgrounds
+│   ├── InteractorLogo_Dark.json   # For dark backgrounds
+│   └── Interactor_FullLogo_Animation.json  # Full animation
+├── favicons/                  # Website favicons (full set)
+│   ├── favicon.ico
+│   ├── favicon-*.png
+│   ├── apple-icon-*.png
+│   ├── android-icon-*.png
+│   └── manifest.json
+└── powered-by/                # "Powered by Interactor" badges
+    ├── powered_by_green.png
+    ├── powered_by_blue.png
+    └── pulzze_powered_by_white.png
+```
+
+**Note**: When building an application, copy the required assets from `.claude/assets/brand/` to your application's public/assets directory.
+
+### Usage Examples
+
+**Step 1: Copy assets to your application's public directory during setup**
+```bash
+# Copy brand assets to your app's public folder
+cp -r .claude/assets/brand public/brand
+# Or to src/assets for bundler imports
+cp -r .claude/assets/brand src/assets/brand
+```
+
+**Step 2: Use in your components**
+```jsx
+// Import brand assets (if copied to src/assets/brand)
+import brandConfig from '@/assets/brand/brand-config.json';
+
+// Static icon (if copied to public/brand)
+<img src="/brand/icons/icon_simple_green_v1.png" alt="Interactor" />
+
+// Lottie animation (using lottie-react)
+import Lottie from 'lottie-react';
+import logoAnimation from '@/assets/brand/lottie/InteractorLogo_Light.json';
+
+<Lottie animationData={logoAnimation} style={{ width: 120, height: 40 }} />
+
+// Dynamic theme-aware logo
+const logoFile = theme.palette.mode === 'dark'
+  ? 'InteractorLogo_Dark.json'
+  : 'InteractorLogo_Light.json';
+```
+
+---
+
 ## Navigation Layout Requirements
 
 ### Global Navigation Bar (AppBar/Header)
@@ -21,9 +89,13 @@ The navigation bar has three distinct sections:
 
 | Section | Elements | Position |
 |---------|----------|----------|
-| **Left** | Sidebar toggle, Tools icon, Interactor logo | Left-aligned |
+| **Left** | Sidebar toggle, Tools icon, Interactor icon, Interactor logo (lottie animated) | Left-aligned |
 | **Center** | AI Assistant input field | Center (flex-grow) |
 | **Right** | Notification, Help, Profile icons | Right-aligned |
+
+**Brand Asset Sources for Navigation** (copy from `.claude/assets/brand/` to your app first):
+- **Interactor Icon**: `icons/icon_simple_green_v1.png`
+- **Interactor Logo (Lottie)**: `lottie/InteractorLogo_Light.json` (light mode) or `InteractorLogo_Dark.json` (dark mode)
 
 #### Left Section Elements (in order)
 
@@ -55,6 +127,26 @@ The navigation bar has three distinct sections:
 
 ```jsx
 // Correct - Global Navigation Bar structure
+import Lottie from 'lottie-react';
+import logoLightAnimation from '@/assets/brand/lottie/InteractorLogo_Light.json';
+import logoDarkAnimation from '@/assets/brand/lottie/InteractorLogo_Dark.json';
+import interactorIcon from '@/assets/brand/icons/icon_simple_green_v1.png';
+
+// InteractorLogo component with Lottie animation
+const InteractorLogo = ({ mode = 'light' }) => {
+  const animationData = mode === 'dark' ? logoDarkAnimation : logoLightAnimation;
+  return (
+    <Box
+      component={Link}
+      to="/"
+      sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
+    >
+      <img src={interactorIcon} alt="" width={24} height={24} style={{ marginRight: 8 }} />
+      <Lottie animationData={animationData} style={{ width: 100, height: 32 }} loop={false} />
+    </Box>
+  );
+};
+
 <AppBar position="fixed">
   <Toolbar>
     {/* LEFT SECTION */}
@@ -65,7 +157,7 @@ The navigation bar has three distinct sections:
       <IconButton>
         <AppsIcon />  {/* Tools selection */}
       </IconButton>
-      <InteractorLogo />  {/* Logo with link to home */}
+      <InteractorLogo mode={theme.palette.mode} />  {/* Logo with link to home */}
     </Box>
 
     {/* CENTER SECTION - AI Assistant Input */}
@@ -1465,7 +1557,11 @@ Fixed at the bottom of the drawer. Shows emoji faces for quick feedback.
 When implementing navigation with Material UI:
 
 ### Global Navigation Bar (AppBar)
-- [ ] **Left section** contains (in order): Sidebar toggle, Tools icon, Interactor logo
+- [ ] **Brand assets** copied from `.claude/assets/brand/` to app's public/assets directory
+- [ ] **Interactor icon** uses `icon_simple_green_v1.png` from brand icons
+- [ ] **Interactor logo** uses Lottie animation (`InteractorLogo_*.json`)
+- [ ] **Theme-aware logo**: Light mode uses `InteractorLogo_Light.json`, dark mode uses `InteractorLogo_Dark.json`
+- [ ] **Left section** contains (in order): Sidebar toggle, Tools icon, Interactor icon + logo (Lottie)
 - [ ] **Center section** contains AI Assistant input field with `flexGrow: 1`
 - [ ] **Right section** contains (in order): Notifications, Help, Profile icons
 - [ ] Profile icon navigates to full page (`/settings`), NOT a dropdown
@@ -1583,18 +1679,20 @@ Before completing any MUI navigation implementation, verify:
 
 ### AppBar Visual Check
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│ [≡] [⊞] [Logo]     [   Ask AI Assistant...   ]     [🔔] [?] [👤]  │
-│  ↑    ↑    ↑                   ↑                     ↑   ↑   ↑     │
-│  │    │    │                   │                     │   │   │     │
-│ Toggle Tools Logo         AI Input              Notif Help Profile │
-└─────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────┐
+│ [≡] [⊞] [🟢][Lottie Logo]    [   Ask AI Assistant...   ]   [🔔] [?] [👤]│
+│  ↑    ↑   ↑       ↑                     ↑                    ↑   ↑   ↑   │
+│  │    │   │       │                     │                    │   │   │   │
+│ Toggle Tools Icon AnimatedLogo      AI Input             Notif Help Prof │
+└──────────────────────────────────────────────────────────────────────────┘
 ```
 
-1. **Left**: Sidebar toggle → Tools → Logo (in that order)
-2. **Center**: AI Assistant input field (centered, max-width constrained)
-3. **Right**: Notifications → Help → Profile (in that order)
-4. **Profile**: Clicking navigates to `/profile` page (no dropdown)
+1. **Left**: Sidebar toggle → Tools → Interactor Icon → Lottie Logo (in that order)
+2. **Interactor Icon**: `icon_simple_green_v1.png` from `.claude/assets/brand/icons/` (24x24px)
+3. **Lottie Logo**: Theme-aware animation from `.claude/assets/brand/lottie/InteractorLogo_*.json`
+4. **Center**: AI Assistant input field (centered, max-width constrained)
+5. **Right**: Notifications → Help → Profile (in that order)
+6. **Profile**: Clicking navigates to `/profile` page (no dropdown)
 
 ### Settings Page Visual Check
 ```

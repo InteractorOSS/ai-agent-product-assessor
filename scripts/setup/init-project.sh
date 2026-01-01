@@ -307,7 +307,7 @@ echo "  docs/i/templates/     Document templates"
 echo "  docs/i/checklists/    Project checklists"
 echo "  .claude/skills/i/     AI-powered skills"
 echo "  .claude/rules/i/      Development rules"
-echo "  .claude/icons/i/      2600+ SVG icons (browse: gallery.html)"
+echo "  .claude/assets/icons/i/  2600+ SVG icons (browse: gallery.html)"
 echo ""
 
 echo -e "${BLUE}Template Improvement:${NC}"

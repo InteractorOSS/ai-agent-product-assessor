@@ -57,6 +57,9 @@ The complete design system is split into modular rule files for easy reference:
 ### Specialized Components
 - **@flow-components.md** - Flow diagram nodes, connection lines, endpoint markers, conditional nodes
 
+### Framework Integration
+- **@material-ui.md** - Material UI (MUI) specific implementation rules, navigation layouts, settings pages (Profile, Preferences, Notifications)
+
 ### Quality Assurance
 - **@checklist.md** - Complete design system compliance checklist
 

@@ -9,7 +9,7 @@
 #   skills    - Sync .claude/skills/i/
 #   commands  - Sync .claude/commands/i/
 #   rules     - Sync .claude/rules/i/
-#   icons     - Sync .claude/icons/i/ (2600+ SVG icons)
+#   icons     - Sync .claude/assets/icons/i/ (2600+ SVG icons)
 #   docs      - Sync docs/i/phases/ and docs/i/checklists/
 #   validator - Sync validator skill and validation checklist
 #
@@ -164,7 +164,7 @@ case $COMPONENT in
         sync_component "rules" ".claude/rules/i/"
         ;;
     icons)
-        sync_component "icons" ".claude/icons/i/"
+        sync_component "icons" ".claude/assets/icons/i/"
         ;;
     docs)
         sync_component "phase documentation" "docs/i/phases/"
@@ -180,7 +180,7 @@ case $COMPONENT in
         echo "  1) Skills (.claude/skills/i/)"
         echo "  2) Commands (.claude/commands/i/)"
         echo "  3) Rules (.claude/rules/i/)"
-        echo "  4) Icons (.claude/icons/i/) - 2600+ SVG icons"
+        echo "  4) Icons (.claude/assets/icons/i/) - 2600+ SVG icons"
         echo "  5) Documentation (docs/i/phases/, docs/i/checklists/)"
         echo "  6) Validator only"
         echo "  7) All (use with caution)"
@@ -194,7 +194,7 @@ case $COMPONENT in
             1) sync_component "skills" ".claude/skills/i/" ;;
             2) sync_component "commands" ".claude/commands/i/" ;;
             3) sync_component "rules" ".claude/rules/i/" ;;
-            4) sync_component "icons" ".claude/icons/i/" ;;
+            4) sync_component "icons" ".claude/assets/icons/i/" ;;
             5)
                 sync_component "phase documentation" "docs/i/phases/"
                 sync_component "checklists" "docs/i/checklists/"
