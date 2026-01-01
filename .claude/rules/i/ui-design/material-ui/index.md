@@ -92,7 +92,7 @@ const logoFile = theme.palette.mode === 'dark'
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│ [≡] [⊞] [🟢][Lottie Logo]    [   Ask AI Assistant...   ]   [🔔] [?] [👤]│
+│ [≡] [⊞] [🟢][Lottie Logo]    [What can I do for you?...]     [🔔] [?] [👤]│
 │  ↑    ↑   ↑       ↑                     ↑                    ↑   ↑   ↑   │
 │ Toggle Tools Icon Logo              AI Input             Notif Help Prof │
 └──────────────────────────────────────────────────────────────────────────┘
