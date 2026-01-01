@@ -15,6 +15,32 @@ When implementing navigation with Material UI:
 - [ ] Profile icon navigates to full page (`/settings`), NOT a dropdown
 - [ ] Notifications icon shows badge with unread count
 
+### AI Assistant Input (Center Section)
+- [ ] Placeholder text: "What can I do for you?" or similar
+- [ ] **Empty state**: Shows sparkle/search icon on left only
+- [ ] **Has input**: Send button (`SendIcon`) appears on right
+- [ ] **Submit triggers**: `Enter` key OR click Send button
+- [ ] On submit: Opens AI Copilot right pane
+- [ ] Input clears after submission
+
+### AI Copilot Right Pane
+- [ ] **Width**: 400-480px (fixed)
+- [ ] **Position**: Right side, below AppBar
+- [ ] **Animation**: Slides in from right (200-300ms ease)
+- [ ] **Main content shrinks**: `marginRight` transition when pane opens
+- [ ] **Header**: Title ("AI Copilot") + Close button (✕)
+- [ ] **Message thread**: User messages and AI responses with distinct styling
+- [ ] **AI response streaming**: Typing indicator, then progressive text
+- [ ] **Code blocks**: Syntax highlighted with copy button
+- [ ] **Suggested actions**: Contextual chips below conversation
+- [ ] **Input area**: Fixed at bottom with multiline support
+- [ ] **Keyboard shortcuts**: Enter=submit, Shift+Enter=newline, Escape=close
+
+**Responsive Behavior:**
+- [ ] Desktop (≥1200px): Side panel, main content shrinks
+- [ ] Tablet (768-1199px): Side panel overlays content
+- [ ] Mobile (<768px): Full-screen modal/sheet
+
 ### Settings/Profile Page (Full Page)
 - [ ] Settings page exists at `/settings` or `/profile`
 - [ ] Split layout: left sidebar (240px) + main content area
@@ -128,10 +154,9 @@ Before completing any MUI navigation implementation, verify:
 ### AppBar Visual Check
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│ [≡] [⊞] [🟢][Lottie Logo]    [   Ask AI Assistant...   ]   [🔔] [?] [👤]│
-│  ↑    ↑   ↑       ↑                     ↑                    ↑   ↑   ↑   │
-│  │    │   │       │                     │                    │   │   │   │
-│ Toggle Tools Icon AnimatedLogo      AI Input             Notif Help Prof │
+│ [≡] [⊞] [🟢][Lottie Logo]  [✨ What can I do for you?... ➤] [🔔] [?] [👤]│
+│  ↑    ↑   ↑       ↑              ↑                  ↑        ↑   ↑   ↑   │
+│ Toggle Tools Icon AnimatedLogo  Sparkle    Send (on input)  Notif Help Prof │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -139,8 +164,39 @@ Before completing any MUI navigation implementation, verify:
 2. **Interactor Icon**: `icon_simple_green_v1.png` from `.claude/assets/i/brand/icons/` (24x24px)
 3. **Lottie Logo**: Theme-aware animation from `.claude/assets/i/brand/lottie/InteractorLogo_*.json`
 4. **Center**: AI Assistant input field (centered, max-width constrained)
+   - Sparkle icon on left (always visible)
+   - Send button on right (appears when input has text)
+   - Submit: Enter key or click Send → Opens AI Copilot pane
 5. **Right**: Notifications → Help → Profile (in that order)
-6. **Profile**: Clicking navigates to `/profile` page (no dropdown)
+6. **Profile**: Clicking navigates to `/settings` page (no dropdown)
+
+### AI Copilot Pane Visual Check
+```
+┌─────────────────────┬─────────────────────┬──────────────────────────────┐
+│                     │                     │  AI Copilot              [✕] │
+│   Left Drawer       │   Main Content      ├──────────────────────────────┤
+│   (240px)           │   (shrinks when     │  ┌────────────────────────┐  │
+│                     │    copilot opens)   │  │ You: User message      │  │
+│                     │                     │  └────────────────────────┘  │
+│                     │                     │  ┌────────────────────────┐  │
+│                     │                     │  │ ✨ AI response with    │  │
+│                     │                     │  │ streaming text...      │  │
+│                     │                     │  └────────────────────────┘  │
+│                     │                     │                              │
+│                     │                     │  [Explain] [Fix] [Optimize]  │
+│   Feedback          │                     ├──────────────────────────────┤
+│   😞 😟 😐 🙂 😊    │                     │  [Ask a follow-up...      ➤] │
+└─────────────────────┴─────────────────────┴──────────────────────────────┘
+```
+
+1. **Pane Width**: 400-480px fixed
+2. **Animation**: Slides in from right (200-300ms)
+3. **Header**: "AI Copilot" title + Close button (✕)
+4. **Messages**: User (right/distinct) + AI (left/sparkle icon)
+5. **Streaming**: Typing indicator → progressive text
+6. **Suggestions**: Contextual action chips
+7. **Input**: Fixed at bottom, multiline, Send on Enter
+8. **Keyboard**: Escape closes, Cmd/Ctrl+K focuses input
 
 ### Settings Page Visual Check
 ```

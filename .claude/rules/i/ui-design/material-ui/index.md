@@ -45,10 +45,13 @@ This design system is split into focused modules for better performance:
 │   ├── logo_blue.png
 │   ├── logo_white_with_icon.png
 │   └── 20221116_interactor_BI*.svg
-├── lottie/                    # Animated logos (JSON, .lottie)
-│   ├── InteractorLogo_Light.json  # For light backgrounds
-│   ├── InteractorLogo_Dark.json   # For dark backgrounds
-│   └── Interactor_FullLogo_Animation.json
+├── lottie/                    # Animated logos (JSON + .lottie formats)
+│   ├── InteractorLogo_Light.json   # For light backgrounds (use with lottie-react)
+│   ├── InteractorLogo_Light.lottie # For light backgrounds (dotLottie format)
+│   ├── InteractorLogo_Dark.json    # For dark backgrounds (use with lottie-react)
+│   ├── InteractorLogo_Dark.lottie  # For dark backgrounds (dotLottie format)
+│   ├── Interactor_FullLogo_Animation.json
+│   └── Interactor_FullLogo_Animation.lottie
 ├── favicons/                  # Website favicons (full set)
 └── powered-by/                # "Powered by Interactor" badges
 ```
@@ -92,15 +95,38 @@ const logoFile = theme.palette.mode === 'dark'
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│ [≡] [⊞] [🟢][Lottie Logo]    [What can I do for you?...]     [🔔] [?] [👤]│
+│ [≡] [⊞] [🟢][Interactor]    [What can I do for you?...]     [🔔] [?] [👤]│
 │  ↑    ↑   ↑       ↑                     ↑                    ↑   ↑   ↑   │
-│ Toggle Tools Icon Logo              AI Input             Notif Help Prof │
+│ Toggle Tools Icon AnimatedLogo      AI Input             Notif Help Prof │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
-- **Left**: Sidebar toggle → Tools → Interactor Icon → Lottie Logo
+- **Left**: Sidebar toggle → Tools → Interactor Icon → Animated Logo
+  - **Icon**: `icon_simple_green_v1.png` (light) / `icon_simple_white_v1.png` (dark)
+  - **Logo**: `InteractorLogo_Light.json` (light) / `InteractorLogo_Dark.json` (dark)
 - **Center**: AI Assistant input (flex-grow, max-width constrained)
+  - Empty: Shows sparkle icon only
+  - Has input: Send button appears on right
+  - Submit: `Enter` or click Send → Opens AI Copilot right pane
 - **Right**: Notifications → Help → Profile (navigates to full page, NOT dropdown)
+
+### AI Copilot Right Pane (see [navigation.md](./navigation.md))
+
+```
+┌─────────────────────┬─────────────────────┬──────────────────┐
+│                     │                     │ AI Copilot   [✕] │
+│   Left Drawer       │   Main Content      ├──────────────────┤
+│   (240px)           │   (shrinks)         │  User message    │
+│                     │                     │  AI response...  │
+│                     │                     │  [Suggestions]   │
+│   Feedback          │                     ├──────────────────┤
+│   😞 😟 😐 🙂 😊    │                     │ [Follow-up...  ➤]│
+└─────────────────────┴─────────────────────┴──────────────────┘
+```
+
+- **Width**: 400-480px (fixed), slides in from right
+- **Content shrinks**: Main content area shrinks horizontally when pane opens
+- **Keyboard**: `Enter` submit, `Shift+Enter` newline, `Escape` close, `Cmd/Ctrl+K` focus
 
 ### Settings Layout (see [settings.md](./settings.md))
 
@@ -127,17 +153,26 @@ const logoFile = theme.palette.mode === 'dark'
 
 ```
 ┌─────────────────────┐
-│  [+ Create]         │  ← Create button (top)
+│  [+ Create]         │  ← Create button (top, fixed)
 ├─────────────────────┤
-│  Dashboard          │
-│  Analytics          │  ← Primary nav (scrollable)
-│  Content            │
-│  ...                │
+│  🏠 For you         │  ← Section 1: Selection items
+│  🕐 Recent        > │    (dropdowns open RIGHT)
+│  ⭐ Starred       > │
 ├─────────────────────┤
-│  Organization ▾     │  ← Organization selector (bottom)
-│  [Avatar] Org Name  │
+│  📁 WORKSPACES  + … │  ← Section 2: Expandable
+│  > DASHBOARDS   + … │    (expand DOWN, hover shows +/…)
+│  ⊞ APPS         + … │
+│  🔽 FILTERS     + … │
+│                     │
+│    (flex spacer)    │  ← Pushes feedback to bottom
+│                     │
+├─────────────────────┤
+│  Feedback           │  ← Fixed at bottom
+│  😞 😟 😐 🙂 😊     │    Click opens comment drawer
 └─────────────────────┘
 ```
 
-- Four zones: Create button, Primary nav, Organization selector, User section
+- **Four zones**: Create button (top), Selection items, Expandable sections, Feedback (bottom)
+- **Feedback**: 5 emoji faces (1-5 rating), clicking opens bottom drawer for comments
+- **Best practice**: Always visible, low-friction, contextual feedback collection
 - Drawer width: 240px (open), 56px (collapsed icons only)
