@@ -17,11 +17,18 @@ The navigation bar has three distinct sections:
 
 ### Left Section Elements (in order)
 
-| Element | Icon | Purpose |
-|---------|------|---------|
+| Element | Icon/Component | Purpose |
+|---------|----------------|---------|
 | Sidebar Toggle | `MenuIcon` / `MenuOpenIcon` | Open/close left navigation drawer |
 | Tools Selection | `AppsIcon` or `GridViewIcon` | Access tools/applications menu |
-| Interactor Logo | Custom logo component | Brand identity, links to home |
+| Interactor Logo | **Lottie Animation** (NOT static icon) | Brand identity, links to home |
+
+**IMPORTANT - Interactor Logo**:
+- Must use **Lottie animated logo**, NOT a static PNG/SVG
+- Light mode: `InteractorLogo_Light.json`
+- Dark mode: `InteractorLogo_Dark.json`
+- Size: ~100-120px width, 32px height
+- Plays once on load, links to home (`/`)
 
 ### Center Section - AI Assistant Input
 
@@ -228,11 +235,105 @@ interface Message {
 
 | Element | Icon | Behavior |
 |---------|------|----------|
-| Notifications | `NotificationsIcon` | Badge for unread count, opens panel |
+| Notifications | `NotificationsIcon` | Badge with unread count + error count |
 | Help | `HelpOutlineIcon` | Opens help/documentation |
-| Profile | `AccountCircleIcon` | **Navigates to full Profile page** |
+| Profile | `AccountCircleIcon` | **Navigates to full Settings page** |
+| Quick Create | `AddIcon` (+) | **Opens Quick Create right panel** |
 
-**Important**: Profile is a **full page navigation**, NOT a dropdown menu.
+**Notification Badge - Dual Counter:**
+- **Primary badge** (default color): Unread notification count
+- **Secondary badge** (red/error): Error count (failed actions, disconnections)
+- Show both when errors exist: `[🔔¹ ²]` (1 notification, 2 errors)
+
+```jsx
+<IconButton>
+  <Badge
+    badgeContent={notificationCount}
+    color="primary"
+    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+  >
+    <Badge
+      badgeContent={errorCount}
+      color="error"
+      anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+    >
+      <NotificationsIcon />
+    </Badge>
+  </Badge>
+</IconButton>
+```
+
+**Quick Create Button (+):**
+- Green circular button with `+` icon
+- Opens **Quick Create right panel** (NOT the AI Copilot)
+- Quick access to create new items without navigating away
+
+**Important**: Profile is a **full page navigation** to `/settings`, NOT a dropdown menu.
+
+---
+
+## Quick Create Right Panel
+
+The "+" button in the AppBar opens a Quick Create panel for fast item creation.
+
+### Quick Create Panel Specifications
+
+| Property | Value |
+|----------|-------|
+| Trigger | Click "+" button in AppBar right section |
+| Width | 320-400px |
+| Position | Right side, below AppBar |
+| Content | List of creatable items with icons |
+
+### Quick Create Panel Structure
+
+```
+┌────────────────────────┐
+│ Quick Create      [✕]  │
+├────────────────────────┤
+│  📝 New Post           │
+│  📅 Schedule Post      │
+│  📁 New Folder         │
+│  🔗 Connect Channel    │
+│  📊 New Dashboard      │
+│  ⚡ New Automation     │
+└────────────────────────┘
+```
+
+```jsx
+<Drawer
+  anchor="right"
+  open={quickCreateOpen}
+  onClose={() => setQuickCreateOpen(false)}
+  sx={{
+    '& .MuiDrawer-paper': {
+      width: 360,
+      top: 64,
+      height: 'calc(100vh - 64px)',
+    },
+  }}
+>
+  <Box sx={{ p: 2 }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+      <Typography variant="h6">Quick Create</Typography>
+      <IconButton onClick={() => setQuickCreateOpen(false)}>
+        <CloseIcon />
+      </IconButton>
+    </Box>
+    <List>
+      <ListItemButton onClick={() => handleCreate('post')}>
+        <ListItemIcon><EditIcon /></ListItemIcon>
+        <ListItemText primary="New Post" />
+      </ListItemButton>
+      <ListItemButton onClick={() => handleCreate('schedule')}>
+        <ListItemIcon><ScheduleIcon /></ListItemIcon>
+        <ListItemText primary="Schedule Post" />
+      </ListItemButton>
+      {/* More create options... */}
+    </List>
+  </Box>
+</Drawer>
+```
 
 ### Implementation Example
 

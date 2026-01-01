@@ -6,14 +6,23 @@ When implementing navigation with Material UI:
 
 ### Global Navigation Bar (AppBar)
 - [ ] **Brand assets** copied from `.claude/assets/i/brand/` to app's public/assets directory
-- [ ] **Interactor icon** uses `icon_simple_green_v1.png` from brand icons
-- [ ] **Interactor logo** uses Lottie animation (`InteractorLogo_*.json`)
-- [ ] **Theme-aware logo**: Light mode uses `InteractorLogo_Light.json`, dark mode uses `InteractorLogo_Dark.json`
-- [ ] **Left section** contains (in order): Sidebar toggle, Tools icon, Interactor icon + logo (Lottie)
+- [ ] **Interactor logo** uses **Lottie animation** (NOT static PNG/SVG!)
+- [ ] **Theme-aware logo**: Light=`InteractorLogo_Light.json`, Dark=`InteractorLogo_Dark.json`
+- [ ] **Logo plays once** on load, links to home (`/`)
+- [ ] **Left section** contains (in order): Sidebar toggle, Tools icon, Lottie Logo
 - [ ] **Center section** contains AI Assistant input field with `flexGrow: 1`
-- [ ] **Right section** contains (in order): Notifications, Help, Profile icons
+- [ ] **Right section** contains (in order): Notifications, Help, Profile, **Quick Create (+)**
 - [ ] Profile icon navigates to full page (`/settings`), NOT a dropdown
-- [ ] Notifications icon shows badge with unread count
+
+**Notification Badge (Dual Counter):**
+- [ ] **Primary badge** (default color): Unread notification count
+- [ ] **Secondary badge** (red/error): Error count (failed actions, disconnections)
+- [ ] Show both badges when errors exist
+
+**Quick Create Button (+):**
+- [ ] Green circular button with `+` icon in right section
+- [ ] Opens Quick Create right panel (NOT AI Copilot)
+- [ ] Panel shows list of creatable items (New Post, Schedule, Connect Channel, etc.)
 
 ### AI Assistant Input (Center Section)
 - [ ] Placeholder text: "What can I do for you?" or similar
@@ -116,10 +125,18 @@ When implementing navigation with Material UI:
 - [ ] Expandable items show expand/collapse arrow on right
 - [ ] Sub-items with counts show count right-aligned in gray
 
-**Create Button (Top)** - Optional
+**Global Create Button (Top)** - REQUIRED
 - [ ] "+ Create" button at top of drawer
-- [ ] Button is orange/primary color, full width
+- [ ] Button is **GREEN** (`#4CD964`), NOT orange/blue
+- [ ] Full width with padding (`m: 2, borderRadius: 2`)
 - [ ] Opens dropdown menu with major feature creation options
+
+**Warning/Alert Messages** - REQUIRED
+- [ ] Warnings placed **BELOW** the problematic item, NOT above
+- [ ] Warning shows description + "Click to fix" action
+- [ ] Uses `Alert` component with `severity="warning"`
+- [ ] Clickable to navigate to fix action
+- [ ] Clear association between item and its warning
 
 **Section 1 (Selection-Only Items)** - Optional
 - [ ] "For you" item with home icon (no arrow)
@@ -153,22 +170,25 @@ Before completing any MUI navigation implementation, verify:
 
 ### AppBar Visual Check
 ```
-┌──────────────────────────────────────────────────────────────────────────┐
-│ [≡] [⊞] [🟢][Lottie Logo]  [✨ What can I do for you?... ➤] [🔔] [?] [👤]│
-│  ↑    ↑   ↑       ↑              ↑                  ↑        ↑   ↑   ↑   │
-│ Toggle Tools Icon AnimatedLogo  Sparkle    Send (on input)  Notif Help Prof │
-└──────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ [≡] [⊞] [Interactor🎬]  [✨ What can I do for you?... ➤]  [🔔¹²] [?] [👤] [+] │
+│  ↑    ↑       ↑               ↑                  ↑          ↑    ↑   ↑    ↑   │
+│ Toggle Tools LottieLogo    Sparkle    Send(on input)     Notif  Help Prof Quick│
+│             (animated!)                                  +Err              Create│
+└────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-1. **Left**: Sidebar toggle → Tools → Interactor Icon → Lottie Logo (in that order)
-2. **Interactor Icon**: `icon_simple_green_v1.png` from `.claude/assets/i/brand/icons/` (24x24px)
-3. **Lottie Logo**: Theme-aware animation from `.claude/assets/i/brand/lottie/InteractorLogo_*.json`
-4. **Center**: AI Assistant input field (centered, max-width constrained)
+1. **Left**: Sidebar toggle → Tools → **Lottie Animated Logo** (NOT static icon!)
+2. **Lottie Logo**: Theme-aware animation from `.claude/assets/i/brand/lottie/InteractorLogo_*.json`
+   - Plays once on load, links to home (`/`)
+3. **Center**: AI Assistant input field (centered, max-width constrained)
    - Sparkle icon on left (always visible)
    - Send button on right (appears when input has text)
    - Submit: Enter key or click Send → Opens AI Copilot pane
-5. **Right**: Notifications → Help → Profile (in that order)
+4. **Right**: Notifications → Help → Profile → **Quick Create (+)**
+5. **Notifications**: Dual badge - normal count + **red error count**
 6. **Profile**: Clicking navigates to `/settings` page (no dropdown)
+7. **Quick Create (+)**: Green button, opens Quick Create right panel
 
 ### AI Copilot Pane Visual Check
 ```
@@ -309,17 +329,19 @@ Before completing any MUI navigation implementation, verify:
 ### Drawer Visual Check
 ```
 ┌─────────────────────────────────┐
-│  [  + Create  ]                 │  ← Top: Orange button
+│  [  + Create  ]  🟢             │  ← Top: GREEN button (#4CD964)
 ├─────────────────────────────────┤
-│  🏠 For you                     │  ← Section 1: No arrow
-│  🕐 Recent                    > │  ← Opens RIGHT
-│  ⭐ Starred                   > │
-│  📋 Plans                     > │
-├ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┤
-│  📁 WORKSPACES           + ··· │  ← Section 2: Expandable
-│  > DASHBOARDS            + ··· │  ← Hover shows + and ...
-│  ⊞ APPS                  + ··· │
-│  🔽 FILTERS              + ··· │
+│  CHANNELS                    ✏️ │  ← Section header
+│  📧 All Channels             0  │
+│  👤 peter@interactor...      0  │  ← Item with issue
+│  ┌─────────────────────────────┐│
+│  │ ⚠️ 2 channels need...       ││  ← Warning BELOW item
+│  │   Click to reconnect     >  ││
+│  └─────────────────────────────┘│
+│  👤 Peter Jung/Pulzze        0  │  ← Next item
+├─────────────────────────────────┤
+│  📁 WORKSPACES           + ··· │  ← Expandable sections
+│  > DASHBOARDS            + ··· │
 │                                 │
 │         (flex spacer)           │
 │                                 │
@@ -329,8 +351,8 @@ Before completing any MUI navigation implementation, verify:
 └─────────────────────────────────┘
 ```
 
-1. **Top**: "+ Create" button (orange, full width)
-2. **Section 1**: Selection items (For you, Recent, Starred, Plans) - dropdowns open RIGHT
-3. **Section 2**: WORKSPACES, DASHBOARDS, APPS, FILTERS - expand DOWN, hover shows + and ...
+1. **Top**: "+ Create" button (**GREEN** `#4CD964`, NOT orange!)
+2. **Sections**: Expandable with + and ... on hover
+3. **Warnings**: Placed **BELOW** problematic items, clickable to fix
 4. **Bottom**: Feedback emoji faces (fixed position)
 5. **Feedback action**: Clicking emoji opens bottom drawer for comments

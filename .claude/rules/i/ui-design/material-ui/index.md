@@ -94,21 +94,25 @@ const logoFile = theme.palette.mode === 'dark'
 ### Navigation Layout (see [navigation.md](./navigation.md))
 
 ```
-┌──────────────────────────────────────────────────────────────────────────┐
-│ [≡] [⊞] [🟢][Interactor]    [What can I do for you?...]     [🔔] [?] [👤]│
-│  ↑    ↑   ↑       ↑                     ↑                    ↑   ↑   ↑   │
-│ Toggle Tools Icon AnimatedLogo      AI Input             Notif Help Prof │
-└──────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ [≡] [⊞] [Interactor🎬]    [✨ What can I do for you?... ➤]   [🔔¹²] [?] [👤] [+]│
+│  ↑    ↑        ↑                      ↑                        ↑    ↑   ↑    ↑ │
+│ Toggle Tools  LottieLogo           AI Input                Notif Help Prof Quick│
+│                                                            +Err              Create│
+└────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-- **Left**: Sidebar toggle → Tools → Interactor Icon → Animated Logo
-  - **Icon**: `icon_simple_green_v1.png` (light) / `icon_simple_white_v1.png` (dark)
+- **Left**: Sidebar toggle → Tools → **Lottie Animated Logo** (NOT static icon!)
   - **Logo**: `InteractorLogo_Light.json` (light) / `InteractorLogo_Dark.json` (dark)
+  - Plays once on load, links to home
 - **Center**: AI Assistant input (flex-grow, max-width constrained)
   - Empty: Shows sparkle icon only
   - Has input: Send button appears on right
   - Submit: `Enter` or click Send → Opens AI Copilot right pane
-- **Right**: Notifications → Help → Profile (navigates to full page, NOT dropdown)
+- **Right**: Notifications → Help → Profile → **Quick Create (+)**
+  - **Notifications**: Dual badge - normal count + **red error count**
+  - **Profile**: Navigates to `/settings` (full page, NOT dropdown)
+  - **Quick Create (+)**: Green button, opens Quick Create right panel
 
 ### AI Copilot Right Pane (see [navigation.md](./navigation.md))
 
@@ -153,16 +157,19 @@ const logoFile = theme.palette.mode === 'dark'
 
 ```
 ┌─────────────────────┐
-│  [+ Create]         │  ← Create button (top, fixed)
+│  [+ Create]  🟢     │  ← GREEN Create button (top, fixed)
 ├─────────────────────┤
-│  🏠 For you         │  ← Section 1: Selection items
-│  🕐 Recent        > │    (dropdowns open RIGHT)
-│  ⭐ Starred       > │
+│  CHANNELS        ✏️ │  ← Section header
+│  📧 All Channels  0 │
+│  👤 peter@inter.. 0 │  ← Item with issue
+│  ┌─────────────────┐│
+│  │ ⚠️ 2 channels.. ││  ← Warning BELOW item (not above!)
+│  │ Click to fix  > ││
+│  └─────────────────┘│
+│  👤 Peter Jung    0 │  ← Next item
 ├─────────────────────┤
 │  📁 WORKSPACES  + … │  ← Section 2: Expandable
 │  > DASHBOARDS   + … │    (expand DOWN, hover shows +/…)
-│  ⊞ APPS         + … │
-│  🔽 FILTERS     + … │
 │                     │
 │    (flex spacer)    │  ← Pushes feedback to bottom
 │                     │
@@ -172,7 +179,8 @@ const logoFile = theme.palette.mode === 'dark'
 └─────────────────────┘
 ```
 
-- **Four zones**: Create button (top), Selection items, Expandable sections, Feedback (bottom)
-- **Feedback**: 5 emoji faces (1-5 rating), clicking opens bottom drawer for comments
-- **Best practice**: Always visible, low-friction, contextual feedback collection
+- **Five zones**: Create button, Selection items, Expandable sections, Warnings, Feedback
+- **Create button**: Must be **GREEN** (`#4CD964`), not orange/blue
+- **Warnings**: Always placed **BELOW** the problematic item, not above
+- **Feedback**: 5 emoji faces (1-5 rating), fixed at bottom, opens comment drawer
 - Drawer width: 240px (open), 56px (collapsed icons only)

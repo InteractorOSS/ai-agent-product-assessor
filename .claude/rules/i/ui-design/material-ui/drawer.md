@@ -2,13 +2,14 @@
 
 ### Left Navigation Bar (Drawer/Sidebar)
 
-The left navigation has four distinct zones:
+The left navigation has five distinct zones:
 
 | Zone | Position | Content |
 |------|----------|---------|
-| **Create Button** | Top (fixed) | "+ Create" button for major features |
+| **Create Button** | Top (fixed) | Green "+ Create" button for major features |
 | **Section 1** | Below Create | Selection-only items (no create option) |
-| **Section 2** | Middle | Expandable sections with create capability |
+| **Section 2** | Middle (scrollable) | Expandable sections with create capability |
+| **Warnings** | Below problematic items | Contextual alerts for items needing attention |
 | **Feedback** | Bottom (fixed) | Emoji feedback faces |
 
 #### Visual Structure
@@ -301,23 +302,29 @@ const InteractorDrawer = () => {
 
 ---
 
-#### Create Button (Top)
+#### Global Create Button (Top)
 
 | Property | Value |
 |----------|-------|
 | Position | Fixed at top of drawer |
-| Style | Primary color (orange), full width with padding |
+| Style | **Green** (`#4CD964`), full width with padding |
 | Icon | `AddIcon` (+) on left |
 | Action | Opens dropdown menu with major feature creation options |
+
+**IMPORTANT**: The Create button must be **green** (Interactor brand color), NOT orange or blue.
 
 ```jsx
 <Button
   variant="contained"
-  color="primary"
   startIcon={<AddIcon />}
   fullWidth
   onClick={handleCreateMenuOpen}
-  sx={{ m: 2, borderRadius: 2 }}
+  sx={{
+    m: 2,
+    borderRadius: 2,
+    bgcolor: '#4CD964',
+    '&:hover': { bgcolor: '#3DBF55' },
+  }}
 >
   Create
 </Button>
@@ -328,6 +335,82 @@ const InteractorDrawer = () => {
   {/* Other create options */}
 </Menu>
 ```
+
+---
+
+#### Warning/Alert Messages (Below Feature)
+
+**IMPORTANT**: Warning messages must be placed **BELOW** the feature that has the problem, NOT above or in a separate area.
+
+| Property | Value |
+|----------|-------|
+| Position | Immediately below the problematic item |
+| Style | Warning background (light orange/amber) |
+| Icon | `WarningIcon` or `ErrorOutlineIcon` |
+| Action | Clickable to fix the issue |
+
+**Visual Structure:**
+```
+┌─────────────────────────────────┐
+│  📧 peter@interactor...      0  │  ← Item with issue
+│  ┌─────────────────────────────┐│
+│  │ ⚠️ 2 channels need...       ││  ← Warning BELOW item
+│  │   Click to reconnect     >  ││
+│  └─────────────────────────────┘│
+│  👤 Peter Jung/Pulzze        0  │  ← Next item
+└─────────────────────────────────┘
+```
+
+**Implementation:**
+```jsx
+{channels.map((channel) => (
+  <Box key={channel.id}>
+    {/* Channel item */}
+    <ListItemButton>
+      <Avatar src={channel.avatar} sx={{ mr: 2 }} />
+      <ListItemText primary={channel.name} />
+      <Typography variant="body2" color="text.secondary">
+        {channel.count}
+      </Typography>
+    </ListItemButton>
+
+    {/* Warning placed BELOW the channel if it has issues */}
+    {channel.hasWarning && (
+      <Alert
+        severity="warning"
+        icon={<WarningIcon />}
+        onClick={() => handleReconnect(channel.id)}
+        sx={{
+          mx: 2,
+          mb: 1,
+          cursor: 'pointer',
+          borderRadius: 2,
+          '& .MuiAlert-message': { width: '100%' },
+        }}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box>
+            <Typography variant="body2" fontWeight="medium">
+              {channel.warningCount} channels need attention
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              Click to reconnect
+            </Typography>
+          </Box>
+          <ChevronRightIcon fontSize="small" />
+        </Box>
+      </Alert>
+    )}
+  </Box>
+))}
+```
+
+**Why Below, Not Above:**
+- Users scan top-to-bottom; warning after item creates clear association
+- Doesn't push content down unexpectedly when warnings appear
+- Matches mental model: "this item → has this problem"
+
+---
 
 #### Section 1: Selection-Only Items
 
