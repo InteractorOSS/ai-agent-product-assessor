@@ -167,7 +167,7 @@ Edit `.env` anytime to add these configurations.
 4. Identify test cases first (TDD)
 
 ### While Coding
-1. Follow code style guidelines (`.claude/rules/code-style.md`)
+1. Follow code style guidelines (`.claude/rules/i/code-style.md`)
 2. Write tests alongside code
 3. Commit frequently with meaningful messages
 4. Keep changes focused and atomic
@@ -277,10 +277,10 @@ Create `./scripts/start.sh` - a comprehensive development startup script that:
 - [ ] Linter configured
 
 ### Guidelines Reference
-- Code style: `.claude/rules/code-style.md`
-- Testing: `.claude/rules/testing.md`
-- Security: `.claude/rules/security.md`
-- Git workflow: `.claude/rules/git-workflow.md`
+- Code style: `.claude/rules/i/code-style.md`
+- Testing: `.claude/rules/i/testing.md`
+- Security: `.claude/rules/i/security.md`
+- Git workflow: `.claude/rules/i/git-workflow.md`
 
 ### Skills Available
 - `code-review` - Code quality analysis

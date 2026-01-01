@@ -6,11 +6,11 @@
 #
 # Components:
 #   all       - Sync everything (use with caution)
-#   skills    - Sync .claude/skills/
-#   commands  - Sync .claude/commands/
-#   rules     - Sync .claude/rules/
+#   skills    - Sync .claude/skills/i/
+#   commands  - Sync .claude/commands/i/
+#   rules     - Sync .claude/rules/i/
 #   icons     - Sync .claude/icons/i/ (2600+ SVG icons)
-#   docs      - Sync docs/phases/ and docs/checklists/
+#   docs      - Sync docs/i/phases/ and docs/i/checklists/
 #   validator - Sync validator skill and validation checklist
 #
 
@@ -101,40 +101,40 @@ case $COMPONENT in
         echo ""
         if [[ $REPLY =~ ^[Yy]$ ]]; then
             git checkout template/main -- .claude/
-            git checkout template/main -- docs/phases/
-            git checkout template/main -- docs/checklists/
-            git checkout template/main -- docs/templates/
+            git checkout template/main -- docs/i/phases/
+            git checkout template/main -- docs/i/checklists/
+            git checkout template/main -- docs/i/templates/
             print_success "Synced all template files"
         fi
         ;;
     skills)
-        sync_component "skills" ".claude/skills/"
+        sync_component "skills" ".claude/skills/i/"
         ;;
     commands)
-        sync_component "commands" ".claude/commands/"
+        sync_component "commands" ".claude/commands/i/"
         ;;
     rules)
-        sync_component "rules" ".claude/rules/"
+        sync_component "rules" ".claude/rules/i/"
         ;;
     icons)
         sync_component "icons" ".claude/icons/i/"
         ;;
     docs)
-        sync_component "phase documentation" "docs/phases/"
-        sync_component "checklists" "docs/checklists/"
+        sync_component "phase documentation" "docs/i/phases/"
+        sync_component "checklists" "docs/i/checklists/"
         ;;
     validator)
-        sync_component "validator skill" ".claude/skills/validator/"
-        sync_component "validation checklist" "docs/checklists/validation-checklist.md"
+        sync_component "validator skill" ".claude/skills/i/validator/"
+        sync_component "validation checklist" "docs/i/checklists/validation-checklist.md"
         ;;
     interactive)
         echo "What would you like to sync?"
         echo ""
-        echo "  1) Skills (.claude/skills/)"
-        echo "  2) Commands (.claude/commands/)"
-        echo "  3) Rules (.claude/rules/)"
+        echo "  1) Skills (.claude/skills/i/)"
+        echo "  2) Commands (.claude/commands/i/)"
+        echo "  3) Rules (.claude/rules/i/)"
         echo "  4) Icons (.claude/icons/i/) - 2600+ SVG icons"
-        echo "  5) Documentation (docs/phases/, docs/checklists/)"
+        echo "  5) Documentation (docs/i/phases/, docs/i/checklists/)"
         echo "  6) Validator only"
         echo "  7) All (use with caution)"
         echo "  8) Cancel"
@@ -144,17 +144,17 @@ case $COMPONENT in
         echo ""
 
         case $REPLY in
-            1) sync_component "skills" ".claude/skills/" ;;
-            2) sync_component "commands" ".claude/commands/" ;;
-            3) sync_component "rules" ".claude/rules/" ;;
+            1) sync_component "skills" ".claude/skills/i/" ;;
+            2) sync_component "commands" ".claude/commands/i/" ;;
+            3) sync_component "rules" ".claude/rules/i/" ;;
             4) sync_component "icons" ".claude/icons/i/" ;;
             5)
-                sync_component "phase documentation" "docs/phases/"
-                sync_component "checklists" "docs/checklists/"
+                sync_component "phase documentation" "docs/i/phases/"
+                sync_component "checklists" "docs/i/checklists/"
                 ;;
             6)
-                sync_component "validator skill" ".claude/skills/validator/"
-                sync_component "validation checklist" "docs/checklists/validation-checklist.md"
+                sync_component "validator skill" ".claude/skills/i/validator/"
+                sync_component "validation checklist" "docs/i/checklists/validation-checklist.md"
                 ;;
             7)
                 print_warning "Syncing ALL template files. This may overwrite your customizations."
@@ -162,8 +162,8 @@ case $COMPONENT in
                 echo ""
                 if [[ $REPLY =~ ^[Yy]$ ]]; then
                     git checkout template/main -- .claude/
-                    git checkout template/main -- docs/phases/
-                    git checkout template/main -- docs/checklists/
+                    git checkout template/main -- docs/i/phases/
+                    git checkout template/main -- docs/i/checklists/
                     print_success "Synced all template files"
                 fi
                 ;;

@@ -176,8 +176,8 @@ fi
 
 # Create project-specific feedback log
 print_info "Creating feedback tracking..."
-if [ -f "docs/templates/template-feedback.md" ]; then
-    cp docs/templates/template-feedback.md docs/template-feedback.md
+if [ -f "docs/i/templates/template-feedback.md" ]; then
+    cp docs/i/templates/template-feedback.md docs/template-feedback.md
     # Update with project info
     if [[ "$OSTYPE" == "darwin"* ]]; then
         sed -i '' "s/\[Your project name\]/$PROJECT_NAME/g" docs/template-feedback.md
@@ -222,11 +222,11 @@ echo ""
 
 echo -e "${BLUE}Documentation:${NC}"
 echo ""
-echo "  docs/phases/          Development phase guides"
-echo "  docs/templates/       Document templates"
-echo "  docs/checklists/      Project checklists"
-echo "  .claude/skills/       AI-powered skills"
-echo "  .claude/rules/        Development rules"
+echo "  docs/i/phases/        Development phase guides"
+echo "  docs/i/templates/     Document templates"
+echo "  docs/i/checklists/    Project checklists"
+echo "  .claude/skills/i/     AI-powered skills"
+echo "  .claude/rules/i/      Development rules"
 echo "  .claude/icons/i/      2600+ SVG icons (browse: gallery.html)"
 echo ""
 

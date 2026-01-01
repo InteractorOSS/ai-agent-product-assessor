@@ -10,7 +10,7 @@ When this command is invoked, perform the following:
 
 First, check if the user has:
 - **A rough project idea** - They may share unstructured notes, ideas, or descriptions
-- **A filled intake form** - Check for `docs/phases/01-discovery/project-idea-intake.md`
+- **A filled intake form** - Check for `docs/i/phases/01-discovery/project-idea-intake.md`
 - **Nothing yet** - Guide them to start fresh
 
 If the user provides a rough write-up or idea:
@@ -146,10 +146,10 @@ After initialization, display:
 4. Conduct user research
 
 ### Templates Available
-- **Project idea intake**: `docs/phases/01-discovery/project-idea-intake.md` (start here with rough ideas)
-- Requirements template: `docs/phases/01-discovery/requirements-template.md`
-- Stakeholder template: `docs/phases/01-discovery/stakeholder-analysis.md`
-- User story template: `docs/phases/01-discovery/user-story-template.md`
+- **Project idea intake**: `docs/i/phases/01-discovery/project-idea-intake.md` (start here with rough ideas)
+- Requirements template: `docs/i/phases/01-discovery/requirements-template.md`
+- Stakeholder template: `docs/i/phases/01-discovery/stakeholder-analysis.md`
+- User story template: `docs/i/phases/01-discovery/user-story-template.md`
 
 ### Ready to Help With
 - Problem definition

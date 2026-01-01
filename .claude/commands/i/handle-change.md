@@ -50,7 +50,7 @@ Based on impact:
 - Update documentation
 
 **Large Change (architecture impact)**:
-- Create formal change request using `docs/templates/change-request-template.md`
+- Create formal change request using `docs/i/templates/change-request-template.md`
 - Go back to Planning phase
 - Create/update ADR
 - Revise design document

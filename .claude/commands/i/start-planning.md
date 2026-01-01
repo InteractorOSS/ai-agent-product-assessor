@@ -111,10 +111,10 @@ Use the architecture-planner skill for detailed guidance.
 5. Document decisions (ADRs)
 
 ### Templates Available
-- Architecture: `docs/phases/02-planning/architecture-template.md`
-- Task breakdown: `docs/phases/02-planning/task-breakdown.md`
-- Risk assessment: `docs/phases/02-planning/risk-assessment.md`
-- ADR template: `docs/templates/adr-template.md`
+- Architecture: `docs/i/phases/02-planning/architecture-template.md`
+- Task breakdown: `docs/i/phases/02-planning/task-breakdown.md`
+- Risk assessment: `docs/i/phases/02-planning/risk-assessment.md`
+- ADR template: `docs/i/templates/adr-template.md`
 
 ### Skills Available
 - `/architecture-planner` - Design system architecture
