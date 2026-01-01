@@ -4,6 +4,41 @@ These rules apply **ONLY** when the project uses Material UI (MUI) as the design
 
 ---
 
+## ⚠️ CRITICAL REQUIREMENTS - MUST IMPLEMENT
+
+The following 6 patterns are **MANDATORY** for all Interactor applications. Failure to implement these correctly will result in inconsistent UX.
+
+| # | Requirement | ❌ Common Mistake | ✅ Correct Implementation |
+|---|-------------|-------------------|---------------------------|
+| 1 | **Lottie Animated Logo** | Using static PNG/SVG | Use `InteractorLogo_Light.json` or `_Dark.json` with lottie-react |
+| 2 | **GREEN Create Button** | Using orange/blue/primary color | Use `#4CD964` (Interactor green) for the + Create button in drawer |
+| 3 | **Quick Create (+)** | Missing or wrong action | Green + button in AppBar right section opens Quick Create panel |
+| 4 | **Dual Notification Badge** | Single badge only | Primary badge (notifications) + secondary red badge (errors) |
+| 5 | **Warnings BELOW Items** | Warning at TOP of drawer | Warning placed immediately BELOW the specific problematic item |
+| 6 | **Feedback Section** | Missing or at wrong position | 5 emoji faces (😞😟😐🙂😊) FIXED at BOTTOM of drawer |
+
+### Warning Placement - Visual Guide
+
+```
+❌ WRONG - Warning at top of drawer:        ✅ CORRECT - Warning below item:
+┌───────────────────────────────┐          ┌───────────────────────────────┐
+│  [+ Create]                   │          │  [+ Create]  🟢               │
+├───────────────────────────────┤          ├───────────────────────────────┤
+│  ┌───────────────────────────┐│          │  CHANNELS                     │
+│  │ ⚠️ 2 channels need...     ││ ← WRONG  │  📧 All Channels           0  │
+│  └───────────────────────────┘│          │  👤 peter@interactor...    0  │ ← Has issue
+│  CHANNELS                     │          │  ┌───────────────────────────┐│
+│  📧 All Channels           0  │          │  │ ⚠️ 2 channels need...     ││ ← CORRECT
+│  👤 peter@interactor...    0  │          │  │   Click to reconnect   >  ││
+│  👤 Peter Jung/Pulzze      0  │          │  └───────────────────────────┘│
+└───────────────────────────────┘          │  👤 Peter Jung/Pulzze      0  │ ← No issue
+                                           └───────────────────────────────┘
+```
+
+**Why this matters**: Warnings placed BELOW items create clear visual association. Users immediately understand which specific item has the problem.
+
+---
+
 ## Applicability
 
 Apply these rules when:

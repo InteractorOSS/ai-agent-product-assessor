@@ -1,5 +1,18 @@
 # MUI Navigation - Global Navigation Bar
 
+## ⚠️ CRITICAL AppBar Requirements
+
+These patterns are **MANDATORY** - verify before implementing:
+
+| Requirement | ❌ Wrong | ✅ Correct |
+|-------------|----------|------------|
+| **Logo** | Static PNG/SVG image | **Lottie animation** (`InteractorLogo_*.json`) |
+| **Notifications** | Single badge | **Dual badge**: count + red error badge |
+| **Quick Create** | Missing or wrong position | **Green + button** in right section → opens panel |
+| **Profile** | Dropdown menu | **Full page navigation** to `/settings` |
+
+---
+
 ## Global Navigation Bar (AppBar/Header)
 
 The navigation bar has three distinct sections:

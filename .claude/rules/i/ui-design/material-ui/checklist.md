@@ -1,5 +1,22 @@
 # MUI Implementation Checklist & Validation
 
+## ⚠️ MUST VERIFY FIRST - Critical Requirements
+
+Before proceeding with any other items, ensure these 6 critical patterns are correctly implemented:
+
+| Status | Requirement | Verification |
+|--------|-------------|--------------|
+| [ ] | **1. Lottie Logo** | AppBar shows animated logo from `lottie/InteractorLogo_*.json`, NOT static image |
+| [ ] | **2. GREEN Create Button** | Drawer has `#4CD964` green "+ Create" button at top, NOT orange/blue |
+| [ ] | **3. Quick Create (+)** | AppBar right section has green + button that opens Quick Create panel |
+| [ ] | **4. Dual Notification Badge** | Notifications icon has TWO badges: normal count + red error count |
+| [ ] | **5. Warnings BELOW Items** | Warnings appear BELOW the specific item with issue, NOT at top of drawer |
+| [ ] | **6. Feedback at Bottom** | 5 emoji faces (😞😟😐🙂😊) are FIXED at bottom of drawer |
+
+**If ANY of the above are incorrect, fix them BEFORE continuing.**
+
+---
+
 ## Implementation Checklist
 
 When implementing navigation with Material UI:

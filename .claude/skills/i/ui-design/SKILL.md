@@ -130,17 +130,35 @@ gap-6  → 24px  (major sections)
 
 ---
 
+## ⚠️ CRITICAL - 6 Mandatory UI Patterns
+
+These patterns are **REQUIRED** for ALL Interactor applications. Verify these FIRST:
+
+| # | Pattern | Requirement |
+|---|---------|-------------|
+| 1 | **Lottie Logo** | AppBar uses `InteractorLogo_Light.json` / `_Dark.json` (NOT static PNG/SVG) |
+| 2 | **GREEN Create Button** | Left drawer has `#4CD964` green "+ Create" at top (NOT orange/blue) |
+| 3 | **Quick Create (+)** | AppBar right section has green + button → opens Quick Create panel |
+| 4 | **Dual Notification Badge** | Notifications has TWO badges: count (primary) + errors (red) |
+| 5 | **Warnings BELOW Items** | Warnings appear BELOW the specific problematic item (NOT at top!) |
+| 6 | **Feedback Section** | 5 emoji faces (😞😟😐🙂😊) FIXED at bottom of drawer |
+
+**See `@material-ui/index.md` for detailed implementation with code examples and visual guides.**
+
+---
+
 ## Checklist Before Completing UI Work
 
 Before finalizing any UI changes, verify against **@checklist.md**:
 
-1. ✅ Uses Interactor green (`#4CD964`) as primary accent
-2. ✅ Buttons and inputs are pill-shaped (`rounded-full`)
-3. ✅ Dark mode colors are correct
-4. ✅ Icons use outlined/stroke style
-5. ✅ Left navigation has green indicator bar for active item
-6. ✅ Responsive design works on mobile
-7. ✅ Flow diagram elements (if applicable) follow node patterns
+1. ✅ **6 Critical Patterns above are correctly implemented**
+2. ✅ Uses Interactor green (`#4CD964`) as primary accent
+3. ✅ Buttons and inputs are pill-shaped (`rounded-full`)
+4. ✅ Dark mode colors are correct
+5. ✅ Icons use outlined/stroke style
+6. ✅ Left navigation has green indicator bar for active item
+7. ✅ Responsive design works on mobile
+8. ✅ Flow diagram elements (if applicable) follow node patterns
 
 ---
 

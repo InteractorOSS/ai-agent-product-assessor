@@ -1,5 +1,35 @@
 # MUI Left Navigation (Drawer/Sidebar)
 
+## ⚠️ CRITICAL Drawer Requirements
+
+These patterns are **MANDATORY** - verify before implementing:
+
+| Requirement | ❌ WRONG | ✅ CORRECT |
+|-------------|----------|------------|
+| **Create Button** | Orange/blue/primary color | **GREEN** `#4CD964` button at TOP |
+| **Warnings** | At top of drawer as banner | **BELOW** the specific item with the issue |
+| **Feedback** | Missing or scrollable | 5 emoji faces **FIXED at BOTTOM** |
+
+### Warning Placement - CRITICAL
+
+```
+❌ WRONG                              ✅ CORRECT
+┌─────────────────────────┐          ┌─────────────────────────┐
+│  [+ Create]             │          │  [+ Create]  🟢         │
+├─────────────────────────┤          ├─────────────────────────┤
+│  ┌─────────────────────┐│          │  CHANNELS               │
+│  │ ⚠️ Warning banner   ││ ← WRONG  │  👤 peter@inter...   0  │ ← Issue
+│  └─────────────────────┘│          │  ┌─────────────────────┐│
+│  CHANNELS               │          │  │ ⚠️ Warning message  ││ ← CORRECT
+│  👤 peter@inter...   0  │          │  └─────────────────────┘│
+│  👤 Peter Jung       0  │          │  👤 Peter Jung       0  │
+└─────────────────────────┘          └─────────────────────────┘
+```
+
+**Why below?** Creates clear visual association - users immediately know which item has the problem.
+
+---
+
 ### Left Navigation Bar (Drawer/Sidebar)
 
 The left navigation has five distinct zones:
@@ -15,7 +45,7 @@ The left navigation has five distinct zones:
 #### Visual Structure
 ```
 ┌─────────────────────────────────┐
-│  [  + Create  ]                 │  ← Orange button, opens dropdown
+│  [  + Create  ]  🟢             │  ← GREEN button (#4CD964), opens dropdown
 ├─────────────────────────────────┤
 │  🏠 For you                     │  ← No arrow (home/landing)
 │  🕐 Recent                    > │  ← Arrow opens dropdown RIGHT
@@ -340,24 +370,46 @@ const InteractorDrawer = () => {
 
 #### Warning/Alert Messages (Below Feature)
 
-**IMPORTANT**: Warning messages must be placed **BELOW** the feature that has the problem, NOT above or in a separate area.
+**CRITICAL**: Warning messages must be placed **BELOW** the feature that has the problem.
+
+❌ **WRONG**: Warning at top of drawer as a global banner
+✅ **CORRECT**: Warning immediately below the specific item with the issue
 
 | Property | Value |
 |----------|-------|
-| Position | Immediately below the problematic item |
+| Position | **Immediately BELOW** the problematic item (NOT at top of drawer!) |
 | Style | Warning background (light orange/amber) |
 | Icon | `WarningIcon` or `ErrorOutlineIcon` |
 | Action | Clickable to fix the issue |
 
-**Visual Structure:**
+**❌ WRONG - Warning at top:**
 ```
 ┌─────────────────────────────────┐
-│  📧 peter@interactor...      0  │  ← Item with issue
+│  [+ Create]                     │
+├─────────────────────────────────┤
 │  ┌─────────────────────────────┐│
-│  │ ⚠️ 2 channels need...       ││  ← Warning BELOW item
+│  │ ⚠️ 2 channels need...       ││  ← WRONG! Not at top!
+│  └─────────────────────────────┘│
+│  CHANNELS                       │
+│  📧 All Channels             0  │
+│  👤 peter@interactor...      0  │
+│  👤 Peter Jung/Pulzze        0  │
+└─────────────────────────────────┘
+```
+
+**✅ CORRECT - Warning below problematic item:**
+```
+┌─────────────────────────────────┐
+│  [+ Create]                     │
+├─────────────────────────────────┤
+│  CHANNELS                       │
+│  📧 All Channels             0  │
+│  👤 peter@interactor...      0  │  ← Item with issue
+│  ┌─────────────────────────────┐│
+│  │ ⚠️ 2 channels need...       ││  ← Warning BELOW this item
 │  │   Click to reconnect     >  ││
 │  └─────────────────────────────┘│
-│  👤 Peter Jung/Pulzze        0  │  ← Next item
+│  👤 Peter Jung/Pulzze        0  │  ← Next item (no issue)
 └─────────────────────────────────┘
 ```
 
