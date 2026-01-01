@@ -30,10 +30,10 @@ This design system is split into focused modules for better performance:
 
 ## Interactor Brand Assets
 
-**IMPORTANT**: Always use the centralized brand assets located in `.claude/assets/brand/`:
+**IMPORTANT**: Always use the centralized brand assets located in `.claude/assets/i/brand/`:
 
 ```
-.claude/assets/brand/
+.claude/assets/i/brand/
 ├── brand-config.json          # Configuration and asset mappings
 ├── icons/                     # Interactor icons (PNG)
 │   ├── icon_simple_green_v1.png   # Primary icon (recommended for nav)
@@ -53,15 +53,15 @@ This design system is split into focused modules for better performance:
 └── powered-by/                # "Powered by Interactor" badges
 ```
 
-**Note**: Copy required assets from `.claude/assets/brand/` to your app's public/assets directory.
+**Note**: Copy required assets from `.claude/assets/i/brand/` to your app's public/assets directory.
 
 ### Usage Examples
 
 **Step 1: Copy assets to your application**
 ```bash
-cp -r .claude/assets/brand public/brand
+cp -r .claude/assets/i/brand public/brand
 # Or for bundler imports:
-cp -r .claude/assets/brand src/assets/brand
+cp -r .claude/assets/i/brand src/assets/brand
 ```
 
 **Step 2: Use in components**

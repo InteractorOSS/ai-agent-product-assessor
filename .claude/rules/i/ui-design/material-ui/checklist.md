@@ -5,7 +5,7 @@
 When implementing navigation with Material UI:
 
 ### Global Navigation Bar (AppBar)
-- [ ] **Brand assets** copied from `.claude/assets/brand/` to app's public/assets directory
+- [ ] **Brand assets** copied from `.claude/assets/i/brand/` to app's public/assets directory
 - [ ] **Interactor icon** uses `icon_simple_green_v1.png` from brand icons
 - [ ] **Interactor logo** uses Lottie animation (`InteractorLogo_*.json`)
 - [ ] **Theme-aware logo**: Light mode uses `InteractorLogo_Light.json`, dark mode uses `InteractorLogo_Dark.json`
@@ -136,8 +136,8 @@ Before completing any MUI navigation implementation, verify:
 ```
 
 1. **Left**: Sidebar toggle → Tools → Interactor Icon → Lottie Logo (in that order)
-2. **Interactor Icon**: `icon_simple_green_v1.png` from `.claude/assets/brand/icons/` (24x24px)
-3. **Lottie Logo**: Theme-aware animation from `.claude/assets/brand/lottie/InteractorLogo_*.json`
+2. **Interactor Icon**: `icon_simple_green_v1.png` from `.claude/assets/i/brand/icons/` (24x24px)
+3. **Lottie Logo**: Theme-aware animation from `.claude/assets/i/brand/lottie/InteractorLogo_*.json`
 4. **Center**: AI Assistant input field (centered, max-width constrained)
 5. **Right**: Notifications → Help → Profile (in that order)
 6. **Profile**: Clicking navigates to `/profile` page (no dropdown)

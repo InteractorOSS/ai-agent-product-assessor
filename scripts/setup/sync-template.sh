@@ -6,11 +6,12 @@
 #
 # Components:
 #   all       - Sync everything (use with caution)
-#   skills    - Sync .claude/skills/i/
+#   agents    - Sync .claude/agents/i/
+#   assets    - Sync .claude/assets/i/ (brand assets + icons)
 #   commands  - Sync .claude/commands/i/
 #   rules     - Sync .claude/rules/i/
-#   icons     - Sync .claude/assets/icons/i/ (2600+ SVG icons)
-#   docs      - Sync docs/i/phases/ and docs/i/checklists/
+#   skills    - Sync .claude/skills/i/
+#   docs      - Sync docs/i/ (phases, checklists, templates)
 #   validator - Sync validator skill and validation checklist
 #
 # IMPORTANT: The "/i/" folder convention
@@ -147,15 +148,20 @@ case $COMPONENT in
         read -p "Are you sure? (y/n) " -n 1 -r
         echo ""
         if [[ $REPLY =~ ^[Yy]$ ]]; then
-            git checkout template/main -- .claude/
-            git checkout template/main -- docs/i/phases/
-            git checkout template/main -- docs/i/checklists/
-            git checkout template/main -- docs/i/templates/
+            git checkout template/main -- .claude/agents/i/
+            git checkout template/main -- .claude/assets/i/
+            git checkout template/main -- .claude/commands/i/
+            git checkout template/main -- .claude/rules/i/
+            git checkout template/main -- .claude/skills/i/
+            git checkout template/main -- docs/i/
             print_success "Synced all template files"
         fi
         ;;
-    skills)
-        sync_component "skills" ".claude/skills/i/"
+    agents)
+        sync_component "agents" ".claude/agents/i/"
+        ;;
+    assets)
+        sync_component "assets (brand + icons)" ".claude/assets/i/"
         ;;
     commands)
         sync_component "commands" ".claude/commands/i/"
@@ -163,12 +169,13 @@ case $COMPONENT in
     rules)
         sync_component "rules" ".claude/rules/i/"
         ;;
-    icons)
-        sync_component "icons" ".claude/assets/icons/i/"
+    skills)
+        sync_component "skills" ".claude/skills/i/"
         ;;
     docs)
         sync_component "phase documentation" "docs/i/phases/"
         sync_component "checklists" "docs/i/checklists/"
+        sync_component "templates" "docs/i/templates/"
         ;;
     validator)
         sync_component "validator skill" ".claude/skills/i/validator/"
@@ -177,44 +184,50 @@ case $COMPONENT in
     interactive)
         echo "What would you like to sync?"
         echo ""
-        echo "  1) Skills (.claude/skills/i/)"
-        echo "  2) Commands (.claude/commands/i/)"
-        echo "  3) Rules (.claude/rules/i/)"
-        echo "  4) Icons (.claude/assets/icons/i/) - 2600+ SVG icons"
-        echo "  5) Documentation (docs/i/phases/, docs/i/checklists/)"
-        echo "  6) Validator only"
-        echo "  7) All (use with caution)"
-        echo "  8) Cancel"
+        echo "  1) Agents (.claude/agents/i/)"
+        echo "  2) Assets (.claude/assets/i/) - brand assets + icons"
+        echo "  3) Commands (.claude/commands/i/)"
+        echo "  4) Rules (.claude/rules/i/)"
+        echo "  5) Skills (.claude/skills/i/)"
+        echo "  6) Documentation (docs/i/) - phases, checklists, templates"
+        echo "  7) Validator only"
+        echo "  8) All (use with caution)"
+        echo "  9) Cancel"
         echo ""
-        read -p "Select option (1-8): " -n 1 -r
+        read -p "Select option (1-9): " -n 1 -r
         echo ""
         echo ""
 
         case $REPLY in
-            1) sync_component "skills" ".claude/skills/i/" ;;
-            2) sync_component "commands" ".claude/commands/i/" ;;
-            3) sync_component "rules" ".claude/rules/i/" ;;
-            4) sync_component "icons" ".claude/assets/icons/i/" ;;
-            5)
+            1) sync_component "agents" ".claude/agents/i/" ;;
+            2) sync_component "assets (brand + icons)" ".claude/assets/i/" ;;
+            3) sync_component "commands" ".claude/commands/i/" ;;
+            4) sync_component "rules" ".claude/rules/i/" ;;
+            5) sync_component "skills" ".claude/skills/i/" ;;
+            6)
                 sync_component "phase documentation" "docs/i/phases/"
                 sync_component "checklists" "docs/i/checklists/"
+                sync_component "templates" "docs/i/templates/"
                 ;;
-            6)
+            7)
                 sync_component "validator skill" ".claude/skills/i/validator/"
                 sync_component "validation checklist" "docs/i/checklists/validation-checklist.md"
                 ;;
-            7)
+            8)
                 print_warning "Syncing ALL template files. This may overwrite your customizations."
                 read -p "Are you sure? (y/n) " -n 1 -r
                 echo ""
                 if [[ $REPLY =~ ^[Yy]$ ]]; then
-                    git checkout template/main -- .claude/
-                    git checkout template/main -- docs/i/phases/
-                    git checkout template/main -- docs/i/checklists/
+                    git checkout template/main -- .claude/agents/i/
+                    git checkout template/main -- .claude/assets/i/
+                    git checkout template/main -- .claude/commands/i/
+                    git checkout template/main -- .claude/rules/i/
+                    git checkout template/main -- .claude/skills/i/
+                    git checkout template/main -- docs/i/
                     print_success "Synced all template files"
                 fi
                 ;;
-            8)
+            9)
                 print_info "Cancelled"
                 exit 0
                 ;;
@@ -227,7 +240,7 @@ case $COMPONENT in
     *)
         print_error "Unknown component: $COMPONENT"
         echo ""
-        echo "Valid components: all, skills, commands, rules, icons, docs, validator"
+        echo "Valid components: all, agents, assets, commands, rules, skills, docs, validator"
         exit 1
         ;;
 esac

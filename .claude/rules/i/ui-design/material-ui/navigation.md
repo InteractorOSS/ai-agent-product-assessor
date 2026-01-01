@@ -10,7 +10,7 @@ The navigation bar has three distinct sections:
 | **Center** | AI Assistant input field | Center (flex-grow) |
 | **Right** | Notification, Help, Profile icons | Right-aligned |
 
-**Brand Asset Sources for Navigation** (copy from `.claude/assets/brand/` to your app first):
+**Brand Asset Sources for Navigation** (copy from `.claude/assets/i/brand/` to your app first):
 - **Interactor Icon (Light Mode)**: `icons/icon_simple_green_v1.png`
 - **Interactor Icon (Dark Mode)**: `icons/icon_simple_white_v1.png` (for visibility on dark backgrounds)
 - **Interactor Logo (Lottie)**: `lottie/InteractorLogo_Light.json` (light mode) or `InteractorLogo_Dark.json` (dark mode)
