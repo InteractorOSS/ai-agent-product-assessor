@@ -6,7 +6,59 @@ Initialize the Implementation phase for coding and development.
 
 When this command is invoked, perform the following:
 
-### 1. Verify Planning Completion
+### 1. Verify Phoenix Project Exists
+
+**CRITICAL**: Check if the Phoenix project is initialized before proceeding.
+
+```bash
+# Check for mix.exs
+ls mix.exs 2>/dev/null
+```
+
+#### If No mix.exs Found
+
+**STOP** and guide the user to create the Phoenix project first:
+
+```markdown
+## ⚠️ Phoenix Project Not Found
+
+The implementation phase requires an initialized Phoenix project.
+
+### Option 1: Return to Planning Phase
+Run `/start-planning` which will guide you through Phoenix project creation.
+
+### Option 2: Create Phoenix Project Now
+
+1. **Derive app name** from your project (snake_case):
+   - Example: "Meeting Recording Note Taker" → `meeting_recording_note_taker`
+
+2. **Create the project**:
+   ```bash
+   mix phx.new . --app <app_name> --database postgres --live
+   ```
+
+   Or in a new directory:
+   ```bash
+   mix phx.new <app_name> --database postgres --live
+   ```
+
+3. **Configure port** (edit `config/dev.exs`):
+   ```elixir
+   http: [ip: {127, 0, 0, 1}, port: 4005]
+   ```
+
+4. **Initialize**:
+   ```bash
+   mix deps.get
+   mix ecto.create
+   ```
+
+Then run `/start-implementation` again.
+```
+
+Do not proceed with implementation until the Phoenix project exists.
+
+### 2. Verify Planning Completion
 
 Check if planning artifacts exist:
 - `docs/planning/architecture.md`
@@ -14,11 +66,11 @@ Check if planning artifacts exist:
 
 If missing, warn that planning phase may be incomplete.
 
-### 2. Set Context
+### 3. Set Context
 
 Update the project phase in CLAUDE.md to "implementation".
 
-### 3. Development Environment Check
+### 4. Development Environment Check
 
 Verify development setup:
 - [ ] Dependencies installed (`npm install` or equivalent)
@@ -32,24 +84,23 @@ Verify development setup:
 **Development**: Use port **4005 or higher** to avoid conflicts with other services.
 **Production**: Use port **4000** (standard Phoenix default).
 
-Configure in `config/dev.exs`:
+#### Dynamic Port Configuration (Recommended)
+
+Update `config/dev.exs` to read from environment variable with fallback:
 ```elixir
 config :my_app, MyAppWeb.Endpoint,
-  http: [ip: {127, 0, 0, 1}, port: 4005],
+  http: [ip: {127, 0, 0, 1}, port: String.to_integer(System.get_env("PORT") || "4005")],
   # ... rest of config
 ```
 
-Or via environment variable in `.env`:
-```bash
-PORT=4005  # Development
-```
+This allows the startup script to find an available port automatically.
 
 For production (`config/runtime.exs`):
 ```elixir
 port = String.to_integer(System.get_env("PORT") || "4000")
 ```
 
-### 4. Create Environment Configuration
+### 5. Create Environment Configuration
 
 If `.env` does not exist, create it from `.env.example`:
 
@@ -155,7 +206,7 @@ Edit `.env` anytime to add these configurations.
 - [ ] `LIVE_VIEW_SIGNING_SALT` is set (32 characters)
 - [ ] `PORT` is set to 4005 or higher for development
 
-### 5. Display Implementation Guidelines
+### 6. Display Implementation Guidelines
 
 ```markdown
 ## Implementation Phase Guidelines
@@ -185,14 +236,14 @@ Edit `.env` anytime to add these configurations.
 - Request tests for generated code
 ```
 
-### 6. Display Current Tasks
+### 7. Display Current Tasks
 
 If `docs/planning/tasks.md` exists, show:
 - Current sprint/milestone tasks
 - Task priorities
 - Dependencies
 
-### 7. Suggested Prompts
+### 8. Suggested Prompts
 
 ```
 "Help me implement [feature] based on the architecture"
@@ -203,7 +254,7 @@ If `docs/planning/tasks.md` exists, show:
 "Implement [pattern] for [use case]"
 ```
 
-### 8. Available Skills
+### 9. Available Skills
 
 ```markdown
 ### Skills for Implementation
@@ -212,7 +263,7 @@ If `docs/planning/tasks.md` exists, show:
 - `doc-generator` - Update documentation
 ```
 
-### 9. Create Development Start Script
+### 10. Create Development Start Script
 
 Create `./scripts/start.sh` - a comprehensive development startup script that:
 
@@ -234,9 +285,14 @@ Create `./scripts/start.sh` - a comprehensive development startup script that:
    - Run `mix ecto.setup` if database not initialized
    - Run `npm install` if node_modules missing (for assets)
 
-4. **Starts the development server**:
+4. **Finds an available port**:
+   - Start from port 4005
+   - Check if port is in use, increment if needed
+   - Export PORT environment variable for Phoenix
+
+5. **Starts the development server**:
    - Run migrations if pending
-   - Start Phoenix server with IEx shell
+   - Start Phoenix server with IEx shell on available port
    - Display helpful startup information
 
 ```bash
@@ -248,6 +304,40 @@ Create `./scripts/start.sh` - a comprehensive development startup script that:
 #   --check-only    Only check dependencies, don't start server
 #   --setup         Run full setup (deps, db, assets)
 #   --skip-checks   Skip dependency checks and start immediately
+#   --port PORT     Use specific port (default: auto-find from 4005)
+```
+
+**Port Finding Logic** (must be included in start.sh):
+```bash
+# Find available port starting from 4005
+find_available_port() {
+    local port=${1:-4005}
+    local max_port=$((port + 100))
+
+    while [ $port -lt $max_port ]; do
+        if ! lsof -i :$port > /dev/null 2>&1; then
+            echo $port
+            return 0
+        fi
+        port=$((port + 1))
+    done
+
+    echo "Error: No available port found between $1 and $max_port" >&2
+    return 1
+}
+
+# Use specified port or find available one
+if [ -n "$SPECIFIED_PORT" ]; then
+    PORT=$SPECIFIED_PORT
+else
+    PORT=$(find_available_port 4005)
+    if [ $? -ne 0 ]; then
+        exit 1
+    fi
+fi
+
+export PORT
+echo "Starting Phoenix on port $PORT..."
 ```
 
 **Required behavior**:
@@ -256,6 +346,7 @@ Create `./scripts/start.sh` - a comprehensive development startup script that:
 - Support `--help` flag for usage information
 - Be idempotent (safe to run multiple times)
 - Work on macOS and Linux
+- **Automatically find available port if default is in use**
 
 ## Output
 
@@ -357,7 +448,7 @@ Run the `validator` skill:
 "Validate the implementation before code review"
 ```
 
-### 10. Update Team Settings
+### 11. Update Team Settings
 
 After the application has been built, update `.claude/settings.json` to reflect the project's technology stack:
 
@@ -561,7 +652,7 @@ After updating settings:
 - [ ] Hooks reference available formatters
 - [ ] No sensitive data in env section
 
-### 11. Update Project README
+### 12. Update Project README
 
 After the application has been built, update the project documentation:
 

@@ -13,6 +13,16 @@
 #   docs      - Sync docs/i/phases/ and docs/i/checklists/
 #   validator - Sync validator skill and validation checklist
 #
+# IMPORTANT: The "/i/" folder convention
+# ======================================
+# Files inside "/i/" directories are template-owned and safe to sync.
+# Files OUTSIDE "/i/" directories are user-owned and will NOT be synced.
+#
+# Protected by design (not in /i/ paths):
+#   - docs/project-idea-intake.md  (your project idea - never overwritten)
+#   - CLAUDE.md                    (your project config - never overwritten)
+#   - Any files you create outside /i/ directories
+#
 
 set -e
 
@@ -48,6 +58,43 @@ echo ""
 
 # Template repository URL
 TEMPLATE_REPO_URL="https://github.com/pulzze/product-dev-template.git"
+
+# Protected files - these should NEVER be overwritten by sync
+# These are user-specific files that live outside /i/ directories
+PROTECTED_FILES=(
+    "docs/project-idea-intake.md"
+    "CLAUDE.md"
+)
+
+# Check if a file is protected
+is_protected() {
+    local file=$1
+    for protected in "${PROTECTED_FILES[@]}"; do
+        if [[ "$file" == "$protected" ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+# Warn if any protected files would be affected
+check_protected_files() {
+    local path=$1
+    local has_protected=false
+
+    for protected in "${PROTECTED_FILES[@]}"; do
+        if [[ "$protected" == "$path"* ]] || git diff --name-only HEAD template/main -- "$path" 2>/dev/null | grep -q "^$protected$"; then
+            print_warning "Protected file would be affected: $protected"
+            has_protected=true
+        fi
+    done
+
+    if $has_protected; then
+        print_warning "Protected files are user-specific and should not be synced."
+        return 1
+    fi
+    return 0
+}
 
 # Check if template remote exists, add if missing
 if ! git remote | grep -q "template"; then

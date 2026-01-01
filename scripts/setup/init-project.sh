@@ -191,6 +191,72 @@ if [ -f "docs/i/templates/template-feedback.md" ]; then
     print_success "Created docs/template-feedback.md for tracking improvements"
 fi
 
+# Offer Phoenix project initialization for web/backend types
+if [[ "$PROJECT_TYPE" == "web" || "$PROJECT_TYPE" == "backend" ]]; then
+    echo ""
+    print_info "This template is configured for Elixir/Phoenix projects."
+    echo ""
+    read -p "Would you like to initialize a Phoenix project now? (y/n) " -n 1 -r
+    echo ""
+
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        # Convert project name to snake_case for Elixir
+        APP_NAME=$(echo "$PROJECT_NAME" | tr '[:upper:]' '[:lower:]' | tr '-' '_' | tr ' ' '_')
+
+        print_info "Creating Phoenix project: $APP_NAME"
+        echo ""
+
+        # Check if Elixir/Mix is available
+        if ! command -v mix &> /dev/null; then
+            print_error "Elixir/Mix not found. Please install Elixir first."
+            print_info "Visit: https://elixir-lang.org/install.html"
+            print_warning "You can create the Phoenix project later during /start-planning"
+        else
+            # Check if phx.new is available
+            if mix help phx.new &> /dev/null; then
+                print_info "Running: mix phx.new . --app $APP_NAME --database postgres --live"
+                echo ""
+
+                if mix phx.new . --app "$APP_NAME" --database postgres --live; then
+                    print_success "Phoenix project created successfully!"
+                    echo ""
+
+                    # Configure development port to use PORT env var with 4005 default
+                    if [ -f "config/dev.exs" ]; then
+                        print_info "Configuring dynamic port (default: 4005)..."
+                        # Replace static port with dynamic PORT env var
+                        if [[ "$OSTYPE" == "darwin"* ]]; then
+                            sed -i '' 's/port: 4000/port: String.to_integer(System.get_env("PORT") || "4005")/g' config/dev.exs
+                        else
+                            sed -i 's/port: 4000/port: String.to_integer(System.get_env("PORT") || "4005")/g' config/dev.exs
+                        fi
+                        print_success "Development port configured (dynamic, default: 4005)"
+                    fi
+
+                    # Install dependencies
+                    print_info "Installing dependencies..."
+                    mix deps.get
+
+                    print_success "Phoenix project ready!"
+                    echo ""
+                    print_info "Run 'mix ecto.create' to create the database"
+                    print_info "Run 'mix phx.server' to start the server (localhost:4005)"
+                else
+                    print_error "Failed to create Phoenix project"
+                    print_warning "You can try again during /start-planning"
+                fi
+            else
+                print_warning "Phoenix installer not found."
+                print_info "Install it with: mix archive.install hex phx_new"
+                print_warning "You can create the Phoenix project later during /start-planning"
+            fi
+        fi
+    else
+        print_info "Skipping Phoenix project creation"
+        print_info "You can create it later during /start-planning"
+    fi
+fi
+
 # Summary
 echo ""
 echo -e "${GREEN}╔═══════════════════════════════════════════════════════════╗${NC}"
@@ -202,13 +268,27 @@ echo -e "${BLUE}Project:${NC} $PROJECT_NAME"
 echo -e "${BLUE}Type:${NC} $PROJECT_TYPE"
 echo ""
 
-echo -e "${YELLOW}Next Steps:${NC}"
-echo ""
-echo "  1. Review and customize CLAUDE.md for your project"
-echo "  2. Configure .claude/settings.json for your team"
-echo "  3. Update .env with your environment variables"
-echo "  4. Set up MCP servers in .mcp.json (if needed)"
-echo "  5. Start development with: /start-discovery"
+# Check if mix.exs exists to adjust next steps
+if [ -f "mix.exs" ]; then
+    echo -e "${YELLOW}Next Steps:${NC}"
+    echo ""
+    echo "  1. Review and customize CLAUDE.md for your project"
+    echo "  2. Configure .claude/settings.json for your team"
+    echo "  3. Create database: mix ecto.create"
+    echo "  4. Start development with: /start-discovery"
+else
+    echo -e "${YELLOW}Next Steps:${NC}"
+    echo ""
+    echo "  1. Review and customize CLAUDE.md for your project"
+    echo "  2. Configure .claude/settings.json for your team"
+    echo "  3. Update .env with your environment variables"
+    echo "  4. Set up MCP servers in .mcp.json (if needed)"
+    echo "  5. Start development with: /start-discovery"
+    echo ""
+    print_warning "Note: Phoenix project not yet created."
+    echo "  Create it during /start-planning or manually with:"
+    echo "  mix phx.new . --app <app_name> --database postgres --live"
+fi
 echo ""
 
 echo -e "${BLUE}Available Commands:${NC}"

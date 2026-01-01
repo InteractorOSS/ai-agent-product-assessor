@@ -62,7 +62,92 @@ Check if the following exist, create if missing:
 - [ ] API documentation started
 ```
 
-### 5. Invoke Architecture Planner
+### 5. Initialize Phoenix Project
+
+**IMPORTANT**: Check if a Phoenix project exists before proceeding with detailed planning.
+
+#### Check for Existing Project
+
+```bash
+# Check if mix.exs exists
+ls mix.exs 2>/dev/null
+```
+
+#### If No Project Exists
+
+If `mix.exs` is missing, the Phoenix project needs to be created:
+
+1. **Derive app name from project**:
+   - Convert project name to snake_case (e.g., "my-project" → "my_project")
+   - Use this for the Phoenix app name
+
+2. **Create the Phoenix project**:
+   ```bash
+   # Standard Phoenix project with LiveView and PostgreSQL
+   mix phx.new <app_name> --database postgres --live
+
+   # Or if in existing directory:
+   mix phx.new . --app <app_name> --database postgres --live
+   ```
+
+3. **After creation, configure dynamic port** (auto-finds available port):
+
+   Update `config/dev.exs` to use PORT env var with 4005 default:
+   ```elixir
+   config :<app_name>, <AppName>Web.Endpoint,
+     http: [ip: {127, 0, 0, 1}, port: String.to_integer(System.get_env("PORT") || "4005")],
+     # ... rest of config
+   ```
+
+   This allows `scripts/start.sh` to automatically find an available port if 4005 is in use.
+
+4. **Add recommended dependencies to `mix.exs`**:
+   ```elixir
+   defp deps do
+     [
+       # ... existing deps ...
+       {:oban, "~> 2.17"},           # Background jobs
+       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+       {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false},
+       {:excoveralls, "~> 0.18", only: :test}
+     ]
+   end
+   ```
+
+5. **Initialize the project**:
+   ```bash
+   mix deps.get
+   mix ecto.create
+   mix ecto.migrate
+   ```
+
+#### Display After Project Creation
+
+```markdown
+## Phoenix Project Initialized
+
+✅ Phoenix project created: <app_name>
+✅ Database configured: PostgreSQL
+✅ LiveView enabled
+✅ Development port: Dynamic (default 4005, auto-finds next if in use)
+
+### Project Structure
+lib/
+├── <app_name>/           # Business logic (contexts)
+└── <app_name>_web/       # Web layer (controllers, LiveView)
+
+### Quick Verification
+```bash
+./scripts/start.sh    # Auto-finds available port (4005+)
+# Or manually:
+mix phx.server        # Uses PORT env var or default 4005
+mix test              # Should pass
+```
+
+Now proceeding with architecture design...
+```
+
+### 6. Invoke Architecture Planner
 
 Suggest using the `architecture-planner` skill:
 

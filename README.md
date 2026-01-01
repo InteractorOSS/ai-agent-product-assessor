@@ -21,7 +21,7 @@ A comprehensive AI-driven product development template for Elixir/Phoenix applic
 
 #### Enter your product idea
 
-Update `docs/phases/01-discovery/project-idea-intake.md` with your idea.
+Update `docs/project-idea-intake.md` with your idea.
 
 | You can write your ideas in a notepad and instruct Claude to fill in the `project-idea-intake.md`
 | Having screenshots or mock of page drawn up helps. Save it in a file and let Claude know the location.
@@ -34,7 +34,7 @@ git clone https://github.com/pulzze/product-dev-template.git my-project
 cd my-project
 
 # Run the initialization script
-./scripts/setup/init-project.sh my-project web mobile backend
+./scripts/setup/init-project.sh my-project web backend
 
 # Project types: web, mobile, backend, cli
 ```
@@ -219,10 +219,10 @@ my-project/
 ├── .env.example                 # Environment variables template
 │
 ├── docs/
+│   ├── project-idea-intake.md   # Start here with rough ideas
 │   ├── phases/                  # Phase documentation
 │   │   ├── 01-discovery/
 │   │   │   ├── README.md
-│   │   │   ├── project-idea-intake.md   # Start here with rough ideas
 │   │   │   ├── requirements-template.md
 │   │   │   ├── stakeholder-analysis.md
 │   │   │   └── user-story-template.md
