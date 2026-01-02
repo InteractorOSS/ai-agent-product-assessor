@@ -9,11 +9,17 @@ Navigation elements including sidebar, header, and breadcrumbs.
 ### Structure
 ```html
 <aside class="w-64 h-screen bg-white dark:bg-[#1C1C1E] border-r border-[#E5E5EA] dark:border-[#3A3A3C] flex flex-col">
-  <!-- Logo -->
+  <!-- Logo (Lottie animation - see logo-branding.md for setup) -->
   <div class="px-4 py-5 border-b border-[#E5E5EA] dark:border-[#3A3A3C]">
-    <a href="/" class="flex items-center gap-2">
-      <svg class="w-8 h-8 text-[#4CD964]"><!-- Logo icon --></svg>
-      <span class="text-xl font-bold text-[#4CD964]">Interactor</span>
+    <a href="/" class="flex items-center">
+      <lottie-player
+        src="/images/logo/InteractorLogo_DarkMode.json"
+        background="transparent"
+        speed="1"
+        style="width: 120px; height: 30px;"
+        autoplay
+      >
+      </lottie-player>
     </a>
   </div>
 
@@ -114,9 +120,15 @@ Navigation elements including sidebar, header, and breadcrumbs.
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
       </svg>
     </button>
-    <a href="/" class="flex items-center gap-2">
-      <svg class="w-8 h-8 text-[#4CD964]"><!-- Logo SVG --></svg>
-      <span class="text-xl font-bold text-[#4CD964]">Interactor</span>
+    <a href="/" class="flex items-center">
+      <lottie-player
+        src="/images/logo/InteractorLogo_DarkMode.json"
+        background="transparent"
+        speed="1"
+        style="width: 120px; height: 30px;"
+        autoplay
+      >
+      </lottie-player>
     </a>
   </div>
 
