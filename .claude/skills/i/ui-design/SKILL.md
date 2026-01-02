@@ -57,8 +57,21 @@ The complete design system is split into modular rule files for easy reference:
 ### Specialized Components
 - **@flow-components.md** - Flow diagram nodes, connection lines, endpoint markers, conditional nodes
 
-### Framework Integration
-- **@material-ui/index.md** - Material UI (MUI) specific implementation rules, navigation layouts, settings pages (Profile, Preferences, Notifications)
+### Framework Adapters
+
+**Source of Truth**: All UI patterns are defined in **@material-ui/index.md**. Other adapters provide translation mappings only.
+
+| If your project has... | Use |
+|------------------------|-----|
+| `@mui/material` in `package.json` | **@material-ui/index.md** (full implementation) |
+| `tailwind.config.js` in root | **@material-ui/index.md** + **@tailwind/index.md** (translation) |
+| `mix.exs` + Phoenix dependency | **@material-ui/index.md** + **@phoenix/index.md** (translation) |
+
+Available files:
+- **@material-ui/index.md** - Source of truth for all UI patterns
+- **@tailwind/index.md** - MUI → TailwindCSS class translations
+- **@tailwind/colors.md** - TailwindCSS color mappings
+- **@phoenix/index.md** - MUI/React → Phoenix/LiveView translations
 
 ### Quality Assurance
 - **@checklist.md** - Complete design system compliance checklist
@@ -143,7 +156,7 @@ These patterns are **REQUIRED** for ALL Interactor applications. Verify these FI
 | 5 | **Warnings BELOW Items** | Warnings appear BELOW the specific problematic item (NOT at top!) |
 | 6 | **Feedback Section** | 5 emoji faces (😞😟😐🙂😊) FIXED at bottom of drawer |
 
-**See `@material-ui/index.md` for detailed implementation with code examples and visual guides.**
+**See `@material-ui/index.md` for detailed requirements. For other frameworks, use the translation adapters above.**
 
 ---
 
