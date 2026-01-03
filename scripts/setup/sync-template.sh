@@ -125,35 +125,104 @@ sync_component() {
 
     print_info "Syncing $component..."
 
-    # Show what would change
+    # Show files that would be added/modified
     echo ""
-    echo "Files that would be updated:"
-    git diff --name-only HEAD template/main -- "$path" 2>/dev/null | head -20 || echo "  (no changes)"
+    echo "Files to add/update:"
+    local added_modified
+    added_modified=$(git diff --name-status HEAD template/main -- "$path" 2>/dev/null | grep -E '^[AM]' | cut -f2 | head -20)
+    if [[ -n "$added_modified" ]]; then
+        echo "$added_modified" | sed 's/^/  /'
+    else
+        echo "  (none)"
+    fi
+
+    # Show files that would be deleted
     echo ""
+    echo "Files to delete:"
+    local deleted
+    deleted=$(git diff --name-status HEAD template/main -- "$path" 2>/dev/null | grep '^D' | cut -f2 | head -20)
+    if [[ -n "$deleted" ]]; then
+        echo "$deleted" | sed 's/^/  /'
+    else
+        echo "  (none)"
+    fi
+    echo ""
+
+    # Check if there are any changes
+    if [[ -z "$added_modified" && -z "$deleted" ]]; then
+        print_info "No changes to sync for $component"
+        return 0
+    fi
 
     read -p "Proceed with sync? (y/n) " -n 1 -r
     echo ""
 
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        git checkout template/main -- "$path"
+        # Remove deleted files first
+        if [[ -n "$deleted" ]]; then
+            echo "$deleted" | while read -r file; do
+                if [[ -f "$file" ]]; then
+                    rm -f "$file"
+                    print_info "Deleted: $file"
+                fi
+            done
+        fi
+
+        # Then checkout additions/modifications
+        if [[ -n "$added_modified" ]]; then
+            git checkout template/main -- "$path"
+        fi
         print_success "Synced $component"
     else
         print_warning "Skipped $component"
     fi
 }
 
+sync_all_paths() {
+    local paths=(
+        ".claude/agents/i/"
+        ".claude/assets/i/"
+        ".claude/commands/i/"
+        ".claude/rules/i/"
+        ".claude/skills/i/"
+        ".claude/templates/i/"
+        "docs/i/"
+    )
+
+    # Remove deleted files first across all paths
+    for path in "${paths[@]}"; do
+        git diff --name-status HEAD template/main -- "$path" 2>/dev/null | grep '^D' | cut -f2 | while read -r file; do
+            if [[ -f "$file" ]]; then
+                rm -f "$file"
+                print_info "Deleted: $file"
+            fi
+        done
+    done
+
+    # Then checkout additions/modifications
+    for path in "${paths[@]}"; do
+        if git ls-tree -d template/main -- "$path" &>/dev/null; then
+            git checkout template/main -- "$path" 2>/dev/null || true
+        fi
+    done
+}
+
 case $COMPONENT in
     all)
         print_warning "Syncing ALL template files. This may overwrite your customizations."
+        echo ""
+        echo "Files to delete:"
+        all_deleted=$(git diff --name-status HEAD template/main -- .claude/agents/i/ .claude/assets/i/ .claude/commands/i/ .claude/rules/i/ .claude/skills/i/ .claude/templates/i/ docs/i/ 2>/dev/null | grep '^D' | cut -f2 | head -30)
+        if [[ -n "$all_deleted" ]]; then
+            echo "$all_deleted" | sed 's/^/  /'
+        else
+            echo "  (none)"
+        fi
+        echo ""
         read -p "Are you sure? (y/n) " -n 1 -r
         echo ""
         if [[ $REPLY =~ ^[Yy]$ ]]; then
-            git checkout template/main -- .claude/agents/i/
-            git checkout template/main -- .claude/assets/i/
-            git checkout template/main -- .claude/commands/i/
-            git checkout template/main -- .claude/rules/i/
-            git checkout template/main -- .claude/skills/i/
-            git checkout template/main -- docs/i/
+            sync_all_paths
             print_success "Synced all template files"
         fi
         ;;
@@ -215,15 +284,19 @@ case $COMPONENT in
                 ;;
             8)
                 print_warning "Syncing ALL template files. This may overwrite your customizations."
+                echo ""
+                echo "Files to delete:"
+                all_deleted=$(git diff --name-status HEAD template/main -- .claude/agents/i/ .claude/assets/i/ .claude/commands/i/ .claude/rules/i/ .claude/skills/i/ .claude/templates/i/ docs/i/ 2>/dev/null | grep '^D' | cut -f2 | head -30)
+                if [[ -n "$all_deleted" ]]; then
+                    echo "$all_deleted" | sed 's/^/  /'
+                else
+                    echo "  (none)"
+                fi
+                echo ""
                 read -p "Are you sure? (y/n) " -n 1 -r
                 echo ""
                 if [[ $REPLY =~ ^[Yy]$ ]]; then
-                    git checkout template/main -- .claude/agents/i/
-                    git checkout template/main -- .claude/assets/i/
-                    git checkout template/main -- .claude/commands/i/
-                    git checkout template/main -- .claude/rules/i/
-                    git checkout template/main -- .claude/skills/i/
-                    git checkout template/main -- docs/i/
+                    sync_all_paths
                     print_success "Synced all template files"
                 fi
                 ;;
