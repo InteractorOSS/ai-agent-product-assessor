@@ -4,18 +4,60 @@ These rules apply **ONLY** when the project uses Material UI (MUI) as the design
 
 ---
 
+# ⛔ MANDATORY LAYOUT STRUCTURE
+
+> **ALL applications MUST implement this 3-panel layout by default.**
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│ APPBAR (Global Navigation Bar) - Fixed Top, h-16                                 │
+│ [≡][⊞][Logo🎬]        [✨ What can I do for you?...]        [🔔¹²][?][👤][+🟢] │
+├─────────────────┬────────────────────────────────────────────┬───────────────────┤
+│ LEFT DRAWER     │                                            │ RIGHT PANE        │
+│ w-64, fixed     │           MAIN CONTENT                     │ w-80, slides in   │
+│                 │                                            │                   │
+│ [+ Create] 🟢   │           (page content)                   │ AI Copilot or     │
+│                 │                                            │ Quick Create      │
+│ NAVIGATION      │                                            │                   │
+│ - Dashboard     │                                            │                   │
+│ - Items...      │                                            │                   │
+│   ⚠️ Warning    │←── Warnings BELOW items, not above!        │                   │
+│                 │                                            │                   │
+│ ─────────────── │                                            │                   │
+│ Feedback        │                                            │                   │
+│ 😞 😟 😐 🙂 😊  │                                            │                   │
+└─────────────────┴────────────────────────────────────────────┴───────────────────┘
+```
+
+### Layout Template
+```
+.claude/templates/ui/phoenix/app_layout.html.heex  →  lib/my_app_web/components/layouts/app.html.heex
+```
+
+---
+
 ## ⚠️ CRITICAL REQUIREMENTS - MUST IMPLEMENT
 
-The following 6 patterns are **MANDATORY** for all Interactor applications. Failure to implement these correctly will result in inconsistent UX.
+The following 9 patterns are **MANDATORY** for all Interactor applications. Failure to implement these correctly will result in inconsistent UX.
+
+### Layout Patterns (3)
 
 | # | Requirement | ❌ Common Mistake | ✅ Correct Implementation |
 |---|-------------|-------------------|---------------------------|
-| 1 | **Lottie Animated Logo** | Using static PNG/SVG | Use `InteractorLogo_Light.json` or `_Dark.json` with lottie-react |
-| 2 | **GREEN Create Button** | Using orange/blue/primary color | Use `#4CD964` (Interactor green) for the + Create button in drawer |
-| 3 | **Quick Create (+)** | Missing or wrong action | Green + button in AppBar right section opens Quick Create panel |
-| 4 | **Dual Notification Badge** | Single badge only | Primary badge (notifications) + secondary red badge (errors) |
-| 5 | **Warnings BELOW Items** | Warning at TOP of drawer | Warning placed immediately BELOW the specific problematic item |
-| 6 | **Feedback Section** | Missing or at wrong position | 5 emoji faces (😞😟😐🙂😊) FIXED at BOTTOM of drawer |
+| 1 | **AppBar (GNB)** | No top navigation or incomplete | Fixed top bar with Logo, AI Input, Notifications, Profile, Quick Create |
+| 2 | **Left Drawer** | No sidebar or floating | Fixed w-64 sidebar with Create button, Navigation, Feedback |
+| 3 | **Main Content Margins** | Content under AppBar/Drawer | `ml-64 pt-16` to offset fixed elements |
+
+### Component Patterns (6)
+
+| # | Requirement | ❌ Common Mistake | ✅ Correct Implementation |
+|---|-------------|-------------------|---------------------------|
+| 4 | **Lottie Animated Logo** | Using static PNG/SVG | Use `InteractorLogo_Light.json` or `_Dark.json` with lottie-react |
+| 5 | **GREEN Create Button** | Using orange/blue/primary color | Use `#4CD964` (Interactor green) for the + Create button in drawer |
+| 6 | **Quick Create (+)** | Missing or wrong action | Green + button in AppBar right section opens Quick Create panel |
+| 7 | **Dual Notification Badge** | Single badge only | Primary badge (notifications) + secondary red badge (errors) |
+| 8 | **Warnings BELOW Items** | Warning at TOP of drawer | Warning placed immediately BELOW the specific problematic item |
+| 9 | **Feedback Section** | Missing or at wrong position | 5 emoji faces (😞😟😐🙂😊) FIXED at BOTTOM of drawer |
 
 ### Warning Placement - Visual Guide
 

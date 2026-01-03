@@ -1,8 +1,54 @@
 # MUI Implementation Checklist & Validation
 
-## ⚠️ MUST VERIFY FIRST - Critical Requirements
+---
 
-Before proceeding with any other items, ensure these 6 critical patterns are correctly implemented:
+# ⛔ STEP 0: MANDATORY LAYOUT STRUCTURE
+
+> **Before checking anything else, verify the app has the correct 3-panel layout.**
+
+## Layout Verification
+
+| Status | Component | Verification |
+|--------|-----------|--------------|
+| [ ] | **AppBar (GNB)** | Fixed top bar with `h-16 fixed top-0 left-0 right-0 z-50` |
+| [ ] | **Left Drawer** | Fixed sidebar with `w-64 fixed left-0 top-16 h-screen` |
+| [ ] | **Main Content** | Scrollable with `ml-64 pt-16 min-h-screen` margins |
+| [ ] | **Right Pane** | Slides in from right with `w-80 fixed right-0 top-16` (when open) |
+
+## Layout Visual Check
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│ APPBAR - Fixed Top (h-16, z-50)                                                  │
+│ [≡][⊞][Logo🎬]      [✨ AI Input...]                       [🔔¹²][?][👤][+🟢] │
+├─────────────────┬────────────────────────────────────────────┬───────────────────┤
+│ LEFT DRAWER     │                                            │ RIGHT PANE        │
+│ w-64, fixed     │           MAIN CONTENT                     │ w-80, slides in   │
+│                 │                                            │                   │
+│ [+ Create] 🟢   │           ml-64 pt-16                      │ AI Copilot or     │
+│                 │                                            │ Quick Create      │
+│ Navigation      │           (page content)                   │                   │
+│ with active     │                                            │                   │
+│ green border    │                                            │                   │
+│   ⚠️ Warnings   │←── Warnings BELOW items, not above!        │                   │
+│   go BELOW      │                                            │                   │
+│                 │                                            │                   │
+│ ─────────────── │                                            │                   │
+│ Feedback        │                                            │                   │
+│ 😞 😟 😐 🙂 😊  │                                            │                   │
+└─────────────────┴────────────────────────────────────────────┴───────────────────┘
+```
+
+**If the layout doesn't match, copy and customize:**
+```
+.claude/templates/ui/phoenix/app_layout.html.heex  →  lib/my_app_web/components/layouts/app.html.heex
+```
+
+---
+
+## ⚠️ MUST VERIFY NEXT - Critical Component Patterns
+
+Before proceeding with detailed items, ensure these 6 critical component patterns are correctly implemented:
 
 | Status | Requirement | Verification |
 |--------|-------------|--------------|
@@ -14,6 +60,8 @@ Before proceeding with any other items, ensure these 6 critical patterns are cor
 | [ ] | **6. Feedback at Bottom** | 5 emoji faces (😞😟😐🙂😊) are FIXED at bottom of drawer |
 
 **If ANY of the above are incorrect, fix them BEFORE continuing.**
+
+**Total: 4 layout checks + 6 component checks = 10 mandatory patterns**
 
 ---
 

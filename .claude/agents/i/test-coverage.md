@@ -1,3 +1,8 @@
+---
+name: test-coverage
+description: Test execution, coverage analysis, and test scaffold generation
+---
+
 # Test Coverage Agent
 
 Specialized agent for test execution, coverage analysis, and test scaffold generation. Runs tests in isolation and returns summarized results.

@@ -1,3 +1,8 @@
+---
+name: security-auditor
+description: Security scanning and vulnerability assessment
+---
+
 # Security Auditor Agent
 
 Specialized agent for security scanning and vulnerability assessment. Runs independently to avoid filling main context with security analysis data.

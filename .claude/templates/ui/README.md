@@ -2,21 +2,42 @@
 
 Pre-built Phoenix/LiveView templates following Material UI design patterns.
 
+## ⛔ MANDATORY - Start Here
+
+**Every application MUST use the app_layout template as the default layout:**
+
+```bash
+cp .claude/templates/ui/phoenix/app_layout.html.heex lib/my_app_web/components/layouts/app.html.heex
+```
+
 ## Templates
 
-| Template | Description |
-|----------|-------------|
-| `app_bar.html.heex` | Material AppBar with logo, search, Quick Create FAB, notifications, profile |
-| `drawer.html.heex` | Left sidebar with Create button, navigation, and feedback section |
-| `notification_badge.html.heex` | Dual notification badge (primary + error count) |
-| `create_button.html.heex` | Green pill-shaped button variants |
-| `layout.html.heex` | Full-page Material layout structure |
+### Phoenix/LiveView (`phoenix/` directory)
+
+| Template | Description | MANDATORY |
+|----------|-------------|-----------|
+| `app_layout.html.heex` | **Full 3-panel layout**: AppBar + Left Drawer + Main Content + Right Pane | ✅ YES |
+| `nav_item.html.heex` | Navigation item component with active state, count badge, and warning support | Recommended |
+
+## Default Layout Structure
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│ APPBAR (GNB) - Logo, AI Input, Notifications, Profile, Quick Create (+)          │
+├─────────────────┬────────────────────────────────────────────┬───────────────────┤
+│ LEFT DRAWER     │           MAIN CONTENT                     │ RIGHT PANE        │
+│ [+ Create] 🟢   │           (page content)                   │ (AI Copilot or    │
+│ Navigation      │                                            │  Quick Create)    │
+│ Feedback 😞-😊  │                                            │                   │
+└─────────────────┴────────────────────────────────────────────┴───────────────────┘
+```
 
 ## Usage
 
-1. **Copy templates** to your project's `lib/my_app_web/components/` or layout directories
-2. **Customize** the templates for your specific needs
-3. **Integrate** into your `core_components.ex` for reusable components
+1. **Copy the app layout** to your project's layouts directory
+2. **Customize navigation items** for your app's routes
+3. **Add LiveView hooks** for Lottie animations and feedback modal
+4. **Wire up events** for drawer toggle, AI input, feedback, etc.
 
 ## 6 Mandatory Patterns
 

@@ -27,20 +27,78 @@ This file provides comprehensive guidance to Claude Code for AI-driven product d
 - **Pipelines**: Use `|>` for data transformation
 - **Pattern Matching**: Leverage for control flow and destructuring
 
+---
+
+# ⛔ STOP - MANDATORY LAYOUT STRUCTURE
+
+> **Before writing ANY UI code, you MUST implement this layout structure.**
+
+## Default Application Layout (MANDATORY)
+
+**ALL applications built with this template MUST use this 3-panel layout:**
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│ APPBAR (Global Navigation Bar) - Fixed Top, h-16, z-50                           │
+│ [≡][⊞][Logo]         [✨ What can I do for you?...]          [🔔¹²][?][👤][+]   │
+├─────────────────┬────────────────────────────────────────────┬───────────────────┤
+│ LEFT DRAWER     │                                            │ RIGHT PANE        │
+│ (Sidebar)       │           MAIN CONTENT                     │ (AI Copilot)      │
+│ w-64, fixed     │           (scrollable)                     │ w-80, optional    │
+│                 │                                            │                   │
+│ [+ Create] 🟢   │                                            │ Slides in when    │
+│                 │                                            │ user submits AI   │
+│ NAVIGATION      │                                            │ query or clicks   │
+│ - Dashboard     │                                            │ Quick Create (+)  │
+│ - Items...      │                                            │                   │
+│                 │                                            │                   │
+│ ⚠️ Warnings go  │                                            │                   │
+│ BELOW items!    │                                            │                   │
+│                 │                                            │                   │
+│ ─────────────── │                                            │                   │
+│ Feedback        │                                            │                   │
+│ 😞 😟 😐 🙂 😊  │                                            │                   │
+└─────────────────┴────────────────────────────────────────────┴───────────────────┘
+```
+
+### Layout Template Location
+
+**Copy and customize this template:**
+```
+.claude/templates/ui/phoenix/app_layout.html.heex  →  lib/my_app_web/components/layouts/app.html.heex
+```
+
+### 3 MANDATORY Layout Components
+
+| # | Component | Description | Template |
+|---|-----------|-------------|----------|
+| 1 | **AppBar (GNB)** | Fixed top nav with Logo, AI Input, Notifications, Profile, Quick Create | Included in app_layout.html.heex |
+| 2 | **Left Drawer** | Fixed sidebar with Create button, Navigation, Feedback at bottom | Included in app_layout.html.heex |
+| 3 | **Main Content** | Scrollable content area that adjusts margins for drawer/pane | Included in app_layout.html.heex |
+
+### Optional: Right Pane (AI Copilot)
+
+The Right Pane slides in from the right when:
+- User submits a query in the AI Assistant input
+- User clicks the Quick Create (+) button
+- Any feature needs a slide-in panel
+
+---
+
 ## ⚠️ MATERIAL UI DESIGN SYSTEM - MANDATORY
 
 > **STOP! Before writing ANY UI code, you MUST read this section.**
 
-**All applications built with this template MUST follow Material UI design patterns.** This is enforced by `.claude/rules/material-ui-enforcement.md` which auto-applies to all UI files.
+**All applications built with this template MUST follow Material UI design patterns.** This is enforced by `.claude/rules/i/material-ui-enforcement.md` which auto-applies to all UI files.
 
 ### Required Reading (In This Order)
 
 | Priority | Document | Purpose |
 |----------|----------|---------|
-| **1. CRITICAL** | `.claude/rules/material-ui-enforcement.md` | Auto-enforced design rules |
-| **2. CRITICAL** | `.claude/rules/i/ui-design/material-ui/index.md` | Complete design specification |
-| **3. CRITICAL** | `.claude/rules/i/ui-design/gnb-components.md` | Navigation patterns |
-| 4. High | `.claude/rules/i/ui-design/material-ui/checklist.md` | Validation checklist |
+| **1. CRITICAL** | `.claude/rules/i/material-ui-enforcement.md` | Auto-enforced design rules |
+| **2. CRITICAL** | `docs/i/ui-design/material-ui/index.md` | Complete design specification |
+| **3. CRITICAL** | `docs/i/ui-design/gnb-components.md` | Navigation patterns |
+| 4. High | `docs/i/ui-design/material-ui/checklist.md` | Validation checklist |
 
 ### 6 Mandatory UI Patterns (Non-Negotiable)
 
@@ -103,12 +161,12 @@ Copy from `.claude/assets/i/brand/` to `priv/static/brand/`:
 
 | Guideline | Location |
 |-----------|----------|
-| Logo & Branding | `.claude/rules/i/ui-design/logo-branding.md` |
-| Forms | `.claude/rules/i/ui-design/forms.md` |
-| Buttons | `.claude/rules/i/ui-design/buttons.md` |
-| Colors | `.claude/rules/i/ui-design/colors.md` |
-| Modals & Dropdowns | `.claude/rules/i/ui-design/modals-dropdowns.md` |
-| Panels & Toolbar | `.claude/rules/i/ui-design/panels-toolbar.md` |
+| Logo & Branding | `docs/i/ui-design/logo-branding.md` |
+| Forms | `docs/i/ui-design/forms.md` |
+| Buttons | `docs/i/ui-design/buttons.md` |
+| Colors | `docs/i/ui-design/colors.md` |
+| Modals & Dropdowns | `docs/i/ui-design/modals-dropdowns.md` |
+| Panels & Toolbar | `docs/i/ui-design/panels-toolbar.md` |
 
 ---
 

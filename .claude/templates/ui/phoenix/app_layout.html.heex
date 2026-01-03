@@ -1,0 +1,398 @@
+<%!--
+  Material UI App Layout Template
+  ================================
+  MANDATORY: All applications MUST use this 3-panel layout structure.
+
+  Layout Structure:
+  - AppBar (Global Navigation Bar) - Fixed top, h-16
+  - Left Drawer (Sidebar) - Fixed left, w-64
+  - Main Content - Scrollable, adjusts for drawer
+  - Right Pane (AI Copilot) - Optional, slides in from right
+
+  Copy this file to: lib/my_app_web/components/layouts/app.html.heex
+--%>
+<div class="min-h-screen bg-[#F5F5F5]">
+  <%!-- === APPBAR (Global Navigation Bar) - Fixed Top === --%>
+  <header class="bg-white shadow-sm h-16 fixed top-0 left-0 right-0 z-50 flex items-center px-4">
+    <%!-- LEFT SECTION: Toggle + Tools + Logo --%>
+    <div class="flex items-center gap-3">
+      <%!-- Sidebar Toggle --%>
+      <button
+        phx-click="toggle_drawer"
+        class="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+        aria-label="Toggle navigation"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+
+      <%!-- Tools/Apps Menu --%>
+      <button class="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+        </svg>
+      </button>
+
+      <%!-- Interactor Logo (Lottie Animated) --%>
+      <a href="/" class="flex items-center gap-2">
+        <%!-- Icon --%>
+        <img src="/brand/icons/icon_simple_green_v1.png" alt="" class="w-6 h-6" />
+        <%!-- Animated Logo (Lottie) - Use hook for animation --%>
+        <div
+          id="app-logo"
+          phx-hook="LottieAnimation"
+          data-src="/brand/lottie/InteractorLogo_Light.json"
+          class="h-8 w-24"
+        >
+          <%!-- Fallback text if Lottie not loaded --%>
+          <span class="text-xl font-bold text-[#4CD964]"><%= Application.get_env(:my_app, :app_name, "Interactor") %></span>
+        </div>
+      </a>
+    </div>
+
+    <%!-- CENTER SECTION: AI Assistant Input --%>
+    <div class="flex-1 max-w-2xl mx-8">
+      <div class="relative">
+        <%!-- Sparkle Icon --%>
+        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 2l1.5 4.5L16 8l-4.5 1.5L10 14l-1.5-4.5L4 8l4.5-1.5L10 2z"/>
+          </svg>
+        </div>
+        <input
+          type="text"
+          id="ai-input"
+          placeholder="What can I do for you?"
+          phx-keydown="ai_input_keydown"
+          phx-focus="ai_input_focus"
+          class="w-full pl-10 pr-12 py-2 rounded-full bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#4CD964] focus:border-transparent transition-all"
+        />
+        <%!-- Send Button (appears when input has value) --%>
+        <button
+          id="ai-send-btn"
+          phx-click="open_ai_copilot"
+          class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-gray-400 hover:text-[#4CD964] hover:bg-gray-200 rounded-full transition-colors hidden"
+          aria-label="Send to AI"
+        >
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <%!-- RIGHT SECTION: Notifications + Help + Profile + Quick Create --%>
+    <div class="flex items-center gap-2">
+      <%!-- Notifications (Dual Badge - MANDATORY) --%>
+      <button class="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+        </svg>
+        <%!-- Primary count badge (green) --%>
+        <span
+          :if={assigns[:notification_count] && @notification_count > 0}
+          class="absolute -top-0.5 -right-0.5 bg-[#4CD964] text-white text-xs font-medium rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1"
+        >
+          <%= @notification_count %>
+        </span>
+        <%!-- Error count badge (red) - MANDATORY pattern --%>
+        <span
+          :if={assigns[:error_count] && @error_count > 0}
+          class="absolute -top-0.5 -left-0.5 bg-[#FF3B30] text-white text-xs font-medium rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1"
+        >
+          <%= @error_count %>
+        </span>
+      </button>
+
+      <%!-- Help --%>
+      <button class="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </button>
+
+      <%!-- Profile (navigates to Settings page - NOT dropdown) --%>
+      <a href="/settings" class="p-1">
+        <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden">
+          <img :if={assigns[:current_user] && @current_user.avatar_url} src={@current_user.avatar_url} alt="Profile" class="w-full h-full object-cover" />
+          <svg :if={!assigns[:current_user] || !@current_user.avatar_url} class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+        </div>
+      </a>
+
+      <%!-- Quick Create FAB (GREEN - MANDATORY) --%>
+      <button
+        phx-click="open_quick_create"
+        class="bg-[#4CD964] hover:bg-[#3DBF55] rounded-full w-10 h-10 shadow-md flex items-center justify-center text-white transition-colors"
+        aria-label="Quick create"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <%!-- === LEFT DRAWER (Sidebar) - Fixed Left === --%>
+  <aside class={[
+    "bg-white h-screen fixed left-0 top-16 shadow-lg flex flex-col z-40 transition-all duration-300",
+    if(assigns[:drawer_open] != false, do: "w-64", else: "w-16")
+  ]}>
+    <%!-- Create Button (GREEN - MANDATORY) --%>
+    <div class="p-4">
+      <button
+        phx-click="open_create_menu"
+        class="w-full bg-[#4CD964] hover:bg-[#3DBF55] text-white font-medium py-3 rounded-full shadow-md transition-colors flex items-center justify-center gap-2"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        <span :if={assigns[:drawer_open] != false}>Create</span>
+      </button>
+    </div>
+
+    <%!-- Navigation (Scrollable) --%>
+    <nav class="flex-1 px-2 py-4 overflow-y-auto">
+      <%!-- Section Header --%>
+      <p :if={assigns[:drawer_open] != false} class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+        Navigation
+      </p>
+
+      <ul class="space-y-1">
+        <%!-- Navigation items - customize per app --%>
+        <%= render_slot(@navigation) %>
+      </ul>
+
+      <%!-- Warnings appear BELOW problematic items (MANDATORY pattern) --%>
+      <%!-- Example:
+      <li>
+        <a href="/channels/1" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+          <span>Channel with issue</span>
+        </a>
+        <div class="mx-4 mb-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+          <p class="text-sm text-amber-800 font-medium">Reconnection required</p>
+          <a href="#" class="text-xs text-amber-600 hover:underline">Click to fix</a>
+        </div>
+      </li>
+      --%>
+    </nav>
+
+    <%!-- Feedback Section (5 emoji - MANDATORY at bottom) --%>
+    <div class="border-t border-gray-200 p-4">
+      <p :if={assigns[:drawer_open] != false} class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-3">
+        Feedback
+      </p>
+      <div class="flex justify-around">
+        <%= for {rating, emoji} <- [{1, "\u{1F61E}"}, {2, "\u{1F61F}"}, {3, "\u{1F610}"}, {4, "\u{1F642}"}, {5, "\u{1F60A}"}] do %>
+          <button
+            phx-click="open_feedback_modal"
+            phx-value-rating={rating}
+            class="text-2xl opacity-60 hover:opacity-100 hover:scale-110 transition-all focus:outline-none focus:ring-2 focus:ring-[#4CD964] rounded-lg p-1"
+            title={feedback_label(rating)}
+          >
+            <%= emoji %>
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </aside>
+
+  <%!-- === MAIN CONTENT === --%>
+  <main class={[
+    "pt-16 min-h-screen transition-all duration-300",
+    if(assigns[:drawer_open] != false, do: "ml-64", else: "ml-16"),
+    if(assigns[:right_pane_open], do: "mr-80", else: "")
+  ]}>
+    <div class="p-6">
+      <%!-- Flash Messages --%>
+      <.flash_group flash={@flash} />
+
+      <%!-- Page Content --%>
+      <%= @inner_content %>
+    </div>
+  </main>
+
+  <%!-- === RIGHT PANE (AI Copilot) - Slides in from right === --%>
+  <aside
+    :if={assigns[:right_pane_open]}
+    class="w-80 bg-white h-[calc(100vh-64px)] fixed right-0 top-16 shadow-lg flex flex-col z-40 border-l border-gray-200"
+  >
+    <%!-- Header --%>
+    <div class="flex items-center justify-between p-4 border-b border-gray-200">
+      <div class="flex items-center gap-2">
+        <svg class="w-5 h-5 text-[#4CD964]" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 2l1.5 4.5L16 8l-4.5 1.5L10 14l-1.5-4.5L4 8l4.5-1.5L10 2z"/>
+        </svg>
+        <span class="font-semibold text-gray-900">AI Copilot</span>
+      </div>
+      <button
+        phx-click="close_right_pane"
+        class="p-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <%!-- Messages Area --%>
+    <div class="flex-1 overflow-y-auto p-4 space-y-4">
+      <%!-- AI Copilot content renders here --%>
+      <%= render_slot(@right_pane_content) %>
+    </div>
+
+    <%!-- Suggested Actions --%>
+    <div class="p-3 border-t border-gray-200 flex flex-wrap gap-2">
+      <button class="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors">
+        Schedule a post
+      </button>
+      <button class="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors">
+        View analytics
+      </button>
+      <button class="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors">
+        Connect account
+      </button>
+      <button class="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors">
+        Help with content
+      </button>
+    </div>
+
+    <%!-- Input Area --%>
+    <div class="p-4 border-t border-gray-200">
+      <div class="relative">
+        <input
+          type="text"
+          placeholder="Ask a follow-up..."
+          phx-keydown="copilot_input_keydown"
+          class="w-full px-4 py-2 pr-10 rounded-full bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#4CD964] focus:border-transparent text-sm"
+        />
+        <button class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-gray-400 hover:text-[#4CD964] rounded-full">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+          </svg>
+        </button>
+      </div>
+      <p class="text-xs text-gray-400 text-center mt-2">
+        Press Enter to send &bull; Esc to close &bull; Cmd+K to focus
+      </p>
+    </div>
+  </aside>
+
+  <%!-- === QUICK CREATE PANEL (Slides in from right) === --%>
+  <aside
+    :if={assigns[:quick_create_open]}
+    class="w-80 bg-white h-[calc(100vh-64px)] fixed right-0 top-16 shadow-lg flex flex-col z-40 border-l border-gray-200"
+  >
+    <div class="flex items-center justify-between p-4 border-b border-gray-200">
+      <span class="font-semibold text-gray-900">Quick Create</span>
+      <button
+        phx-click="close_quick_create"
+        class="p-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <nav class="flex-1 overflow-y-auto">
+      <ul class="p-2">
+        <%!-- Quick create options - customize per app --%>
+        <%= render_slot(@quick_create_options) %>
+      </ul>
+    </nav>
+  </aside>
+
+  <%!-- === FEEDBACK MODAL === --%>
+  <div
+    :if={assigns[:show_feedback_modal]}
+    id="feedback-modal"
+    class="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]"
+    phx-click-away="close_feedback_modal"
+  >
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6" phx-click="noop">
+      <%!-- Close button --%>
+      <button
+        phx-click="close_feedback_modal"
+        class="absolute top-4 right-4 p-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <h3 class="text-xl font-bold text-gray-900 text-center mb-1">Share Your Feedback</h3>
+      <p class="text-sm text-gray-500 text-center mb-6">How are you feeling about your experience?</p>
+
+      <%!-- Emoji selector --%>
+      <div class="flex justify-center gap-2 mb-6">
+        <%= for {rating, emoji} <- [{1, "\u{1F61E}"}, {2, "\u{1F61F}"}, {3, "\u{1F610}"}, {4, "\u{1F642}"}, {5, "\u{1F60A}"}] do %>
+          <button
+            phx-click="select_feedback_rating"
+            phx-value-rating={rating}
+            class={[
+              "text-3xl p-2 rounded-xl transition-all",
+              if(@feedback_rating == rating,
+                do: "opacity-100 ring-2 ring-[#4CD964] bg-[#E8F8EB]",
+                else: "opacity-60 hover:opacity-100 hover:bg-gray-100"
+              )
+            ]}
+          >
+            <%= emoji %>
+          </button>
+        <% end %>
+      </div>
+
+      <%!-- Rating label --%>
+      <p class="text-sm text-center text-[#4CD964] font-medium mb-4 h-5">
+        <%= if assigns[:feedback_rating], do: feedback_label(@feedback_rating) %>
+      </p>
+
+      <%!-- Comment --%>
+      <form phx-submit="submit_feedback">
+        <input type="hidden" name="rating" value={assigns[:feedback_rating] || ""} />
+        <textarea
+          name="comment"
+          rows="3"
+          placeholder="Tell us more about your experience..."
+          class="w-full px-4 py-3 bg-gray-100 rounded-xl border-0 focus:ring-2 focus:ring-[#4CD964] resize-none mb-4"
+        ></textarea>
+
+        <div class="flex gap-3">
+          <button
+            type="button"
+            phx-click="close_feedback_modal"
+            class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-full hover:bg-gray-200 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={!assigns[:feedback_rating]}
+            class={[
+              "flex-1 px-6 py-3 text-white font-semibold rounded-full transition-colors",
+              if(assigns[:feedback_rating],
+                do: "bg-[#4CD964] hover:bg-[#3DBF55]",
+                else: "bg-[#4CD964] opacity-50 cursor-not-allowed"
+              )
+            ]}
+          >
+            Submit Feedback
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%!--
+  HELPER FUNCTIONS - Add to your view/component module:
+
+  defp feedback_label(1), do: "Very Dissatisfied"
+  defp feedback_label(2), do: "Dissatisfied"
+  defp feedback_label(3), do: "Neutral"
+  defp feedback_label(4), do: "Satisfied"
+  defp feedback_label(5), do: "Very Satisfied"
+  defp feedback_label(_), do: ""
+--%>

@@ -11,17 +11,72 @@ This rule is auto-applied to ALL UI-related files. Non-compliance will result in
 
 ---
 
-## STOP - Before Writing ANY UI Code
+# ⛔ MANDATORY LAYOUT STRUCTURE - READ FIRST
 
-You MUST read these files in order:
+> **Every application MUST implement this 3-panel layout structure by default.**
 
-1. `.claude/rules/i/ui-design/material-ui/index.md` - Source of truth for all patterns
-2. `.claude/rules/i/ui-design/gnb-components.md` - Critical navigation patterns
-3. `.claude/rules/i/ui-design/material-ui/checklist.md` - Validation checklist
+## Default Application Layout
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│ APPBAR (Global Navigation Bar) - Fixed Top, h-16, z-50                           │
+│ [≡][⊞][Logo🎬]      [✨ What can I do for you?...]         [🔔¹²][?][👤][+🟢]  │
+├─────────────────┬────────────────────────────────────────────┬───────────────────┤
+│ LEFT DRAWER     │                                            │ RIGHT PANE        │
+│ w-64, fixed     │           MAIN CONTENT                     │ w-80, slides in   │
+│                 │                                            │                   │
+│ [+ Create] 🟢   │   (Your page content here)                 │ AI Copilot or     │
+│                 │                                            │ Quick Create      │
+│ NAVIGATION      │                                            │                   │
+│ - Item 1        │                                            │                   │
+│ - Item 2        │                                            │                   │
+│   ⚠️ Warning    │←── Warnings go BELOW items!                │                   │
+│ - Item 3        │                                            │                   │
+│                 │                                            │                   │
+│ ─────────────── │                                            │                   │
+│ Feedback        │                                            │                   │
+│ 😞 😟 😐 🙂 😊  │                                            │                   │
+└─────────────────┴────────────────────────────────────────────┴───────────────────┘
+```
+
+## Layout Template
+
+**Use this template as starting point:**
+```
+.claude/templates/ui/phoenix/app_layout.html.heex  →  lib/my_app_web/components/layouts/app.html.heex
+```
+
+## 3 Layout Components (ALL MANDATORY)
+
+| Component | CSS Classes | Purpose |
+|-----------|-------------|---------|
+| **AppBar** | `h-16 fixed top-0 left-0 right-0 z-50` | Logo, AI Input, Notifications, Profile, Quick Create |
+| **Left Drawer** | `w-64 fixed left-0 top-16 h-screen` | Create button, Navigation, Feedback at bottom |
+| **Main Content** | `ml-64 pt-16 min-h-screen` | Page content, adjusts for drawer/pane |
 
 ---
 
-## 6 MANDATORY Patterns (Non-Negotiable)
+## STOP - Before Writing ANY UI Code
+
+For detailed UI specifications, read these files in `docs/i/ui-design/`:
+
+1. `docs/i/ui-design/material-ui/index.md` - Source of truth for all patterns
+2. `docs/i/ui-design/gnb-components.md` - Critical navigation patterns
+3. `docs/i/ui-design/material-ui/checklist.md` - Validation checklist
+
+---
+
+## 9 MANDATORY Patterns (Non-Negotiable)
+
+### Layout Patterns (3)
+
+| # | Pattern | ✅ Correct | ❌ Wrong |
+|---|---------|-----------|----------|
+| 1 | **AppBar (GNB)** | Fixed top bar with all sections | No top navigation |
+| 2 | **Left Drawer** | Fixed sidebar w-64 with navigation | No sidebar or floating |
+| 3 | **Right Pane** | Slides in from right when triggered | Hardcoded always-visible |
+
+### Component Patterns (6)
 
 | # | Pattern | Correct Implementation | Common Mistake |
 |---|---------|------------------------|----------------|
@@ -191,8 +246,9 @@ icons/icon_simple_green_v1.png    → public/brand/
 
 ## References
 
-- Full Material UI Spec: `.claude/rules/i/ui-design/material-ui/index.md`
-- GNB Components: `.claude/rules/i/ui-design/gnb-components.md`
-- Implementation Checklist: `.claude/rules/i/ui-design/material-ui/checklist.md`
-- TailwindCSS Mappings: `.claude/rules/i/ui-design/tailwind/index.md`
-- Phoenix Patterns: `.claude/rules/i/ui-design/phoenix/index.md`
+For detailed specifications (read on-demand):
+- Full Material UI Spec: `docs/i/ui-design/material-ui/index.md`
+- GNB Components: `docs/i/ui-design/gnb-components.md`
+- Implementation Checklist: `docs/i/ui-design/material-ui/checklist.md`
+- TailwindCSS Mappings: `docs/i/ui-design/tailwind/index.md`
+- Phoenix Patterns: `docs/i/ui-design/phoenix/index.md`

@@ -1,3 +1,8 @@
+---
+name: visual-tester
+description: UI/UX visual testing using Playwright
+---
+
 # Visual Tester Agent
 
 Specialized agent for UI/UX visual testing using Playwright. Captures screenshots, verifies responsive layouts, and validates design consistency.

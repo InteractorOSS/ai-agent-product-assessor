@@ -1,3 +1,8 @@
+---
+name: architecture-planner
+description: System architecture design and documentation
+---
+
 # Architecture Planner Agent
 
 Specialized agent for system architecture design and documentation. Analyzes requirements and codebase to propose architectural solutions.

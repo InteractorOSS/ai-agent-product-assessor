@@ -1,3 +1,8 @@
+---
+name: release-validator
+description: Comprehensive pre-release validation
+---
+
 # Release Validator Agent
 
 Comprehensive pre-release validation agent. Runs all validation checks in parallel/sequence and returns a consolidated pass/fail report.
