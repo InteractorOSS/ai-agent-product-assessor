@@ -235,3 +235,100 @@ Navigation elements including sidebar, header, and breadcrumbs.
   </div>
 </div>
 ```
+
+---
+
+## Sidebar Feedback Section
+
+Include a "How are you feeling today?" feedback section at the bottom of the sidebar with 5 emoji satisfaction options.
+
+```html
+<!-- Feedback section (bottom of sidebar) -->
+<div class="px-4 py-4 border-t border-[#E5E5EA] dark:border-[#3A3A3C]">
+  <p class="text-sm text-[#8E8E93] mb-3 text-center">How are you feeling today?</p>
+  <div class="flex justify-center gap-2">
+    <!-- Very Unsatisfied -->
+    <button class="p-2 hover:bg-[#F5F5F7] dark:hover:bg-[#2C2C2E] rounded-lg transition-colors" title="Very Unsatisfied">
+      <span class="text-xl">😠</span>
+    </button>
+    <!-- Unsatisfied -->
+    <button class="p-2 hover:bg-[#F5F5F7] dark:hover:bg-[#2C2C2E] rounded-lg transition-colors" title="Unsatisfied">
+      <span class="text-xl">😕</span>
+    </button>
+    <!-- Neutral -->
+    <button class="p-2 hover:bg-[#F5F5F7] dark:hover:bg-[#2C2C2E] rounded-lg transition-colors" title="Neutral">
+      <span class="text-xl">😐</span>
+    </button>
+    <!-- Satisfied -->
+    <button class="p-2 hover:bg-[#F5F5F7] dark:hover:bg-[#2C2C2E] rounded-lg transition-colors" title="Satisfied">
+      <span class="text-xl">🙂</span>
+    </button>
+    <!-- Very Satisfied -->
+    <button class="p-2 hover:bg-[#F5F5F7] dark:hover:bg-[#2C2C2E] rounded-lg transition-colors" title="Very Satisfied">
+      <span class="text-xl">😄</span>
+    </button>
+  </div>
+</div>
+```
+
+### Feedback Specifications
+
+| Element | Specification |
+|---------|---------------|
+| Position | Bottom of sidebar, above any fixed footer |
+| Emoji Count | 5 options (Very Unsatisfied → Very Satisfied) |
+| Emoji Size | `text-xl` |
+| Button Padding | `p-2` |
+| Gap | `gap-2` |
+
+---
+
+## Error/Warning Banners
+
+Display warnings and error messages in the sidebar. Show once per issue type (no duplicates).
+
+```html
+<!-- Warning banner in sidebar -->
+<div class="mx-4 mb-4 p-3 bg-[#FFF3CD] dark:bg-[#FFF3CD]/10 border border-[#FFCA2C] rounded-xl" role="alert">
+  <div class="flex items-start gap-2">
+    <svg class="w-5 h-5 text-[#FFCA2C] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+    </svg>
+    <div class="flex-1">
+      <p class="text-sm text-[#856404] dark:text-[#FFCA2C]">Your subscription expires in 3 days</p>
+    </div>
+    <button class="text-[#856404] dark:text-[#FFCA2C] hover:opacity-70" aria-label="Dismiss">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- Error banner in sidebar -->
+<div class="mx-4 mb-4 p-3 bg-[#F8D7DA] dark:bg-[#F8D7DA]/10 border border-[#F5C2C7] rounded-xl" role="alert">
+  <div class="flex items-start gap-2">
+    <svg class="w-5 h-5 text-[#DC3545] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+    <div class="flex-1">
+      <p class="text-sm text-[#842029] dark:text-[#F5C2C7]">Connection to server failed</p>
+    </div>
+    <button class="text-[#842029] dark:text-[#F5C2C7] hover:opacity-70" aria-label="Dismiss">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+</div>
+```
+
+### Banner Guidelines
+
+| Rule | Description |
+|------|-------------|
+| Display Location | Inside sidebar, typically near top or before navigation |
+| Duplicates | Show each warning type only ONCE |
+| Accessibility | Use `role="alert"` for screen readers |
+| Dismissal | Include close button with `aria-label="Dismiss"` |
+| Persistence | Store dismissed state in localStorage or user preferences |

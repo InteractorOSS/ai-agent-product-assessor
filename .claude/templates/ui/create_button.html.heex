@@ -1,0 +1,111 @@
+<%!-- Material UI Create Button Template
+     MANDATORY: All create/primary action buttons must be:
+     - GREEN (#4CD964) with hover (#3DBF55)
+     - Pill-shaped (rounded-full)
+     - Include shadow for elevation
+
+     This file shows various create button patterns.
+--%>
+
+<%!-- === PRIMARY CREATE BUTTON (Full Width - for sidebar) === --%>
+<button
+  class="w-full bg-[#4CD964] hover:bg-[#3DBF55] text-white font-medium py-3 rounded-full shadow-md transition-colors flex items-center justify-center gap-2"
+  phx-click="open_create_modal"
+>
+  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+  </svg>
+  Create New
+</button>
+
+
+<%!-- === FLOATING ACTION BUTTON (FAB - for AppBar) === --%>
+<button
+  class="bg-[#4CD964] hover:bg-[#3DBF55] rounded-full w-10 h-10 shadow-md flex items-center justify-center text-white transition-colors"
+  phx-click="quick_create"
+>
+  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+  </svg>
+</button>
+
+
+<%!-- === INLINE CREATE BUTTON (for tables/lists) === --%>
+<button
+  class="bg-[#4CD964] hover:bg-[#3DBF55] text-white font-medium px-6 py-2 rounded-full shadow-md transition-colors inline-flex items-center gap-2"
+  phx-click="create_item"
+>
+  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+  </svg>
+  Add Item
+</button>
+
+
+<%!-- === SECONDARY BUTTON (Cancel, Back, etc.) === --%>
+<button
+  class="bg-white hover:bg-gray-50 text-gray-700 font-medium px-6 py-2 rounded-full border border-gray-200 shadow-sm transition-colors"
+  phx-click="cancel"
+>
+  Cancel
+</button>
+
+
+<%!-- === DANGER BUTTON (Delete, Remove) === --%>
+<button
+  class="bg-[#FF3B30] hover:bg-red-600 text-white font-medium px-6 py-2 rounded-full shadow-md transition-colors"
+  phx-click="delete"
+>
+  Delete
+</button>
+
+
+<%!--
+=== PHOENIX CORE_COMPONENTS.EX IMPLEMENTATION ===
+
+Add this to your core_components.ex for reusable button component:
+
+@doc """
+Renders a Material UI styled button.
+
+## Examples
+
+    <.button>Create</.button>
+    <.button variant="secondary">Cancel</.button>
+    <.button variant="danger">Delete</.button>
+    <.button variant="fab" phx-click="quick_create" />
+"""
+attr :type, :string, default: "button"
+attr :variant, :string, default: "primary", values: ~w(primary secondary danger fab)
+attr :class, :string, default: nil
+attr :rest, :global, include: ~w(disabled form name value phx-click phx-target)
+
+slot :inner_block
+
+def button(assigns) do
+  ~H"""
+  <button
+    type={@type}
+    class={[
+      "font-medium transition-colors",
+      variant_classes(@variant),
+      @class
+    ]}
+    {@rest}
+  >
+    <%= if @variant == "fab" do %>
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      </svg>
+    <% else %>
+      <%= render_slot(@inner_block) %>
+    <% end %>
+  </button>
+  """
+end
+
+defp variant_classes("primary"), do: "bg-[#4CD964] hover:bg-[#3DBF55] text-white px-6 py-2 rounded-full shadow-md"
+defp variant_classes("secondary"), do: "bg-white hover:bg-gray-50 text-gray-700 px-6 py-2 rounded-full border border-gray-200 shadow-sm"
+defp variant_classes("danger"), do: "bg-[#FF3B30] hover:bg-red-600 text-white px-6 py-2 rounded-full shadow-md"
+defp variant_classes("fab"), do: "bg-[#4CD964] hover:bg-[#3DBF55] rounded-full w-10 h-10 shadow-md flex items-center justify-center text-white"
+--%>

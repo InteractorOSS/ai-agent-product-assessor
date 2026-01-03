@@ -139,7 +139,61 @@ After generating tests:
 - [ ] Coverage meets threshold (`mix test --cover`)
 ```
 
-### 5. Database Migration Validation
+### 5. Material UI Design Validation
+
+After generating any UI code (LiveView, templates, components):
+
+```markdown
+## Material UI Validation Checklist
+
+### 6 Mandatory Patterns
+- [ ] **Lottie Animated Logo**: Using `InteractorLogo_Light.json` or `_Dark.json` (NOT static PNG/SVG)
+- [ ] **GREEN Create Button**: Using `#4CD964` with hover `#3DBF55` (NOT blue/orange/other)
+- [ ] **Quick Create (+)**: Green FAB in AppBar opens right panel (present and functional)
+- [ ] **Dual Notification Badge**: Primary count + secondary red error count (NOT single badge)
+- [ ] **Warnings BELOW Items**: Warning placed immediately BELOW problematic item (NOT at top)
+- [ ] **Feedback Section**: 5 emoji faces fixed at drawer bottom (present and positioned correctly)
+
+### Design Tokens
+- [ ] Primary green uses `#4CD964` (hover: `#3DBF55`)
+- [ ] Error red uses `#FF3B30`
+- [ ] Warning yellow uses `#FFCC00`
+- [ ] Background uses `#F5F5F5` (light) / `#1E1E1E` (dark)
+- [ ] Surface uses `#FFFFFF` (light) / `#2D2D2D` (dark)
+
+### Border Radius Compliance
+- [ ] All buttons use `rounded-full` (pill-shaped, 9999px)
+- [ ] Cards and modals use `rounded-2xl` (16px)
+- [ ] Input fields use `rounded-lg` (8px)
+- [ ] Chips and tags use `rounded-full`
+
+### Sizing Standards
+- [ ] AppBar height is `h-16` (64px)
+- [ ] Sidebar width is `w-64` (240px open) or `w-14` (56px collapsed)
+- [ ] Right panel width is `w-80` (320px)
+- [ ] Icons use `size-6` (24px)
+
+### Component Structure
+- [ ] AppBar is fixed at top with `fixed top-0 left-0 right-0 z-50`
+- [ ] Drawer is fixed left with `fixed left-0 top-16 shadow-lg`
+- [ ] Main content has proper margin for sidebar `ml-64 pt-16`
+- [ ] Cards use `shadow-md` for elevation
+
+### Phoenix/LiveView Patterns
+- [ ] Button component in core_components.ex supports `variant` attribute
+- [ ] Primary variant uses green styling
+- [ ] Components are typed with proper `attr` declarations
+- [ ] Layout uses full-screen pattern (`min-h-screen`)
+
+### Brand Assets
+- [ ] Lottie JSON files present in `priv/static/brand/` or `assets/`
+- [ ] Logo component uses Lottie player (not `<img>` tag)
+- [ ] Favicon uses Interactor icon
+```
+
+**Reference**: See `.claude/rules/material-ui-enforcement.md` for complete specifications.
+
+### 6. Database Migration Validation
 
 After generating migrations:
 
@@ -251,7 +305,8 @@ Validate requirements completeness and clarity
 Validate architecture correctness and consistency
 
 ### After `/start-implementation`
-Validate generated code compiles and follows patterns
+Validate generated code compiles and follows patterns.
+**For UI code**: Also validate Material UI compliance (6 mandatory patterns, design tokens, component structure).
 
 ### After `/run-review`
 Validate code quality, tests, and security
@@ -267,4 +322,6 @@ Validate deployment readiness
 "Validate the Accounts context code"
 "Run full validation before I commit"
 "Check if these tests are comprehensive"
+"Validate the UI follows Material UI patterns"
+"Check Material UI compliance for the dashboard"
 ```

@@ -13,18 +13,11 @@ A comprehensive AI-driven product development template for Elixir/Phoenix applic
 ## Prerequisites
 
 - [Claude Code](https://claude.ai/claude-code) installed
-- Elixir 1.15+ and Erlang/OTP 26+
-- PostgreSQL
 - Git
 
+**Note**: Elixir, Erlang, Node.js, and PostgreSQL will be auto-installed by `./scripts/start.sh` if missing!
+
 ## Quick Start
-
-#### Enter your product idea
-
-Update `docs/project-idea-intake.md` with your idea.
-
-| You can write your ideas in a notepad and instruct Claude to fill in the `project-idea-intake.md`
-| Having screenshots or mock of page drawn up helps. Save it in a file and let Claude know the location.
 
 ### Step 1: Create Your Project
 
@@ -34,42 +27,30 @@ git clone https://github.com/pulzze/product-dev-template.git my-project
 cd my-project
 
 # Run the initialization script
-./scripts/setup/init-project.sh my-project web backend
+./scripts/setup/init-project.sh my-project web
 
 # Project types: web, mobile, backend, cli
 ```
 
-The init script will:
-- Configure CLAUDE.md with your project name
-- Apply platform-specific settings
-- Create local configuration files
-- Set up git repository
-- Add template remote for future updates
-
-
-### Step 2: Configure Your Environment
+### Step 2: Start Development Environment
 
 ```bash
-# Copy environment template
-cp .env.example .env
-
-# Edit .env with your settings
-# Key variables:
-#   DATABASE_URL=postgresql://postgres:postgres@localhost:5432/my_app_dev
-#   SECRET_KEY_BASE= (generate with: mix phx.gen.secret)
+# This single command does everything:
+./scripts/start.sh --setup
 ```
 
-### Step 3: Create Your Phoenix Application
+**The start.sh script automatically:**
+- ✅ Installs Elixir/Erlang (via asdf or Homebrew)
+- ✅ Installs Node.js 18+
+- ✅ Creates Phoenix project if missing
+- ✅ Creates and configures `.env` file
+- ✅ Generates security keys (SECRET_KEY_BASE, etc.)
+- ✅ Installs all dependencies
+- ✅ Creates database and runs migrations
+- ✅ Validates everything works
+- ✅ Starts the development server
 
-```bash
-# Create a new Phoenix app (run in parent directory of my-project, or adjust paths)
-mix phx.new my_app --database postgres
-
-# Or if using this template as a scaffold for an existing app,
-# copy the .claude/, docs/, and scripts/ directories to your project
-```
-
-### Step 4: Start Development with Claude Code
+### Step 3: Start Development with Claude Code
 
 Open Claude Code in your project directory and begin with discovery:
 

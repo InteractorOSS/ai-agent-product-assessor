@@ -1,0 +1,80 @@
+<%!-- Material UI AppBar Template
+     Copy this to your layout and customize as needed.
+
+     Required:
+     - Lottie player for animated logo
+     - Green Quick Create (+) button on right
+     - Search bar with AI input
+     - Notification badge component
+     - Profile icon
+--%>
+
+<header class="bg-white shadow-sm h-16 fixed top-0 left-0 right-0 z-50 flex items-center px-4">
+  <%!-- Left Section: Logo --%>
+  <div class="flex items-center gap-4">
+    <%!-- Lottie Animated Logo (MANDATORY - do not use static image) --%>
+    <a href="/" class="flex items-center">
+      <lottie-player
+        src="/brand/InteractorLogo_Light.json"
+        background="transparent"
+        speed="1"
+        style="width: 120px; height: 40px;"
+        autoplay
+      ></lottie-player>
+    </a>
+  </div>
+
+  <%!-- Center Section: Search/AI Input --%>
+  <div class="flex-1 max-w-2xl mx-8">
+    <div class="relative">
+      <input
+        type="text"
+        placeholder="What can I do for you?"
+        class="w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#4CD964] focus:border-transparent"
+      />
+      <%!-- Sparkle icon for AI sidebar --%>
+      <button class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#4CD964]">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 2l1.5 4.5L16 8l-4.5 1.5L10 14l-1.5-4.5L4 8l4.5-1.5L10 2z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <%!-- Right Section: Actions --%>
+  <div class="flex items-center gap-4">
+    <%!-- Quick Create FAB (MANDATORY - Green) --%>
+    <button
+      class="bg-[#4CD964] hover:bg-[#3DBF55] rounded-full w-10 h-10 shadow-md flex items-center justify-center text-white transition-colors"
+      phx-click="open_quick_create"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      </svg>
+    </button>
+
+    <%!-- Notifications with Dual Badge (MANDATORY) --%>
+    <button class="relative p-2 text-gray-600 hover:text-gray-900">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+      </svg>
+      <%!-- Primary count badge --%>
+      <span class="absolute -top-1 -right-1 bg-[#4CD964] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+        3
+      </span>
+      <%!-- Secondary error count (red) --%>
+      <span class="absolute -bottom-1 -right-1 bg-[#FF3B30] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+        1
+      </span>
+    </button>
+
+    <%!-- Profile --%>
+    <a href="/settings" class="flex items-center">
+      <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+        </svg>
+      </div>
+    </a>
+  </div>
+</header>

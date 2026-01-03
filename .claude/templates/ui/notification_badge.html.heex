@@ -1,0 +1,68 @@
+<%!-- Material UI Dual Notification Badge Template
+     MANDATORY: All notification badges must show BOTH:
+     - Primary count (green or neutral)
+     - Secondary error count (red)
+
+     Usage: Include this component in your AppBar
+--%>
+
+<%!-- Component attributes --%>
+<%!--
+attr :count, :integer, required: true, doc: "Primary notification count"
+attr :error_count, :integer, default: 0, doc: "Error/urgent notification count"
+attr :on_click, :string, default: nil, doc: "Click handler"
+--%>
+
+<button
+  class="relative p-2 text-gray-600 hover:text-gray-900 transition-colors"
+  phx-click={@on_click}
+>
+  <%!-- Bell Icon --%>
+  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+  </svg>
+
+  <%!-- Primary Count Badge (Top Right) --%>
+  <%= if @count > 0 do %>
+    <span class="absolute -top-1 -right-1 bg-[#4CD964] text-white text-xs font-medium rounded-full min-w-[20px] h-5 flex items-center justify-center px-1">
+      <%= if @count > 99, do: "99+", else: @count %>
+    </span>
+  <% end %>
+
+  <%!-- Error Count Badge (Bottom Right - RED) --%>
+  <%= if @error_count > 0 do %>
+    <span class="absolute -bottom-1 -right-1 bg-[#FF3B30] text-white text-xs font-medium rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">
+      <%= if @error_count > 99, do: "99+", else: @error_count %>
+    </span>
+  <% end %>
+</button>
+
+<%!--
+Example usage in your LiveView or template:
+
+<.notification_badge count={5} error_count={2} on_click="show_notifications" />
+
+Or in core_components.ex:
+
+def notification_badge(assigns) do
+  assigns = assign_new(assigns, :error_count, fn -> 0 end)
+  assigns = assign_new(assigns, :on_click, fn -> nil end)
+
+  ~H"""
+  <button
+    class="relative p-2 text-gray-600 hover:text-gray-900 transition-colors"
+    phx-click={@on_click}
+  >
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+    </svg>
+    <span :if={@count > 0} class="absolute -top-1 -right-1 bg-[#4CD964] text-white text-xs font-medium rounded-full min-w-[20px] h-5 flex items-center justify-center px-1">
+      <%= if @count > 99, do: "99+", else: @count %>
+    </span>
+    <span :if={@error_count > 0} class="absolute -bottom-1 -right-1 bg-[#FF3B30] text-white text-xs font-medium rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">
+      <%= if @error_count > 99, do: "99+", else: @error_count %>
+    </span>
+  </button>
+  """
+end
+--%>

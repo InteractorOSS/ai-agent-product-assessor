@@ -587,70 +587,408 @@ Sections that can be expanded and support creating new items. Options expand **d
 
 #### Feedback Section (Bottom - Fixed)
 
-Fixed at the bottom of the drawer. Shows emoji faces for quick feedback.
+Fixed at the bottom of the drawer. Shows emoji faces for quick feedback. Clicking any emoji opens a modal for detailed feedback collection.
 
 | Component | Description |
 |-----------|-------------|
 | Label | "Feedback" text above emoji row |
 | Emojis | 5 faces from negative to positive (😞 😟 😐 🙂 😊) |
-| Action | Clicking any emoji opens comment section at bottom of screen |
+| Action | Clicking any emoji opens feedback modal with pre-selected rating |
+
+**Rating Labels:**
+
+| Rating | Emoji | Label |
+|--------|-------|-------|
+| 1 | 😞 | Very Dissatisfied |
+| 2 | 😟 | Dissatisfied |
+| 3 | 😐 | Neutral |
+| 4 | 🙂 | Satisfied |
+| 5 | 😊 | Very Satisfied |
+
+**Complete Implementation with Feedback Modal:**
 
 ```jsx
-{/* Feedback section - fixed at bottom */}
-<Box sx={{ flexGrow: 1 }} />  {/* Spacer */}
-<Divider />
-<Box sx={{ p: 2 }}>
-  <Typography variant="caption" color="text.secondary">
-    Feedback
-  </Typography>
-  <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 1 }}>
-    {[
-      { icon: '😞', value: 1 },
-      { icon: '😟', value: 2 },
-      { icon: '😐', value: 3 },
-      { icon: '🙂', value: 4 },
-      { icon: '😊', value: 5 },
-    ].map((feedback) => (
-      <IconButton
-        key={feedback.value}
-        onClick={() => handleFeedbackClick(feedback.value)}
-        sx={{
-          fontSize: '1.5rem',
-          opacity: 0.6,
-          '&:hover': { opacity: 1 }
+import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  Typography,
+  IconButton,
+  Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+
+// Rating configuration
+const RATINGS = [
+  { value: 1, emoji: '😞', label: 'Very Dissatisfied' },
+  { value: 2, emoji: '😟', label: 'Dissatisfied' },
+  { value: 3, emoji: '😐', label: 'Neutral' },
+  { value: 4, emoji: '🙂', label: 'Satisfied' },
+  { value: 5, emoji: '😊', label: 'Very Satisfied' },
+];
+
+const FeedbackSection = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedRating, setSelectedRating] = useState(null);
+  const [comment, setComment] = useState('');
+
+  // Get current page URL for context
+  const pageUrl = typeof window !== 'undefined' ? window.location.pathname : '';
+
+  const handleEmojiClick = (rating) => {
+    setSelectedRating(rating);
+    setModalOpen(true);
+  };
+
+  const handleRatingSelect = (rating) => {
+    setSelectedRating(rating);
+  };
+
+  const handleClose = () => {
+    setModalOpen(false);
+    setSelectedRating(null);
+    setComment('');
+  };
+
+  const handleSubmit = () => {
+    if (!selectedRating) return;
+
+    const feedbackData = {
+      rating: selectedRating,
+      comment: comment,
+      page_url: pageUrl,
+      user_id: getCurrentUserId(), // Implement based on your auth
+      user_agent: navigator.userAgent,
+      viewport: `${window.innerWidth}x${window.innerHeight}`,
+      timestamp: new Date().toISOString(),
+    };
+
+    // Log or send to your feedback service
+    console.log('[Feedback]', feedbackData);
+
+    // Show success message (implement your notification system)
+    // showNotification('Thank you for your feedback!');
+
+    handleClose();
+  };
+
+  const getRatingLabel = (rating) => {
+    return RATINGS.find(r => r.value === rating)?.label || '';
+  };
+
+  return (
+    <>
+      {/* Feedback trigger section - fixed at bottom of drawer */}
+      <Box sx={{ flexGrow: 1 }} />  {/* Spacer to push to bottom */}
+      <Divider />
+      <Box sx={{ p: 2 }}>
+        <Typography
+          variant="overline"
+          sx={{
+            color: 'text.secondary',
+            fontWeight: 600,
+            letterSpacing: 1.2,
+          }}
+        >
+          Feedback
+        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 1 }}>
+          {RATINGS.map((rating) => (
+            <IconButton
+              key={rating.value}
+              onClick={() => handleEmojiClick(rating.value)}
+              aria-label={rating.label}
+              sx={{
+                fontSize: '1.5rem',
+                opacity: 0.6,
+                transition: 'all 0.2s ease',
+                '&:hover': {
+                  opacity: 1,
+                  transform: 'scale(1.1)',
+                },
+                '&:focus': {
+                  outline: '2px solid #4CD964',
+                  outlineOffset: 2,
+                },
+              }}
+            >
+              {rating.emoji}
+            </IconButton>
+          ))}
+        </Box>
+      </Box>
+
+      {/* Feedback Modal */}
+      <Dialog
+        open={modalOpen}
+        onClose={handleClose}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 4,
+            maxWidth: 448,
+          },
         }}
       >
-        {feedback.icon}
-      </IconButton>
-    ))}
-  </Box>
-</Box>
+        {/* Close button */}
+        <IconButton
+          onClick={handleClose}
+          sx={{
+            position: 'absolute',
+            top: 16,
+            right: 16,
+            color: 'text.secondary',
+            '&:hover': {
+              bgcolor: 'action.hover',
+            },
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
 
-{/* Feedback comment drawer - slides up from bottom */}
-<Drawer
-  anchor="bottom"
-  open={feedbackOpen}
-  onClose={() => setFeedbackOpen(false)}
->
-  <Box sx={{ p: 3 }}>
-    <Typography variant="h6">
-      {getFeedbackTitle(selectedFeedback)}
-    </Typography>
-    <TextField
-      multiline
-      rows={3}
-      fullWidth
-      placeholder="Tell us more about your experience..."
-      value={feedbackComment}
-      onChange={(e) => setFeedbackComment(e.target.value)}
-      sx={{ mt: 2 }}
-    />
-    <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-      <Button onClick={() => setFeedbackOpen(false)}>Cancel</Button>
-      <Button variant="contained" onClick={submitFeedback}>Submit</Button>
-    </Box>
-  </Box>
-</Drawer>
+        <DialogContent sx={{ pt: 4, pb: 3, px: 3 }}>
+          {/* Title */}
+          <Typography
+            variant="h5"
+            fontWeight="bold"
+            textAlign="center"
+            sx={{ mb: 0.5 }}
+          >
+            Share Your Feedback
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            textAlign="center"
+            sx={{ mb: 3 }}
+          >
+            How are you feeling about your experience?
+          </Typography>
+
+          {/* Emoji rating selector */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: 1,
+              mb: 1,
+            }}
+          >
+            {RATINGS.map((rating) => (
+              <IconButton
+                key={rating.value}
+                onClick={() => handleRatingSelect(rating.value)}
+                aria-label={`${rating.label} - ${rating.value} star`}
+                sx={{
+                  fontSize: '2rem',
+                  p: 1,
+                  borderRadius: 2,
+                  transition: 'all 0.2s ease',
+                  opacity: selectedRating === rating.value ? 1 : 0.6,
+                  bgcolor: selectedRating === rating.value
+                    ? 'rgba(76, 217, 100, 0.1)'
+                    : 'transparent',
+                  border: selectedRating === rating.value
+                    ? '2px solid #4CD964'
+                    : '2px solid transparent',
+                  '&:hover': {
+                    opacity: 1,
+                    bgcolor: selectedRating === rating.value
+                      ? 'rgba(76, 217, 100, 0.1)'
+                      : 'action.hover',
+                  },
+                }}
+              >
+                {rating.emoji}
+              </IconButton>
+            ))}
+          </Box>
+
+          {/* Rating label */}
+          <Typography
+            variant="body2"
+            textAlign="center"
+            sx={{
+              color: '#4CD964',
+              fontWeight: 500,
+              height: 20,
+              mb: 3,
+            }}
+          >
+            {selectedRating ? getRatingLabel(selectedRating) : ''}
+          </Typography>
+
+          {/* Comment textarea */}
+          <Typography
+            variant="body2"
+            fontWeight="medium"
+            sx={{ mb: 1 }}
+          >
+            What can we improve?{' '}
+            <Typography component="span" color="text.secondary" fontWeight="normal">
+              (optional)
+            </Typography>
+          </Typography>
+          <TextField
+            multiline
+            rows={3}
+            fullWidth
+            placeholder="Tell us more about your experience..."
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            sx={{
+              mb: 2,
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+                bgcolor: 'action.hover',
+                '& fieldset': {
+                  border: 'none',
+                },
+                '&:focus-within': {
+                  outline: '2px solid #4CD964',
+                },
+              },
+            }}
+          />
+
+          {/* Context display */}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              color: 'text.secondary',
+              mb: 3,
+            }}
+          >
+            <DescriptionOutlinedIcon sx={{ fontSize: 18 }} />
+            <Typography variant="body2">
+              Feedback for:{' '}
+              <Typography component="span" color="text.primary">
+                {pageUrl}
+              </Typography>
+            </Typography>
+          </Box>
+        </DialogContent>
+
+        {/* Action buttons */}
+        <DialogActions sx={{ px: 3, pb: 3, gap: 1.5 }}>
+          <Button
+            onClick={handleClose}
+            fullWidth
+            sx={{
+              borderRadius: 50,
+              py: 1.5,
+              bgcolor: 'action.hover',
+              color: 'text.primary',
+              textTransform: 'none',
+              fontWeight: 500,
+              '&:hover': {
+                bgcolor: 'action.selected',
+              },
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            fullWidth
+            disabled={!selectedRating}
+            sx={{
+              borderRadius: 50,
+              py: 1.5,
+              bgcolor: '#4CD964',
+              color: 'white',
+              textTransform: 'none',
+              fontWeight: 600,
+              '&:hover': {
+                bgcolor: '#3DBF55',
+              },
+              '&:disabled': {
+                bgcolor: '#4CD964',
+                opacity: 0.5,
+                color: 'white',
+              },
+            }}
+          >
+            Submit Feedback
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+};
+
+// Helper function - implement based on your auth system
+const getCurrentUserId = () => {
+  // Return user ID from your auth context/store
+  return null;
+};
+
+export default FeedbackSection;
+```
+
+**Feedback Data Schema:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `rating` | integer (1-5) | Required. The selected emoji rating |
+| `comment` | string | Optional. Additional feedback text |
+| `page_url` | string | Current page URL/path |
+| `user_id` | string/null | Authenticated user ID (if available) |
+| `user_agent` | string | Browser user agent string |
+| `viewport` | string | Window dimensions (e.g., "1920x1080") |
+| `timestamp` | string | ISO 8601 timestamp |
+
+**Integration in Drawer:**
+
+```jsx
+const AppDrawer = () => {
+  return (
+    <Drawer
+      variant="permanent"
+      sx={{
+        width: 256,
+        '& .MuiDrawer-paper': {
+          width: 256,
+          display: 'flex',
+          flexDirection: 'column',
+        },
+      }}
+    >
+      {/* Create Button */}
+      <Box sx={{ p: 2 }}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          fullWidth
+          sx={{
+            borderRadius: 2,
+            bgcolor: '#4CD964',
+            '&:hover': { bgcolor: '#3DBF55' },
+          }}
+        >
+          Create
+        </Button>
+      </Box>
+
+      {/* Navigation sections */}
+      <Box sx={{ flex: 1, overflow: 'auto' }}>
+        {/* ... navigation items ... */}
+      </Box>
+
+      {/* Feedback Section - uses flexGrow spacer internally */}
+      <FeedbackSection />
+    </Drawer>
+  );
+};
 ```
 
 ---

@@ -26,6 +26,23 @@ Use this checklist before completing any UI work to ensure design system complia
 
 ---
 
+## Feedback System Verification
+
+- [ ] Feedback emoji row (😞 😟 😐 🙂 😊) fixed at bottom of sidebar
+- [ ] Emojis have 60% opacity by default, 100% on hover
+- [ ] Clicking emoji opens feedback modal with pre-selected rating
+- [ ] Feedback modal follows modal styling (`rounded-2xl`, `shadow-2xl`)
+- [ ] Modal has close button (✕) in top-right corner
+- [ ] 5 emoji rating buttons interactive within modal
+- [ ] Selected rating shows green ring (`#4CD964`) and light green background
+- [ ] Rating label displays below emojis (Very Dissatisfied → Very Satisfied)
+- [ ] Comment textarea is optional (label includes "(optional)")
+- [ ] Submit button uses primary green (`#4CD964`) when enabled
+- [ ] Submit button disabled (50% opacity) until rating selected
+- [ ] Context data collected: page_url, user_agent, viewport, timestamp
+
+---
+
 ## Flow Diagram Elements (if applicable)
 
 - [ ] Nodes have green borders (`border-[#4CD964]`)

@@ -172,12 +172,27 @@ When implementing navigation with Material UI:
 - [ ] Sections expand DOWNWARD (not right)
 - [ ] Expanded items show avatar with first letter
 
-**Feedback Section (Bottom - Fixed)** - Optional
-- [ ] "Feedback" label above emoji row
-- [ ] 5 emoji faces: 😞 😟 😐 🙂 😊
-- [ ] `flexGrow: 1` spacer pushes feedback to bottom
-- [ ] Clicking emoji opens bottom drawer with comment field
-- [ ] Comment drawer has Cancel and Submit buttons
+**Feedback Section (Bottom - Fixed)** - REQUIRED
+- [ ] "Feedback" label above emoji row (uses `variant="overline"`)
+- [ ] 5 emoji faces: 😞 😟 😐 🙂 😊 (ratings 1-5)
+- [ ] `flexGrow: 1` spacer pushes feedback to bottom of drawer
+- [ ] Emojis have hover effect (opacity 0.6 → 1.0, scale 1.1)
+- [ ] Clicking emoji opens feedback modal with that rating pre-selected
+
+**Feedback Modal** - REQUIRED
+- [ ] Modal uses `Dialog` with `borderRadius: 4` (16px)
+- [ ] Close button (✕) in top-right corner
+- [ ] Title: "Share Your Feedback" (centered, bold)
+- [ ] Subtitle: "How are you feeling about your experience?" (centered, gray)
+- [ ] 5 emoji rating buttons in modal (interactive selection)
+- [ ] Selected emoji has green ring (`2px solid #4CD964`) and light green background
+- [ ] Rating label shows below emojis (Very Dissatisfied → Very Satisfied)
+- [ ] Comment textarea with label "What can we improve? (optional)"
+- [ ] Context display shows current page URL with document icon
+- [ ] Cancel button (gray, rounded-full)
+- [ ] Submit button (green `#4CD964`, rounded-full)
+- [ ] Submit button disabled until rating selected (opacity 0.5)
+- [ ] Context data collected: page_url, user_agent, viewport, timestamp
 
 ---
 

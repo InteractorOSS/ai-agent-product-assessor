@@ -206,7 +206,116 @@ Edit `.env` anytime to add these configurations.
 - [ ] `LIVE_VIEW_SIGNING_SALT` is set (32 characters)
 - [ ] `PORT` is set to 4005 or higher for development
 
-### 6. Display Implementation Guidelines
+### 6. Material UI Design System - MANDATORY
+
+**CRITICAL**: All UI code MUST follow Material UI design patterns. This is enforced by `.claude/rules/material-ui-enforcement.md`.
+
+#### Required Reading Before ANY UI Work
+
+You **MUST** read these files in order before writing any UI code:
+
+1. `.claude/rules/material-ui-enforcement.md` - Auto-applied enforcement rule
+2. `.claude/rules/i/ui-design/material-ui/index.md` - Complete design specification
+3. `.claude/rules/i/ui-design/gnb-components.md` - Navigation patterns
+
+#### 6 Mandatory UI Patterns (Non-Negotiable)
+
+| # | Pattern | Required Implementation |
+|---|---------|------------------------|
+| 1 | **Lottie Animated Logo** | Use `InteractorLogo_Light.json` or `_Dark.json` |
+| 2 | **GREEN Create Button** | `#4CD964` with hover `#3DBF55` (rounded-full) |
+| 3 | **Quick Create (+)** | Green FAB in AppBar opens right panel |
+| 4 | **Dual Notification Badge** | Primary count + secondary red error count |
+| 5 | **Warnings BELOW Items** | Warning placed immediately BELOW problematic item |
+| 6 | **Feedback Section** | 5 emoji faces fixed at drawer bottom |
+
+#### Design Tokens (Use Exactly)
+
+```
+Colors:
+  Primary Green:    #4CD964  (hover: #3DBF55)
+  Error Red:        #FF3B30
+  Warning Yellow:   #FFCC00
+  Background:       #F5F5F5  (light) / #1E1E1E (dark)
+  Surface:          #FFFFFF  (light) / #2D2D2D (dark)
+
+Border Radius:
+  Buttons:          9999px   (pill-shaped, rounded-full)
+  Cards/Modals:     16px     (rounded-2xl)
+  Inputs:           8px      (rounded-lg)
+
+Sizing:
+  AppBar Height:    64px     (h-16)
+  Sidebar Width:    240px    (w-64 open) / 56px (collapsed)
+  Right Panel:      320px    (w-80)
+```
+
+#### TailwindCSS Component Patterns
+
+**Primary Button (Create Actions)**:
+```html
+<button class="bg-[#4CD964] hover:bg-[#3DBF55] text-white font-medium px-6 py-2 rounded-full shadow-md transition-colors">
+  Create
+</button>
+```
+
+**AppBar**:
+```html
+<header class="bg-white shadow-sm h-16 fixed top-0 left-0 right-0 z-50 flex items-center px-4">
+  <!-- Logo | Search | Actions -->
+</header>
+```
+
+**Left Drawer**:
+```html
+<aside class="w-64 bg-white h-screen fixed left-0 top-16 shadow-lg flex flex-col">
+  <!-- Create Button | Navigation | Flex Spacer | Feedback -->
+</aside>
+```
+
+#### Phoenix/LiveView Pattern
+
+```elixir
+# In core_components.ex - Primary button (GREEN for create actions)
+attr :variant, :string, default: "primary", values: ~w(primary secondary danger)
+
+def button(assigns) do
+  ~H"""
+  <button class={[
+    "font-medium px-6 py-2 rounded-full shadow-md transition-colors",
+    @variant == "primary" && "bg-[#4CD964] hover:bg-[#3DBF55] text-white",
+    @variant == "secondary" && "bg-white hover:bg-gray-50 text-gray-700 border border-gray-200",
+    @variant == "danger" && "bg-[#FF3B30] hover:bg-red-600 text-white"
+  ]}>
+    <%= render_slot(@inner_block) %>
+  </button>
+  """
+end
+```
+
+#### Brand Assets Setup
+
+Copy from `.claude/assets/i/brand/` to your project's `priv/static/brand/`:
+- `lottie/InteractorLogo_Light.json`
+- `lottie/InteractorLogo_Dark.json`
+- `icons/icon_simple_green_v1.png`
+
+#### UI Validation Checklist
+
+Before ANY UI code is committed:
+- [ ] Using Lottie animated logo (not static image)
+- [ ] All create buttons use `#4CD964` green
+- [ ] AppBar has Quick Create (+) button on right
+- [ ] Notifications show dual badge (count + errors)
+- [ ] Warnings placed BELOW problematic items
+- [ ] Feedback section (5 emoji) at drawer bottom
+- [ ] All buttons are pill-shaped (`rounded-full`)
+- [ ] Cards use `rounded-2xl` (16px radius)
+- [ ] Using correct shadow levels (shadow-sm, shadow-md, shadow-lg)
+
+---
+
+### 7. Display Implementation Guidelines
 
 ```markdown
 ## Implementation Phase Guidelines
@@ -216,18 +325,21 @@ Edit `.env` anytime to add these configurations.
 2. Understand the acceptance criteria
 3. Check related architecture decisions
 4. Identify test cases first (TDD)
+5. **Read Material UI rules if working on UI** (see section 6 above)
 
 ### While Coding
 1. Follow code style guidelines (`.claude/rules/i/code-style.md`)
-2. Write tests alongside code
-3. Commit frequently with meaningful messages
-4. Keep changes focused and atomic
+2. **Follow Material UI patterns for all UI code** (`.claude/rules/material-ui-enforcement.md`)
+3. Write tests alongside code
+4. Commit frequently with meaningful messages
+5. Keep changes focused and atomic
 
 ### Code Review Preparation
 1. Self-review before requesting review
 2. Ensure tests pass
 3. Update documentation if needed
 4. Run linter and formatter
+5. **Verify Material UI compliance for UI changes**
 
 ### AI Collaboration Tips
 - Explain context before asking for help
@@ -236,14 +348,14 @@ Edit `.env` anytime to add these configurations.
 - Request tests for generated code
 ```
 
-### 7. Display Current Tasks
+### 8. Display Current Tasks
 
 If `docs/planning/tasks.md` exists, show:
 - Current sprint/milestone tasks
 - Task priorities
 - Dependencies
 
-### 8. Suggested Prompts
+### 9. Suggested Prompts
 
 ```
 "Help me implement [feature] based on the architecture"
@@ -254,7 +366,7 @@ If `docs/planning/tasks.md` exists, show:
 "Implement [pattern] for [use case]"
 ```
 
-### 9. Available Skills
+### 10. Available Skills
 
 ```markdown
 ### Skills for Implementation
@@ -263,7 +375,7 @@ If `docs/planning/tasks.md` exists, show:
 - `doc-generator` - Update documentation
 ```
 
-### 10. Create Development Start Script
+### 11. Create Development Start Script
 
 Create `./scripts/start.sh` - a comprehensive development startup script that:
 
@@ -448,7 +560,7 @@ Run the `validator` skill:
 "Validate the implementation before code review"
 ```
 
-### 11. Update Team Settings
+### 12. Update Team Settings
 
 After the application has been built, update `.claude/settings.json` to reflect the project's technology stack:
 
@@ -652,7 +764,7 @@ After updating settings:
 - [ ] Hooks reference available formatters
 - [ ] No sensitive data in env section
 
-### 12. Update Project README
+### 13. Update Project README
 
 After the application has been built, update the project documentation:
 

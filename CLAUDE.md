@@ -27,6 +27,91 @@ This file provides comprehensive guidance to Claude Code for AI-driven product d
 - **Pipelines**: Use `|>` for data transformation
 - **Pattern Matching**: Leverage for control flow and destructuring
 
+## ⚠️ MATERIAL UI DESIGN SYSTEM - MANDATORY
+
+> **STOP! Before writing ANY UI code, you MUST read this section.**
+
+**All applications built with this template MUST follow Material UI design patterns.** This is enforced by `.claude/rules/material-ui-enforcement.md` which auto-applies to all UI files.
+
+### Required Reading (In This Order)
+
+| Priority | Document | Purpose |
+|----------|----------|---------|
+| **1. CRITICAL** | `.claude/rules/material-ui-enforcement.md` | Auto-enforced design rules |
+| **2. CRITICAL** | `.claude/rules/i/ui-design/material-ui/index.md` | Complete design specification |
+| **3. CRITICAL** | `.claude/rules/i/ui-design/gnb-components.md` | Navigation patterns |
+| 4. High | `.claude/rules/i/ui-design/material-ui/checklist.md` | Validation checklist |
+
+### 6 Mandatory UI Patterns (Non-Negotiable)
+
+| # | Pattern | ✅ Correct | ❌ Wrong |
+|---|---------|-----------|----------|
+| 1 | **Lottie Animated Logo** | `InteractorLogo_Light.json` | Static PNG/SVG |
+| 2 | **GREEN Create Button** | `#4CD964` with `#3DBF55` hover | Blue/orange/other colors |
+| 3 | **Quick Create (+)** | Green FAB in AppBar → right panel | Missing or wrong action |
+| 4 | **Dual Notification Badge** | Primary count + red error count | Single badge only |
+| 5 | **Warnings BELOW Items** | Warning below problematic item | Warning at top of page |
+| 6 | **Feedback Section** | 5 emoji at drawer bottom | Missing or wrong position |
+
+### Design Tokens (Use These Exactly)
+
+```
+COLORS:
+  Primary Green:    #4CD964  (hover: #3DBF55)
+  Error Red:        #FF3B30
+  Warning Yellow:   #FFCC00
+  Background:       #F5F5F5 (light) / #1E1E1E (dark)
+  Surface:          #FFFFFF (light) / #2D2D2D (dark)
+
+BORDER RADIUS:
+  Buttons:          9999px  (rounded-full - pill shaped)
+  Cards/Modals:     16px    (rounded-2xl)
+  Inputs:           8px     (rounded-lg)
+
+SIZING:
+  AppBar:           64px    (h-16)
+  Sidebar:          240px   (w-64) / 56px collapsed
+  Right Panel:      320px   (w-80)
+```
+
+### TailwindCSS Quick Reference
+
+```html
+<!-- Primary Button (Create Actions) -->
+<button class="bg-[#4CD964] hover:bg-[#3DBF55] text-white font-medium px-6 py-2 rounded-full shadow-md">
+  Create
+</button>
+
+<!-- AppBar -->
+<header class="bg-white shadow-sm h-16 fixed top-0 left-0 right-0 z-50">
+
+<!-- Left Drawer -->
+<aside class="w-64 bg-white h-screen fixed left-0 top-16 shadow-lg">
+
+<!-- Card -->
+<div class="bg-white rounded-2xl shadow-md p-6">
+```
+
+### Brand Assets
+
+Copy from `.claude/assets/i/brand/` to `priv/static/brand/`:
+- `lottie/InteractorLogo_Light.json`
+- `lottie/InteractorLogo_Dark.json`
+- `icons/icon_simple_green_v1.png`
+
+### Additional UI Guidelines
+
+| Guideline | Location |
+|-----------|----------|
+| Logo & Branding | `.claude/rules/i/ui-design/logo-branding.md` |
+| Forms | `.claude/rules/i/ui-design/forms.md` |
+| Buttons | `.claude/rules/i/ui-design/buttons.md` |
+| Colors | `.claude/rules/i/ui-design/colors.md` |
+| Modals & Dropdowns | `.claude/rules/i/ui-design/modals-dropdowns.md` |
+| Panels & Toolbar | `.claude/rules/i/ui-design/panels-toolbar.md` |
+
+---
+
 ## Quick Reference
 
 ### Slash Commands
