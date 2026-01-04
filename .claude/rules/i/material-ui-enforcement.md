@@ -87,6 +87,28 @@ For detailed UI specifications, read these files in `docs/i/ui-design/`:
 | 5 | **Warnings BELOW Items** | Warning placed immediately BELOW problematic item | Warning at TOP |
 | 6 | **Feedback Section** | 5 emoji faces fixed at drawer bottom | Missing or wrong position |
 
+### Feedback Modal Pattern (MANDATORY)
+
+When any sidebar emoji is clicked, a feedback modal MUST appear with these exact specifications:
+
+| Element | ✅ Correct | ❌ Wrong |
+|---------|-----------|----------|
+| **Selected Emoji** | Green circular background (`bg-[#4CD964]/20`) | No visual selection state |
+| **Rating Label** | Regular text color below emojis | Green text or missing |
+| **Cancel Button** | Gray/white with border | Primary green color |
+| **Submit Button** | Green `#4CD964` rounded-full | Different color or shape |
+
+**Quick Reference:**
+```html
+<!-- Selected emoji state -->
+<button class="w-12 h-12 rounded-full bg-[#4CD964]/20 ring-2 ring-[#4CD964]">😐</button>
+
+<!-- Rating label (regular text, NOT green) -->
+<p class="text-sm text-center text-[#1C1C1E] font-medium">Neutral</p>
+```
+
+See `docs/i/ui-design/modals-dropdowns.md` for complete specification.
+
 ---
 
 ## Design Tokens (Use These Exactly)
@@ -226,6 +248,8 @@ Before committing UI code, verify:
 - [ ] Notifications show dual badge (count + errors)
 - [ ] Warnings placed BELOW problematic items
 - [ ] Feedback section (5 emoji) at drawer bottom
+- [ ] Feedback modal shows green circular bg on selected emoji
+- [ ] Feedback modal rating label uses regular text color (not green)
 - [ ] All buttons are pill-shaped (`rounded-full`)
 - [ ] Cards use `rounded-2xl` (16px radius)
 - [ ] Using correct shadow levels
@@ -249,6 +273,7 @@ icons/icon_simple_green_v1.png    → public/brand/
 For detailed specifications (read on-demand):
 - Full Material UI Spec: `docs/i/ui-design/material-ui/index.md`
 - GNB Components: `docs/i/ui-design/gnb-components.md`
+- **Feedback Modal**: `docs/i/ui-design/modals-dropdowns.md` (Feedback Modal section)
 - Implementation Checklist: `docs/i/ui-design/material-ui/checklist.md`
 - TailwindCSS Mappings: `docs/i/ui-design/tailwind/index.md`
 - Phoenix Patterns: `docs/i/ui-design/phoenix/index.md`

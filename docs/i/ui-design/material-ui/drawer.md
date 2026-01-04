@@ -589,6 +589,8 @@ Sections that can be expanded and support creating new items. Options expand **d
 
 Fixed at the bottom of the drawer. Shows emoji faces for quick feedback. Clicking any emoji opens a modal for detailed feedback collection.
 
+**Production Design Reference**: See `docs/i/ui-design/modals-dropdowns.md` for the complete Feedback Modal specification with screenshot-accurate styling.
+
 | Component | Description |
 |-----------|-------------|
 | Label | "Feedback" text above emoji row |
@@ -787,21 +789,21 @@ const FeedbackSection = () => {
                 onClick={() => handleRatingSelect(rating.value)}
                 aria-label={`${rating.label} - ${rating.value} star`}
                 sx={{
-                  fontSize: '2rem',
-                  p: 1,
-                  borderRadius: 2,
+                  fontSize: '1.5rem',
+                  width: 48,
+                  height: 48,
+                  borderRadius: '50%',  // Circular button (production design)
                   transition: 'all 0.2s ease',
-                  opacity: selectedRating === rating.value ? 1 : 0.6,
+                  // Selected state: green circular background
                   bgcolor: selectedRating === rating.value
-                    ? 'rgba(76, 217, 100, 0.1)'
+                    ? 'rgba(76, 217, 100, 0.2)'  // #4CD964 at 20% opacity
                     : 'transparent',
-                  border: selectedRating === rating.value
+                  outline: selectedRating === rating.value
                     ? '2px solid #4CD964'
-                    : '2px solid transparent',
+                    : 'none',
                   '&:hover': {
-                    opacity: 1,
                     bgcolor: selectedRating === rating.value
-                      ? 'rgba(76, 217, 100, 0.1)'
+                      ? 'rgba(76, 217, 100, 0.2)'
                       : 'action.hover',
                   },
                 }}
@@ -811,12 +813,12 @@ const FeedbackSection = () => {
             ))}
           </Box>
 
-          {/* Rating label */}
+          {/* Rating label - shows below selected emoji */}
           <Typography
             variant="body2"
             textAlign="center"
             sx={{
-              color: '#4CD964',
+              color: 'text.primary',  // Regular text color (production design)
               fontWeight: 500,
               height: 20,
               mb: 3,
