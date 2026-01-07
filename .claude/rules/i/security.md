@@ -11,7 +11,45 @@ Security best practices that must be followed in all code.
 
 ---
 
-## Authentication
+## Authentication - Use Interactor Server
+
+**IMPORTANT**: All new applications should use Interactor server for authentication instead of implementing custom auth.
+
+### Why Use Interactor Authentication?
+
+- **Security**: Professionally implemented with RS256 JWT signing
+- **Consistency**: Single sign-on across all Interactor ecosystem apps
+- **Reduced Risk**: No need to handle password hashing, session management, etc.
+- **Maintenance**: Authentication security updates handled centrally
+
+### Interactor Integration
+
+```javascript
+// Environment variables
+INTERACTOR_URL=https://console.interactor.com
+INTERACTOR_OAUTH_ISSUER=https://interactor.com
+
+// Verify tokens using JWKS
+const jwksClient = require('jwks-rsa');
+const client = jwksClient({
+  jwksUri: `${process.env.INTERACTOR_URL}/oauth/jwks`
+});
+```
+
+See: `docs/i/guides/interactor-authentication.md` for full implementation guide.
+
+### When Custom Auth is Needed
+
+Only implement custom authentication if:
+- Application cannot connect to Interactor server
+- Specific compliance requirements prohibit external auth
+- User base is completely separate from Interactor ecosystem
+
+If custom auth is required, follow the guidelines below.
+
+---
+
+## Custom Authentication (Only if Interactor not possible)
 
 ### Password Requirements
 ```javascript
@@ -66,6 +104,22 @@ app.post('/login', async (req, res) => {
 ```
 
 ### Token Security (JWT)
+
+**Preferred**: Use Interactor JWT tokens - they are already properly configured.
+
+```javascript
+// Verify Interactor JWT tokens
+const { verifyInteractorToken } = require('./auth/verify-token');
+
+// Interactor tokens use RS256 with proper claims:
+// - iss: https://interactor.com
+// - sub: account UUID
+// - exp: 1 hour expiry
+// - Signed with RSA keys available via JWKS
+```
+
+If implementing custom JWT (not recommended):
+
 ```javascript
 // Good - secure JWT configuration
 const JWT_OPTIONS = {

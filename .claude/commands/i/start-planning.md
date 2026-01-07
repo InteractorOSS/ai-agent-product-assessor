@@ -45,6 +45,12 @@ Check if the following exist, create if missing:
 - [ ] Infrastructure requirements defined
 - [ ] Third-party services selected
 
+### Authentication Architecture
+- [ ] Use Interactor server for authentication (recommended)
+- [ ] Authentication flow designed (JWT tokens via Interactor)
+- [ ] Session management approach defined
+- [ ] Cross-domain auth requirements identified
+
 ### Task Breakdown
 - [ ] Features broken into tasks
 - [ ] Dependencies identified
@@ -161,7 +167,31 @@ I can help design the architecture. Would you like me to:
 Use the architecture-planner skill for detailed guidance.
 ```
 
-### 6. Suggested Prompts
+### 6. Interactor Authentication Planning
+
+**IMPORTANT**: All new applications should use Interactor server for authentication.
+
+#### Why Interactor Authentication?
+- Single sign-on across all Interactor ecosystem apps
+- JWT tokens with RS256 signing for secure verification
+- No need to implement password hashing, session management, etc.
+- JWKS endpoint for external token verification
+- Built-in user management
+
+#### Authentication Architecture Decision
+Create an ADR documenting the choice to use Interactor authentication:
+- **Context**: Need user authentication for the application
+- **Decision**: Use Interactor server as the identity provider
+- **Consequences**: Users must have Interactor accounts; app depends on Interactor availability
+
+#### Planning Considerations
+1. **Same Domain/Subdomain**: Use SharedAuth (cookie-based, automatic)
+2. **Different Domain**: Use JWT token exchange via API
+3. **API-only Apps**: Use Bearer token authentication
+
+See: `docs/i/guides/interactor-authentication.md` for implementation details.
+
+### 7. Suggested Prompts
 
 ```
 "Design the architecture for [feature/system]"
@@ -170,6 +200,7 @@ Use the architecture-planner skill for detailed guidance.
 "Create an ADR for choosing [technology/approach]"
 "Define the API contract for [endpoint]"
 "Evaluate [option A] vs [option B] for [requirement]"
+"Plan Interactor authentication integration"
 ```
 
 ## Output

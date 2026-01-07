@@ -144,6 +144,7 @@ Ask the user for the following **required** values:
    - [ ] Stripe payments
    - [ ] AWS S3 storage
    - [ ] Error tracking (Sentry)
+   - [ ] Interactor Authentication (recommended)
    - [ ] Interactor API
    ```
 
@@ -167,13 +168,17 @@ POOL_SIZE=10
 SECRET_KEY_BASE={generated_64_char_secret}
 LIVE_VIEW_SIGNING_SALT={generated_32_char_salt}
 
+# Interactor Authentication (recommended for all apps)
+INTERACTOR_URL=https://console.interactor.com
+INTERACTOR_OAUTH_ISSUER=https://interactor.com
+# INTERACTOR_API_KEY=your_api_key  # For server-to-server calls
+
 # Optional services - configure as needed
 # Uncomment and fill in when ready:
 # SMTP_HOST=
 # STRIPE_SECRET_KEY=
 # AWS_ACCESS_KEY_ID=
 # SENTRY_DSN=
-# INTERACTOR_API_KEY=
 ```
 
 #### Deferred Configuration Notice
@@ -206,7 +211,59 @@ Edit `.env` anytime to add these configurations.
 - [ ] `LIVE_VIEW_SIGNING_SALT` is set (32 characters)
 - [ ] `PORT` is set to 4005 or higher for development
 
-### 6. Material UI Design System - MANDATORY
+### 6. Interactor Authentication Setup
+
+**IMPORTANT**: Use Interactor server for all authentication needs.
+
+#### Why Use Interactor Authentication?
+- Single sign-on across all Interactor ecosystem apps
+- JWT tokens with RS256 signing for secure verification
+- No need to implement password hashing, session management, etc.
+- JWKS endpoint for external token verification
+
+#### Required Environment Variables
+```bash
+# Add to .env (should already be in .env.example)
+INTERACTOR_URL=https://console.interactor.com
+INTERACTOR_OAUTH_ISSUER=https://interactor.com
+# INTERACTOR_API_KEY=your_api_key  # For server-to-server calls
+```
+
+#### Implementation Checklist
+- [ ] Environment variables configured
+- [ ] JWT verification using Interactor JWKS endpoint
+- [ ] Login redirect to Interactor (or token exchange)
+- [ ] Session management with validated JWT claims
+- [ ] Protected routes check authentication
+
+#### Quick Start Code (Elixir/Phoenix)
+```elixir
+# Verify JWT using Interactor's public keys
+def verify_interactor_token(token) do
+  jwks_url = "#{System.get_env("INTERACTOR_URL")}/oauth/jwks"
+  # Fetch JWKS and verify token signature
+  # See docs/i/guides/interactor-authentication.md for full implementation
+end
+```
+
+#### Quick Start Code (Node.js)
+```javascript
+// Verify JWT using Interactor's public keys
+const jwksClient = require('jwks-rsa');
+const jwt = require('jsonwebtoken');
+
+const client = jwksClient({
+  jwksUri: `${process.env.INTERACTOR_URL}/oauth/jwks`
+});
+
+async function verifyInteractorToken(token) {
+  // See docs/i/guides/interactor-authentication.md for full implementation
+}
+```
+
+See: `docs/i/guides/interactor-authentication.md` for complete implementation guide.
+
+### 7. Material UI Design System - MANDATORY
 
 **CRITICAL**: All UI code MUST follow Material UI design patterns. This is enforced by `.claude/rules/material-ui-enforcement.md`.
 
@@ -315,7 +372,7 @@ Before ANY UI code is committed:
 
 ---
 
-### 7. Display Implementation Guidelines
+### 8. Display Implementation Guidelines
 
 ```markdown
 ## Implementation Phase Guidelines
@@ -348,14 +405,14 @@ Before ANY UI code is committed:
 - Request tests for generated code
 ```
 
-### 8. Display Current Tasks
+### 9. Display Current Tasks
 
 If `docs/planning/tasks.md` exists, show:
 - Current sprint/milestone tasks
 - Task priorities
 - Dependencies
 
-### 9. Suggested Prompts
+### 10. Suggested Prompts
 
 ```
 "Help me implement [feature] based on the architecture"
@@ -366,7 +423,7 @@ If `docs/planning/tasks.md` exists, show:
 "Implement [pattern] for [use case]"
 ```
 
-### 10. Available Skills
+### 11. Available Skills
 
 ```markdown
 ### Skills for Implementation
@@ -375,7 +432,7 @@ If `docs/planning/tasks.md` exists, show:
 - `doc-generator` - Update documentation
 ```
 
-### 11. Create Development Start Script
+### 12. Create Development Start Script
 
 Create `./scripts/start.sh` - a comprehensive development startup script that:
 
@@ -560,7 +617,7 @@ Run the `validator` skill:
 "Validate the implementation before code review"
 ```
 
-### 12. Update Team Settings
+### 13. Update Team Settings
 
 After the application has been built, update `.claude/settings.json` to reflect the project's technology stack:
 
@@ -764,7 +821,7 @@ After updating settings:
 - [ ] Hooks reference available formatters
 - [ ] No sensitive data in env section
 
-### 13. Update Project README
+### 14. Update Project README
 
 After the application has been built, update the project documentation:
 
