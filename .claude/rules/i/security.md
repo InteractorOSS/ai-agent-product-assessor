@@ -36,7 +36,9 @@ const client = jwksClient({
 });
 ```
 
-See: `docs/i/guides/interactor-authentication.md` for full implementation guide.
+**📚 Integration Guide:** See `docs/i/guides/interactor-authentication.md` for full implementation guide.
+
+> **Note:** This guide is automatically synchronized daily from the `pulzze/account-server` repository to ensure you always have the latest integration instructions. Metadata tracked in `docs/i/guides/.interactor-auth-meta.json`.
 
 ### When Custom Auth is Needed
 

@@ -1,6 +1,7 @@
 ---
 name: validator
 description: Validate artifacts, code, and deliverables for correctness at each development phase. Use this skill proactively after generating any output to ensure quality and correctness.
+author: David Jung
 ---
 
 # Validator Skill

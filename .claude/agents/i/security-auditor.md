@@ -1,6 +1,7 @@
 ---
 name: security-auditor
 description: Security scanning and vulnerability assessment
+author: David Jung
 ---
 
 # Security Auditor Agent

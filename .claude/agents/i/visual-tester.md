@@ -1,6 +1,7 @@
 ---
 name: visual-tester
 description: UI/UX visual testing using Playwright
+author: Peter Jung
 ---
 
 # Visual Tester Agent

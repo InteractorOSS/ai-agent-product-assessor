@@ -195,6 +195,19 @@ Copy from `.claude/assets/i/brand/` to `priv/static/brand/`:
 | `deployment` | Deployment preparation and verification |
 | `validator` | **Validate any artifact for correctness** (use after every generation) |
 
+### External Documentation
+
+Some documentation is automatically synchronized from external Interactor repositories:
+
+| Document | Description | Manual Sync |
+|----------|-------------|-------------|
+| `docs/i/guides/interactor-authentication.md` | Interactor auth integration guide (auto-synced daily) | `./scripts/setup/sync-external-docs.sh interactor-auth` |
+
+**Auto-Sync Details:**
+- Daily sync at 6am UTC via GitHub Actions
+- Manual trigger available in Actions → "Sync External Documentation"
+- See `docs/i/guides/README.md` for complete sync system documentation
+
 ---
 
 ## Development Workflow
@@ -622,6 +635,7 @@ See `.env.example` for all available variables.
 - `docs/phases/` - Phase-specific documentation and templates
 - `docs/templates/` - Document templates (PRD, ADR, Design Doc)
 - `docs/checklists/` - Comprehensive project checklists
+- `docs/i/guides/` - Interactor integration guides (some auto-synced from external repos)
 
 ### Configuration
 

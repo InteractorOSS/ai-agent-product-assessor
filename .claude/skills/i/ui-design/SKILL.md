@@ -2,6 +2,7 @@
 name: ui-design
 description: Enforces consistent UI/UX patterns based on the Interactor design system. Use this skill when creating or modifying UI components to ensure visual consistency across all applications.
 allowed-tools: [Read, Grep, Glob, Edit, MultiEdit, Write]
+author: Peter Jung
 ---
 
 # UI Design Skill - Interactor Design System

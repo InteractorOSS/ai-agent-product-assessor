@@ -1,6 +1,7 @@
 ---
 name: test-coverage
 description: Test execution, coverage analysis, and test scaffold generation
+author: David Jung
 ---
 
 # Test Coverage Agent

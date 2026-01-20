@@ -1,6 +1,7 @@
 ---
 name: doc-generator
 description: Auto-generate and update project documentation including README, API docs, and changelogs. Use when adding features, updating APIs, or preparing releases.
+author: David Jung
 ---
 
 # Documentation Generator Skill

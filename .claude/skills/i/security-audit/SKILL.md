@@ -1,6 +1,7 @@
 ---
 name: security-audit
 description: Perform OWASP-based security audit identifying vulnerabilities, misconfigurations, and security best practice violations. Use before releases or when security concerns arise.
+author: David Jung
 ---
 
 # Security Audit Skill

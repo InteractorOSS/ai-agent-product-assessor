@@ -1,0 +1,258 @@
+name: Sync External Documentation
+
+on:
+  schedule:
+    # Daily at 6am UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Target branch for sync'
+        required: false
+        default: 'main'
+      create_pr:
+        description: 'Create PR instead of direct push'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  sync-interactor-auth:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_branch || 'main' }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup environment
+        run: |
+          # Ensure metadata directory exists
+          mkdir -p docs/i/guides
+
+          # Install jq if not present
+          which jq || sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Check upstream version
+        id: check
+        run: |
+          SOURCE_REPO="pulzze/account-server"
+          SOURCE_PATH="docs/integration-guide.md"
+          META_FILE="docs/i/guides/.interactor-auth-meta.json"
+
+          echo "Fetching upstream commit SHA..."
+          UPSTREAM_SHA=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/$SOURCE_REPO/commits/main" | jq -r '.sha')
+
+          if [ -z "$UPSTREAM_SHA" ] || [ "$UPSTREAM_SHA" = "null" ]; then
+            echo "::error::Failed to fetch upstream commit SHA"
+            exit 1
+          fi
+
+          echo "Upstream SHA: $UPSTREAM_SHA"
+
+          # Read local SHA from metadata file
+          LOCAL_SHA="none"
+          if [ -f "$META_FILE" ]; then
+            LOCAL_SHA=$(jq -r '.source_commit' "$META_FILE" 2>/dev/null || echo "none")
+          fi
+
+          echo "Local SHA: $LOCAL_SHA"
+
+          # Determine if changes exist
+          if [ "$UPSTREAM_SHA" = "$LOCAL_SHA" ]; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "✅ Already up to date (SHA: $UPSTREAM_SHA)"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "📥 Changes detected (Local: $LOCAL_SHA → Upstream: $UPSTREAM_SHA)"
+          fi
+
+          echo "upstream=$UPSTREAM_SHA" >> $GITHUB_OUTPUT
+          echo "source_repo=$SOURCE_REPO" >> $GITHUB_OUTPUT
+          echo "source_path=$SOURCE_PATH" >> $GITHUB_OUTPUT
+
+      - name: Fetch upstream content
+        if: steps.check.outputs.has_changes == 'true'
+        id: fetch
+        run: |
+          SOURCE_REPO="${{ steps.check.outputs.source_repo }}"
+          SOURCE_PATH="${{ steps.check.outputs.source_path }}"
+          UPSTREAM_SHA="${{ steps.check.outputs.upstream }}"
+          TARGET_FILE="docs/i/guides/interactor-authentication.md"
+
+          echo "Fetching content from $SOURCE_REPO/$SOURCE_PATH..."
+
+          HTTP_STATUS=$(curl -s -w "%{http_code}" -o "$TARGET_FILE" \
+            "https://raw.githubusercontent.com/$SOURCE_REPO/$UPSTREAM_SHA/$SOURCE_PATH")
+
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "::error::Failed to fetch content (HTTP $HTTP_STATUS)"
+            exit 1
+          fi
+
+          # Verify file has content
+          if [ ! -s "$TARGET_FILE" ]; then
+            echo "::error::Downloaded file is empty"
+            exit 1
+          fi
+
+          echo "✅ Content fetched successfully ($(wc -l < "$TARGET_FILE") lines)"
+
+      - name: Update metadata
+        if: steps.check.outputs.has_changes == 'true'
+        run: |
+          SOURCE_REPO="${{ steps.check.outputs.source_repo }}"
+          SOURCE_PATH="${{ steps.check.outputs.source_path }}"
+          UPSTREAM_SHA="${{ steps.check.outputs.upstream }}"
+          TARGET_FILE="docs/i/guides/interactor-authentication.md"
+          META_FILE="docs/i/guides/.interactor-auth-meta.json"
+
+          # Calculate content hash
+          CONTENT_SHA=$(sha256sum "$TARGET_FILE" | cut -d' ' -f1)
+
+          # Generate metadata JSON
+          jq -n \
+            --arg repo "$SOURCE_REPO" \
+            --arg path "$SOURCE_PATH" \
+            --arg commit "$UPSTREAM_SHA" \
+            --arg synced "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg synced_by "github-actions[bot]" \
+            --arg sha "$CONTENT_SHA" \
+            --arg url "https://github.com/$SOURCE_REPO/blob/main/$SOURCE_PATH" \
+            '{
+              source_repo: $repo,
+              source_path: $path,
+              source_commit: $commit,
+              synced_at: $synced,
+              synced_by: $synced_by,
+              content_sha256: $sha,
+              upstream_url: $url
+            }' > "$META_FILE"
+
+          echo "✅ Metadata updated"
+          cat "$META_FILE"
+
+      - name: Commit changes
+        if: steps.check.outputs.has_changes == 'true' && inputs.create_pr != true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add docs/i/guides/interactor-authentication.md
+          git add docs/i/guides/.interactor-auth-meta.json
+
+          # Create detailed commit message
+          UPSTREAM_SHA="${{ steps.check.outputs.upstream }}"
+          SHORT_SHA="${UPSTREAM_SHA:0:7}"
+
+          git commit -m "docs: sync Interactor authentication guide" \
+            -m "Synced from pulzze/account-server@$SHORT_SHA" \
+            -m "Automated sync via external-docs workflow"
+
+          git push origin ${{ inputs.target_branch || 'main' }}
+
+          echo "✅ Changes committed and pushed"
+
+      - name: Create Pull Request
+        if: steps.check.outputs.has_changes == 'true' && inputs.create_pr == true
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            docs: sync Interactor authentication guide
+
+            Synced from pulzze/account-server@${{ steps.check.outputs.upstream }}
+            Automated sync via external-docs workflow
+          branch: sync-external-docs-${{ github.run_number }}
+          title: 'docs: Sync Interactor authentication guide'
+          body: |
+            ## Automated Documentation Sync
+
+            This PR syncs the Interactor authentication guide from the upstream repository.
+
+            **Source:** `pulzze/account-server/docs/integration-guide.md`
+            **Commit:** ${{ steps.check.outputs.upstream }}
+            **Synced at:** ${{ github.run_id }}
+
+            ### Changes
+            - Updated `docs/i/guides/interactor-authentication.md`
+            - Updated metadata file with new commit SHA and timestamp
+
+            ### Review Checklist
+            - [ ] Content appears correct and complete
+            - [ ] No unintended changes to file structure
+            - [ ] Metadata file is valid JSON
+
+            ---
+            *This PR was automatically created by the sync-external-docs workflow.*
+          labels: |
+            documentation
+            external-docs-sync
+            automated
+
+      - name: Create issue on failure
+        if: failure() && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const upstream = '${{ steps.check.outputs.upstream }}';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 External docs sync failed',
+              body: `## Sync Failure Report
+
+            The automated external documentation sync has failed.
+
+            **Workflow Run:** [View logs](${runUrl})
+            **Source:** pulzze/account-server
+            **Upstream SHA:** ${upstream || 'unknown'}
+            **Timestamp:** ${new Date().toISOString()}
+
+            ### Possible Causes
+            - Source file moved or deleted in upstream repository
+            - Network connectivity issues
+            - GitHub API rate limiting
+            - Authentication token expired
+
+            ### Manual Sync Instructions
+            You can manually sync the documentation using:
+            \`\`\`bash
+            ./scripts/setup/sync-external-docs.sh interactor-auth
+            \`\`\`
+
+            ### Troubleshooting
+            1. Check if source file exists: https://github.com/pulzze/account-server/blob/main/docs/integration-guide.md
+            2. Verify GitHub token has required permissions
+            3. Review workflow logs for specific error messages
+
+            ---
+            *This issue was automatically created by the sync-external-docs workflow.*`,
+              labels: ['external-docs-sync', 'automated', 'needs-attention', 'bug']
+            });
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Sync External Documentation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.check.outputs.has_changes }}" = "true" ]; then
+            echo "✅ **Status:** Changes synced successfully" >> $GITHUB_STEP_SUMMARY
+            echo "- **Source:** pulzze/account-server" >> $GITHUB_STEP_SUMMARY
+            echo "- **Commit:** ${{ steps.check.outputs.upstream }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Target:** docs/i/guides/interactor-authentication.md" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **Status:** Already up to date" >> $GITHUB_STEP_SUMMARY
+            echo "- **Current SHA:** ${{ steps.check.outputs.upstream }}" >> $GITHUB_STEP_SUMMARY
+          fi

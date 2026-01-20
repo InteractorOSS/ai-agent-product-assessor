@@ -1,6 +1,7 @@
 ---
 name: test-generator
 description: Generate test scaffolds, suggest test cases, and analyze coverage gaps. Use when implementing new features, fixing bugs, or improving test coverage.
+author: David Jung
 ---
 
 # Test Generator Skill

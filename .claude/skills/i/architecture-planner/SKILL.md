@@ -1,6 +1,7 @@
 ---
 name: architecture-planner
 description: Design and document system architecture including component diagrams, data flow, API design, and scalability planning. Use during planning phase or for architectural decisions.
+author: David Jung
 ---
 
 # Architecture Planner Skill

@@ -1,0 +1,11 @@
+{
+  "source_repo": "pulzze/account-server",
+  "source_path": "docs/integration-guide.md",
+  "source_commit": "pending_initial_sync",
+  "synced_at": "2026-01-19T18:30:00Z",
+  "synced_by": "manual_setup",
+  "content_sha256": "placeholder",
+  "upstream_url": "https://github.com/pulzze/account-server/blob/main/docs/integration-guide.md",
+  "sync_status": "pending",
+  "notes": "Initial metadata file - requires authentication configuration for first sync"
+}

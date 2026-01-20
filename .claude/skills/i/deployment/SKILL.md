@@ -1,6 +1,7 @@
 ---
 name: deployment
 description: Guide deployment preparation, verification, and release management for Elixir/Phoenix applications. Use before releases for validation, during deployment for verification, and after for monitoring setup.
+author: David Jung
 ---
 
 # Deployment Skill

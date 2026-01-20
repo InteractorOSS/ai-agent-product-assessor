@@ -1,6 +1,7 @@
 ---
 name: architecture-planner
 description: System architecture design and documentation
+author: David Jung
 ---
 
 # Architecture Planner Agent

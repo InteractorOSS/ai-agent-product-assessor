@@ -1,6 +1,7 @@
 ---
 name: release-validator
 description: Comprehensive pre-release validation
+author: David Jung
 ---
 
 # Release Validator Agent

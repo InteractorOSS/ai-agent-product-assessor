@@ -328,6 +328,118 @@ git checkout template/main -- docs/checklists/validation-checklist.md
 git checkout template/main -- .claude/skills/deployment/
 ```
 
+---
+
+## Syncing External Documentation
+
+Some documentation files are automatically synchronized from external Interactor repositories (e.g., authentication guides from `pulzze/account-server`).
+
+### Auto-Synced Files
+
+| File | Source Repository | Sync Frequency |
+|------|-------------------|----------------|
+| `docs/i/guides/interactor-authentication.md` | `pulzze/account-server/docs/integration-guide.md` | Daily at 6am UTC |
+
+### How External Doc Sync Works
+
+1. **Automated Daily Sync:**
+   - GitHub Actions workflow (`.github/workflows/sync-external-docs.yml`) runs daily
+   - Checks upstream repository for changes
+   - Updates local file and metadata if changes detected
+   - Commits directly to `main` branch
+
+2. **Manual Sync:**
+   ```bash
+   # Sync specific document
+   ./scripts/setup/sync-external-docs.sh interactor-auth
+
+   # Interactive mode
+   ./scripts/setup/sync-external-docs.sh
+
+   # Preview changes without applying
+   ./scripts/setup/sync-external-docs.sh --dry-run interactor-auth
+   ```
+
+3. **Manual Workflow Trigger:**
+   - Go to **Actions** tab → "Sync External Documentation"
+   - Click **"Run workflow"**
+   - Options:
+     - `target_branch`: Which branch to sync to (default: `main`)
+     - `create_pr`: Create PR instead of direct push (default: `false`)
+
+### Metadata Tracking
+
+Each synced file has a corresponding metadata file (e.g., `.interactor-auth-meta.json`) containing:
+- Source repository and path
+- Commit SHA of synced content
+- Sync timestamp and user
+- Content SHA256 hash for integrity verification
+
+### Handling Sync Conflicts
+
+If you've made local modifications to an auto-synced file:
+
+1. **Preserve your changes:**
+   ```bash
+   # Backup your modifications
+   cp docs/i/guides/interactor-authentication.md docs/i/guides/interactor-authentication.md.local
+
+   # Sync latest from upstream
+   ./scripts/setup/sync-external-docs.sh interactor-auth
+
+   # Manual merge if needed
+   vimdiff docs/i/guides/interactor-authentication.md.local docs/i/guides/interactor-authentication.md
+   ```
+
+2. **Disable auto-sync for specific file:**
+   - Comment out the file entry in `scripts/setup/sync-external-docs.sh`
+   - Remove the corresponding job from `.github/workflows/sync-external-docs.yml`
+   - Document your customizations in `docs/template-feedback.md`
+
+3. **Contribute changes upstream:**
+   - If your modifications improve the guide, contribute them back to the source repository
+   - Submit PR to `pulzze/account-server` so all projects benefit
+
+### Adding New External Docs
+
+To sync additional external documentation:
+
+1. **Update script configuration** in `scripts/setup/sync-external-docs.sh`:
+   ```bash
+   declare -A EXTERNAL_DOCS=(
+     ["interactor-auth"]="pulzze/account-server|docs/integration-guide.md|docs/i/guides/interactor-authentication.md|docs/i/guides/.interactor-auth-meta.json"
+     ["new-doc"]="owner/repo|path/to/source.md|docs/i/guides/target.md|docs/i/guides/.target-meta.json"
+   )
+   ```
+
+2. **Add workflow job** in `.github/workflows/sync-external-docs.yml` following the existing pattern
+
+3. **Test locally:**
+   ```bash
+   ./scripts/setup/sync-external-docs.sh --dry-run new-doc
+   ./scripts/setup/sync-external-docs.sh new-doc
+   ```
+
+4. **Document** in `docs/i/guides/README.md` and update this section
+
+### Troubleshooting External Doc Sync
+
+**Authentication errors:**
+- Verify `GITHUB_TOKEN` has access to source repository
+- For private repos, ensure token has `repo` scope
+
+**File not found (404):**
+- Verify source path is correct in configuration
+- Check if file was moved or renamed in source repository
+
+**Content appears outdated:**
+- Check metadata file for last sync timestamp
+- Force fresh sync by deleting metadata file and running sync again
+
+For detailed troubleshooting, see `docs/i/guides/README.md`.
+
+---
+
 ## Versioning
 
 The template uses semantic versioning:

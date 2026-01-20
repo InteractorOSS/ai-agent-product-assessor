@@ -1,6 +1,7 @@
 ---
 name: code-review
 description: Perform comprehensive code review with security, performance, and best practices analysis. Use when reviewing PRs, before commits, or for code quality assessment.
+author: David Jung
 ---
 
 # Code Review Skill
