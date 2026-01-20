@@ -26,7 +26,7 @@ Security best practices that must be followed in all code.
 
 ```javascript
 // Environment variables
-INTERACTOR_URL=https://console.interactor.com
+INTERACTOR_URL=https://auth.interactor.com
 INTERACTOR_OAUTH_ISSUER=https://interactor.com
 
 // Verify tokens using JWKS

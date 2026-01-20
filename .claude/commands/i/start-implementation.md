@@ -169,7 +169,7 @@ SECRET_KEY_BASE={generated_64_char_secret}
 LIVE_VIEW_SIGNING_SALT={generated_32_char_salt}
 
 # Interactor Authentication (recommended for all apps)
-INTERACTOR_URL=https://console.interactor.com
+INTERACTOR_URL=https://auth.interactor.com
 INTERACTOR_OAUTH_ISSUER=https://interactor.com
 # INTERACTOR_API_KEY=your_api_key  # For server-to-server calls
 
@@ -224,7 +224,7 @@ Edit `.env` anytime to add these configurations.
 #### Required Environment Variables
 ```bash
 # Add to .env (should already be in .env.example)
-INTERACTOR_URL=https://console.interactor.com
+INTERACTOR_URL=https://auth.interactor.com
 INTERACTOR_OAUTH_ISSUER=https://interactor.com
 # INTERACTOR_API_KEY=your_api_key  # For server-to-server calls
 ```

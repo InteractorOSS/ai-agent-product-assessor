@@ -44,7 +44,7 @@ This documentation is configured for automatic synchronization but requires prop
 
 ### Integration Requirements
 
-- **Interactor URL:** `https://console.interactor.com`
+- **Interactor URL:** `https://auth.interactor.com`
 - **OAuth Issuer:** `https://interactor.com`
 - **Token Verification:** JWKS endpoint at `/oauth/jwks`
 
@@ -56,7 +56,7 @@ This documentation is configured for automatic synchronization but requires prop
 
 ```bash
 # .env
-INTERACTOR_URL=https://console.interactor.com
+INTERACTOR_URL=https://auth.interactor.com
 INTERACTOR_OAUTH_ISSUER=https://interactor.com
 ```
 
@@ -118,7 +118,7 @@ Interactor tokens use RS256 with the following claims:
 ## Additional Resources
 
 - **Full Integration Guide:** [Source Repository](https://github.com/pulzze/account-server/blob/main/docs/integration-guide.md)
-- **Interactor Console:** [console.interactor.com](https://console.interactor.com)
+- **Interactor Auth Server:** [auth.interactor.com](https://auth.interactor.com)
 - **Support:** Contact Interactor team for access credentials
 
 ---
