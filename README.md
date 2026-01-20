@@ -1,416 +1,110 @@
 # Product Development Template
 
-A comprehensive AI-driven product development template for Elixir/Phoenix applications, powered by Claude Code. This template covers all phases of the software development lifecycle with built-in validation at every step.
+**⚠️ TEMPLATE PLACEHOLDER - REPLACE THIS FILE**
 
-## What This Template Provides
+This README.md is a temporary placeholder. Once you initialize your project and complete development, **replace this file with your application-specific README**.
 
-- **AI-Powered Development** - Skills, commands, and rules optimized for Claude Code
-- **Full SDLC Coverage** - Discovery → Planning → Implementation → Testing → Review → Deployment
-- **Continuous Validation** - Every artifact is validated for correctness before proceeding
-- **Elixir/Phoenix Best Practices** - Phoenix contexts, Ecto patterns, LiveView, Oban
-- **Comprehensive Documentation** - Templates, checklists, and guides for every phase
+---
 
-## Prerequisites
+## 📚 Template Documentation
 
-- [Claude Code](https://claude.ai/claude-code) installed
-- Git
+### For Setting Up a New Project (Internal Team)
 
-**Note**: Elixir, Erlang, Node.js, and PostgreSQL will be auto-installed by `./scripts/start.sh` if missing!
+**👉 [README_SETUP.md](README_SETUP.md)** - Start here!
+
+Complete project creation methodology:
+- Project initialization with `init-project.sh`
+- The Six Phases (Discovery → Planning → Implementation → Testing → Review → Deployment)
+- Setup commands: `/start-discovery`, `/start-planning`, `/start-implementation`
+- Proprietary setup workflow
+
+**⚠️ Contains proprietary methodology - internal use only**
+
+---
+
+### For Template Components & Tools (External/Internal)
+
+**👉 [README_i.md](README_i.md)** - Template reference
+
+Shareable template tools and components:
+- AI skills: validator, code-review, security-audit, test-generator, etc.
+- Development rules and standards
+- Template syncing and updates
+- UI design system
+- Contributing guidelines
+
+**✓ Safe to share with external engineers**
+
+---
 
 ## Quick Start
 
-### Step 1: Create Your Project
+### Creating a New Project
 
 ```bash
-# Clone the template
+# 1. Clone template
 git clone https://github.com/pulzze/product-dev-template.git my-project
 cd my-project
 
-# Run the initialization script
+# 2. Initialize project
 ./scripts/setup/init-project.sh my-project web
 
-# Project types: web, mobile, backend, cli
-```
-
-### Step 2: Start Development Environment
-
-```bash
-# This single command does everything:
+# 3. Start development
 ./scripts/start.sh --setup
+
+# 4. Follow the six-phase workflow
+# See README_SETUP.md for complete guide
 ```
 
-**The start.sh script automatically:**
-- ✅ Installs Elixir/Erlang (via asdf or Homebrew)
-- ✅ Installs Node.js 18+
-- ✅ Creates Phoenix project if missing
-- ✅ Creates and configures `.env` file
-- ✅ Generates security keys (SECRET_KEY_BASE, etc.)
-- ✅ Installs all dependencies
-- ✅ Creates database and runs migrations
-- ✅ Validates everything works
-- ✅ Starts the development server
-
-### Step 3: Start Development with Claude Code
-
-Open Claude Code in your project directory and begin with discovery:
-
-```
-/start-discovery
-```
-
-This will guide you through gathering requirements. Then proceed through the phases:
-
-```
-/start-planning        # Design architecture
-/start-implementation  # Begin coding
-/run-review           # Code review
-/prepare-release      # Deploy
-```
-
-## Development Workflow
-
-### The Six Phases
-
-```
-┌─────────────┐   ┌─────────────┐   ┌─────────────────┐
-│  Discovery  │ → │  Planning   │ → │ Implementation  │
-│             │   │             │   │                 │
-│ • Requirements   • Architecture    • Write code     │
-│ • User stories   • Task breakdown  • Write tests    │
-│ • Stakeholders   • ADRs            • Validate       │
-└─────────────┘   └─────────────┘   └─────────────────┘
-       ↓                 ↓                   ↓
-   [Validate]        [Validate]          [Validate]
-
-┌─────────────┐   ┌─────────────┐   ┌─────────────────┐
-│   Testing   │ → │   Review    │ → │   Deployment    │
-│             │   │             │   │                 │
-│ • Unit tests     • Code review    • Release build  │
-│ • Integration    • Security       • Staging        │
-│ • Coverage       • Performance    • Production     │
-└─────────────┘   └─────────────┘   └─────────────────┘
-       ↓                 ↓                   ↓
-   [Validate]        [Validate]          [Validate]
-```
-
-### Iterative Changes
-
-Real projects aren't linear. Use `/handle-change` when requirements or designs change:
-
-```
-                    ┌─────────────────┐
-                    │  Change Request │
-                    └────────┬────────┘
-                             │
-              ┌──────────────┼──────────────┐
-              ▼              ▼              ▼
-         ┌────────┐    ┌──────────┐   ┌──────────┐
-         │ Small  │    │  Medium  │   │  Large   │
-         │(code)  │    │(design)  │   │(arch)    │
-         └───┬────┘    └────┬─────┘   └────┬─────┘
-             │              │              │
-             ▼              ▼              ▼
-         Continue      Update docs    Go back to
-         coding        Mini-cycle     Planning
-```
-
-- **Small changes**: Update code + tests, continue implementation
-- **Medium changes**: Quick planning, update docs, mini-cycle
-- **Large changes**: Revisit Planning phase, update ADR, re-estimate
-
-See `docs/templates/change-request-template.md` for formal change tracking.
-
-### Validation at Every Step
-
-The template enforces validation at every phase. After generating any artifact, run:
+### Using Template Tools in Existing Project
 
 ```bash
-# After code changes
-mix compile --warnings-as-errors  # Must pass
-mix format --check-formatted      # Must pass
-mix test                          # Must pass
+# Sync latest template updates
+./scripts/i/sync-template.sh
 
-# Before commits
-mix credo --strict               # Should pass
-mix test --cover                 # Coverage ≥ 80%
+# Use template skills
+# Example: "use validator skill to check this code"
 
-# Before deployment
-mix sobelow                      # Security check
-mix hex.audit                    # Dependency audit
-MIX_ENV=prod mix release         # Release builds
+# See README_i.md for complete guide
 ```
-
-### Using Slash Commands
-
-| Command | When to Use |
-|---------|------------|
-| `/start-discovery` | Starting a new project or feature - gather requirements |
-| `/start-planning` | After requirements are clear - design architecture |
-| `/start-implementation` | After planning is complete - begin coding |
-| `/run-review` | Before merging - comprehensive code review |
-| `/prepare-release` | Before deployment - release checklist |
-| `/handle-change` | Requirements or design changed - assess and adapt |
-
-### Using Skills
-
-| Skill | Purpose |
-|-------|---------|
-| `validator` | Validate any artifact for correctness (use frequently!) |
-| `code-review` | Comprehensive code quality analysis |
-| `security-audit` | OWASP-based security scanning |
-| `test-generator` | Generate test scaffolds |
-| `architecture-planner` | Design system architecture |
-| `deployment` | Deployment preparation and verification |
-| `doc-generator` | Auto-generate documentation |
-
-Example: "Use the validator skill to check these requirements"
-
-## Project Structure
-
-```
-my-project/
-├── CLAUDE.md                    # AI guidance - customize for your project
-├── CONTRIBUTING.md              # How to improve the template
-│
-├── .claude/
-│   ├── settings.json            # Team settings & hooks
-│   ├── settings.local.json      # Personal settings (gitignored)
-│   ├── skills/                  # AI skills
-│   │   ├── validator/           # Validation skill (use frequently!)
-│   │   ├── code-review/
-│   │   ├── security-audit/
-│   │   ├── test-generator/
-│   │   ├── architecture-planner/
-│   │   ├── deployment/
-│   │   └── doc-generator/
-│   ├── commands/                # Slash commands for each phase
-│   │   ├── start-discovery.md
-│   │   ├── start-planning.md
-│   │   ├── start-implementation.md
-│   │   ├── run-review.md
-│   │   └── prepare-release.md
-│   └── rules/                   # Development rules
-│       ├── code-style.md
-│       ├── testing.md
-│       ├── security.md
-│       ├── documentation.md
-│       └── git-workflow.md
-│
-├── .mcp.json                    # MCP server configuration
-├── .env.example                 # Environment variables template
-│
-├── docs/
-│   ├── project-idea-intake.md   # Start here with rough ideas
-│   ├── phases/                  # Phase documentation
-│   │   ├── 01-discovery/
-│   │   │   ├── README.md
-│   │   │   ├── requirements-template.md
-│   │   │   ├── stakeholder-analysis.md
-│   │   │   └── user-story-template.md
-│   │   ├── 02-planning/
-│   │   ├── 03-implementation/
-│   │   ├── 04-testing/
-│   │   ├── 05-review/
-│   │   └── 06-deployment/
-│   │       ├── README.md
-│   │       ├── release-checklist.md
-│   │       └── rollback-procedures.md
-│   ├── templates/
-│   │   ├── prd-template.md          # Product Requirements Doc
-│   │   ├── design-doc-template.md   # Technical Design Doc
-│   │   ├── adr-template.md          # Architecture Decision Record
-│   │   └── template-feedback.md     # Track template improvements
-│   └── checklists/
-│       ├── validation-checklist.md  # Comprehensive validation guide
-│       ├── project-kickoff.md
-│       ├── code-complete.md
-│       └── release-ready.md
-│
-├── config/                      # Platform-specific configurations
-│   ├── web/CLAUDE.local.md
-│   ├── mobile/CLAUDE.local.md
-│   ├── backend/CLAUDE.local.md
-│   └── cli/CLAUDE.local.md
-│
-└── scripts/
-    └── setup/
-        ├── init-project.sh      # Project initialization
-        └── sync-template.sh     # Pull template updates
-```
-
-## Example Workflow
-
-### Starting a New Project
-
-1. **Share your idea** (even rough notes are fine):
-   ```
-   I want to build a task management app where teams can track projects,
-   assign tasks, and set deadlines. Should have real-time updates.
-   ```
-
-2. **Claude processes through discovery**:
-   - Extracts requirements from your description
-   - Asks clarifying questions
-   - Creates structured user stories
-   - Validates completeness
-
-3. **Move to planning** (`/start-planning`):
-   - Designs Phoenix contexts (Projects, Tasks, Teams)
-   - Creates database schema with Ecto
-   - Documents architectural decisions
-
-4. **Implementation** (`/start-implementation`):
-   - Generates code following Phoenix patterns
-   - Validates after every change
-   - Writes tests alongside code
-
-5. **Review and Deploy** (`/run-review`, `/prepare-release`):
-   - Comprehensive code review
-   - Security audit
-   - Release validation
-
-## Validation Commands Reference
-
-```bash
-# Must pass after every code change
-mix compile --warnings-as-errors
-mix format --check-formatted
-mix test
-
-# Should pass before commits
-mix credo --strict
-mix test --cover
-
-# Must pass before deployment
-mix sobelow --config
-mix hex.audit
-mix dialyzer                    # Optional but recommended
-MIX_ENV=prod mix release
-
-# One-liner for pre-commit
-mix format && mix compile --warnings-as-errors && mix credo --strict && mix test
-
-# One-liner for full validation
-mix format --check-formatted && mix compile --warnings-as-errors && \
-mix credo --strict && mix test --cover && mix sobelow && mix hex.audit
-```
-
-## Keeping the Template Updated
-
-Projects created from this template can pull in improvements automatically or manually.
-
-### Option 1: GitHub Actions (Recommended)
-
-Set up automatic sync checking with the included workflow:
-
-1. Add the template repo as a secret:
-   ```bash
-   # In your project's GitHub Settings > Secrets > Actions
-   # Add secret: TEMPLATE_REPO = "your-org/product-dev-template"
-   ```
-
-2. The workflow runs weekly and creates a PR when updates are available
-
-3. Or trigger manually:
-   - Go to **Actions** > **Sync Template Updates** > **Run workflow**
-   - Select which component to sync (all, skills, commands, rules, docs, validator)
-
-### Option 2: Manual Sync
-
-```bash
-# See available updates
-git fetch template
-git diff HEAD template/main -- .claude/ docs/
-
-# Interactive sync
-./scripts/setup/sync-template.sh
-
-# Sync specific components
-./scripts/setup/sync-template.sh skills     # Just skills
-./scripts/setup/sync-template.sh validator  # Just validator
-./scripts/setup/sync-template.sh docs       # Documentation
-```
-
-## Contributing Improvements
-
-Track what works and what doesn't in `docs/template-feedback.md`, then contribute back:
-
-1. Fork the template repository
-2. Make your improvements
-3. Submit a PR with description of what was improved
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
-
-## Customization
-
-### Modify CLAUDE.md
-
-The main guidance document. Update:
-- Project name and type
-- Current development phase
-- Technology stack specifics
-- Custom workflows
-
-### Add Custom Skills
-
-Create in `.claude/skills/my-skill/SKILL.md`:
-
-```markdown
----
-name: my-skill
-description: What this skill does
----
-
-# My Skill
-
-## When to Use
-[Trigger conditions]
-
-## Instructions
-[What Claude should do]
-```
-
-### Add Custom Rules
-
-Create in `.claude/rules/my-rule.md`:
-
-```markdown
----
-paths: src/**/*.ex  # Optional: apply to specific files
----
-
-# My Rule
-
-[Rule content]
-```
-
-## MCP Servers
-
-Pre-configured but disabled by default in `.mcp.json`:
-
-- **filesystem** - File system access
-- **github** - GitHub integration
-- **postgres** - PostgreSQL access
-- **memory** - Persistent memory
-
-Enable by setting `"disabled": false` in `.mcp.json`.
-
-## Technology Stack
-
-This template is optimized for:
-
-- **Elixir 1.15+** with OTP 26+
-- **Phoenix 1.7+** with LiveView
-- **PostgreSQL** with Ecto
-- **Oban** for background jobs
-- **TailwindCSS** for styling
-
-The validation commands, skills, and examples all follow Elixir/Phoenix best practices.
-
-## License
-
-MIT License - See [LICENSE](LICENSE) for details.
 
 ---
 
-Built with Claude Code best practices. Happy coding!
+## When to Replace This README
+
+Replace this README.md with your application-specific README when:
+- ✅ Project initialization is complete
+- ✅ Core application features are implemented
+- ✅ You're ready to document YOUR application
+
+Your new README should describe:
+- What your application does
+- How to install and run it
+- API documentation (if applicable)
+- Configuration options
+- Contributing guidelines for your project
+
+**Template documentation** (README_SETUP.md and README_i.md) will remain available for reference.
+
+---
+
+## Template Contents
+
+**Template Components** (`/i/` folders - Shareable):
+- Skills, rules, commands, documentation, scripts
+
+**Setup Components** (`/setup/` folders - Proprietary):
+- Six-phase methodology, setup commands, project initialization
+
+See README_SETUP.md and README_i.md for details.
+
+---
+
+**Choose Your Path**:
+- 🏗️ **Setting up a new project?** → [README_SETUP.md](README_SETUP.md)
+- 🛠️ **Using template tools?** → [README_i.md](README_i.md)
+- 📝 **Ready to document your app?** → Replace this README.md
+
+---
+
+Built with Claude Code. Template by Pulzze.

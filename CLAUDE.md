@@ -85,22 +85,42 @@ The Right Pane slides in from the right when:
 
 ---
 
-## ⚠️ MATERIAL UI DESIGN SYSTEM - MANDATORY
+## ⚠️ UI DESIGN SYSTEM - MANDATORY
 
 > **STOP! Before writing ANY UI code, you MUST read this section.**
 
-**All applications built with this template MUST follow Material UI design patterns.** This is enforced by `.claude/rules/i/material-ui-enforcement.md` which auto-applies to all UI files.
+**All applications built with this template MUST follow the Interactor design system.** This uses a three-tier enforcement system:
+
+### Three-Tier Design Enforcement
+
+| Tier | Location | Purpose | Applied |
+|------|----------|---------|---------|
+| **1. Universal Standards** | `.claude/rules/i/ui-design.md` | Colors, spacing, border radius, typography | Auto-applied to all UI files |
+| **2. Framework Patterns** | `docs/i/ui-design/material-ui/enforcement.md` | Material UI layout, 9 mandatory patterns | Referenced when using Material UI |
+| **3. Validation Tool** | `.claude/skills/i/ui-design/` | Validate compliance, generate components | Use before completing UI work |
 
 ### Required Reading (In This Order)
 
 | Priority | Document | Purpose |
 |----------|----------|---------|
-| **1. CRITICAL** | `.claude/rules/i/material-ui-enforcement.md` | Auto-enforced design rules |
-| **2. CRITICAL** | `docs/i/ui-design/material-ui/index.md` | Complete design specification |
-| **3. CRITICAL** | `docs/i/ui-design/gnb-components.md` | Navigation patterns |
-| 4. High | `docs/i/ui-design/material-ui/checklist.md` | Validation checklist |
+| **1. CRITICAL** | `.claude/rules/i/ui-design.md` | Universal design standards (auto-enforced) |
+| **2. CRITICAL** | `docs/i/ui-design/material-ui/enforcement.md` | Material UI patterns (if using 3-panel layout) |
+| **3. CRITICAL** | `docs/i/ui-design/material-ui/index.md` | Complete design specification |
+| **4. CRITICAL** | `docs/i/ui-design/gnb-components.md` | Navigation patterns |
+| 5. High | `docs/i/ui-design/material-ui/checklist.md` | Validation checklist |
 
-### 6 Mandatory UI Patterns (Non-Negotiable)
+### Universal Design Standards (Always Apply)
+
+**Automatically enforced by `.claude/rules/i/ui-design.md`:**
+- **Primary Color**: `#4CD964` green for all primary actions/buttons
+- **Border Radius**: Buttons and inputs must be pill-shaped (`rounded-full`)
+- **Cards**: Must use `rounded-2xl` (16px radius)
+- **Spacing**: Follow 8px, 12px, 16px, 24px scale
+- **Icons**: Outlined style with `stroke-width="1.5"`
+- **Dark Mode**: All components must support dark mode
+- **Accessibility**: WCAG AA minimum (4.5:1 contrast ratio)
+
+### 6 Mandatory Material UI Patterns (For 3-Panel Layout Apps)
 
 | # | Pattern | ✅ Correct | ❌ Wrong |
 |---|---------|-----------|----------|
@@ -110,6 +130,28 @@ The Right Pane slides in from the right when:
 | 4 | **Dual Notification Badge** | Primary count + red error count | Single badge only |
 | 5 | **Warnings BELOW Items** | Warning below problematic item | Warning at top of page |
 | 6 | **Feedback Section** | 5 emoji at drawer bottom | Missing or wrong position |
+
+**📚 See `docs/i/ui-design/material-ui/enforcement.md` for complete Material UI pattern requirements.**
+
+### Validation Before Completing UI Work
+
+Before completing any UI changes, use the `ui-design` skill to validate:
+
+```
+Use ui-design skill to validate this component against:
+1. Universal design standards
+2. Material UI patterns (if applicable)
+3. Accessibility requirements
+```
+
+The skill will check:
+- ✅ Color compliance
+- ✅ Border radius standards
+- ✅ Spacing consistency
+- ✅ Icon style
+- ✅ Dark mode support
+- ✅ Accessibility standards
+- ✅ Framework-specific patterns
 
 ### Design Tokens (Use These Exactly)
 
@@ -176,12 +218,14 @@ Copy from `.claude/assets/i/brand/` to `priv/static/brand/`:
 
 | Command | Description |
 |---------|-------------|
-| `/start-discovery` | Begin requirements gathering phase |
-| `/start-planning` | Start architecture and planning phase |
-| `/start-implementation` | Begin development phase |
+| `/start-discovery` | **[SETUP]** Begin requirements gathering phase |
+| `/start-planning` | **[SETUP]** Start architecture and planning phase |
+| `/start-implementation` | **[SETUP]** Begin development phase |
 | `/run-review` | Execute code review workflow |
 | `/prepare-release` | Prepare for deployment |
 | `/handle-change` | Process requirement/design changes mid-project |
+
+**Note:** Commands marked **[SETUP]** are part of the initial project creation methodology. They are located in `.claude/commands/setup/` and `docs/setup/`.
 
 ### Skills
 
@@ -191,9 +235,11 @@ Copy from `.claude/assets/i/brand/` to `priv/static/brand/`:
 | `security-audit` | OWASP-based security scanning |
 | `doc-generator` | Auto-generate documentation |
 | `test-generator` | Generate test scaffolds |
-| `architecture-planner` | Design system architecture |
+| `architecture-planner` | **[SETUP]** Design system architecture |
 | `deployment` | Deployment preparation and verification |
 | `validator` | **Validate any artifact for correctness** (use after every generation) |
+
+**Note:** Skills marked **[SETUP]** are located in `.claude/skills/setup/`.
 
 ### External Documentation
 
@@ -212,13 +258,13 @@ Some documentation is automatically synchronized from external Interactor reposi
 
 ## Development Workflow
 
-### Phase 1: Discovery
+### Phase 1: Discovery **[SETUP PHASE]**
 
 **Objective**: Understand the problem space and gather requirements.
 
 When working on discovery tasks:
 1. Use `/start-discovery` to initialize the phase
-2. Reference `docs/phases/01-discovery/` for templates
+2. Reference `docs/setup/phases/01-discovery/` for templates
 3. Create stakeholder analysis using provided template
 4. Document requirements in user story format
 5. Validate requirements against business goals
@@ -231,17 +277,19 @@ When working on discovery tasks:
 
 **Exit criteria**: Requirements prioritized and approved by stakeholders.
 
+**Note:** This phase is part of initial project setup. Files are in `docs/setup/phases/01-discovery/`.
+
 ---
 
-### Phase 2: Planning
+### Phase 2: Planning **[SETUP PHASE]**
 
 **Objective**: Design architecture and create implementation plan.
 
 When working on planning tasks:
 1. Use `/start-planning` to initialize the phase
-2. Create architecture using `docs/templates/design-doc-template.md`
-3. Break down work using `docs/phases/02-planning/task-breakdown.md`
-4. Document decisions using ADR template
+2. Create architecture using `docs/setup/templates/design-doc-template.md`
+3. Break down work using `docs/setup/phases/02-planning/task-breakdown.md`
+4. Document decisions using ADR template at `docs/setup/templates/adr-template.md`
 5. Identify and assess risks
 
 **Key deliverables**:
@@ -252,6 +300,8 @@ When working on planning tasks:
 
 **Exit criteria**: Architecture approved, tasks estimated, risks mitigated.
 
+**Note:** This phase is part of initial project setup. Files are in `docs/setup/phases/02-planning/` and `docs/setup/templates/`.
+
 ---
 
 ### Phase 3: Implementation
@@ -259,11 +309,12 @@ When working on planning tasks:
 **Objective**: Write code following established standards.
 
 When writing code:
-1. Use `/start-implementation` to setup the phase
-2. Follow `.claude/rules/code-style.md` for formatting
+1. Use `/start-implementation` to setup the phase **[SETUP command]**
+2. Follow `.claude/rules/i/code-style.md` for formatting
 3. Apply TDD - write tests first when possible
-4. Use meaningful commit messages per `.claude/rules/git-workflow.md`
-5. Reference `docs/phases/03-implementation/ai-collaboration-guide.md`
+4. Use meaningful commit messages per `.claude/rules/i/git-workflow.md`
+5. Reference `docs/setup/phases/03-implementation/ai-collaboration-guide.md` for initial setup collaboration **[SETUP]**
+6. Reference `docs/i/phases/03-implementation/` for ongoing development standards
 
 **Best practices**:
 - Commit frequently with atomic changes
@@ -630,18 +681,38 @@ See `.env.example` for all available variables.
 
 ## Key Resources
 
-### Documentation
+### Setup Documentation (Initial Project Creation)
 
-- `docs/phases/` - Phase-specific documentation and templates
-- `docs/templates/` - Document templates (PRD, ADR, Design Doc)
-- `docs/checklists/` - Comprehensive project checklists
-- `docs/i/guides/` - Interactor integration guides (some auto-synced from external repos)
+**These files contain proprietary project creation methodology:**
+- `docs/setup/phases/` - Initial discovery, planning, and setup phases
+  - `01-discovery/` - Requirements gathering templates
+  - `02-planning/` - Architecture and task planning
+  - `03-implementation/` - AI collaboration guide for setup
+- `docs/setup/templates/` - Setup document templates (PRD, ADR, Design Doc)
+- `docs/setup/checklists/` - Project kickoff checklist
+- `.claude/commands/setup/` - Setup phase commands (`/start-discovery`, `/start-planning`, `/start-implementation`)
+- `.claude/skills/setup/` - Setup skills (`architecture-planner`)
+
+### Ongoing Development Documentation
+
+**These files are for continuous improvement and can be shared:**
+- `docs/i/phases/` - Ongoing phase documentation
+  - `03-implementation/` - Coding standards and best practices
+  - `04-testing/` - Testing requirements and templates
+  - `05-review/` - Code review and security checklists
+  - `06-deployment/` - Deployment procedures
+- `docs/i/templates/` - Ongoing templates (change requests, template feedback)
+- `docs/i/checklists/` - Ongoing checklists (code-complete, release-ready, validation)
+- `docs/i/guides/` - Integration guides (some auto-synced from external repos)
+- `docs/i/ui-design/` - Complete UI/UX design system
 
 ### Configuration
 
-- `.claude/skills/` - AI skills for specialized tasks
-- `.claude/commands/` - Slash commands for workflows
-- `.claude/rules/` - Modular development rules
+- `.claude/commands/i/` - Ongoing workflow commands (review, release, change handling)
+- `.claude/skills/i/` - Development skills (code-review, security-audit, testing, etc.)
+- `.claude/rules/i/` - Development rules (code-style, security, testing, git-workflow)
+- `.claude/templates/ui/` - UI component templates
+- `.claude/assets/i/brand/` - Brand assets (logos, icons, favicons)
 - `.claude/settings.json` - Team settings and permissions
 
 ### Platform-Specific
@@ -655,8 +726,24 @@ See `.env.example` for all available variables.
 
 ## Getting Started
 
+### For New Projects (Using Setup Methodology)
+
 1. Run `./scripts/setup/init-project.sh <project-name> <type>` to initialize
 2. Update this CLAUDE.md with your project specifics
 3. Configure `.claude/settings.json` for your team
 4. Set up environment variables from `.env.example`
-5. Use `/start-discovery` to begin the development process
+5. Use `/start-discovery` to begin the development process (located in `.claude/commands/setup/`)
+6. Follow the setup phases in sequence:
+   - Discovery → Planning → Implementation → Testing → Review → Deployment
+
+**Note:** The setup commands and documentation in `docs/setup/` and `.claude/*/setup/` contain proprietary project creation methodology. These files should be excluded when sharing projects with external engineers. They are now located OUTSIDE the `/i/` convention to ensure they are never accidentally synced.
+
+### For Ongoing Development (Shared with External Engineers)
+
+External engineers working on improvements should:
+1. Use ongoing commands: `/run-review`, `/prepare-release`, `/handle-change`
+2. Reference `docs/i/phases/` for development standards
+3. Follow `.claude/rules/i/` for code style, security, testing, and git workflow
+4. Use `.claude/skills/i/` for specialized tasks (code-review, security-audit, etc.)
+
+The setup methodology files will not be available to external engineers.

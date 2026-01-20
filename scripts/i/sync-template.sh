@@ -11,6 +11,7 @@
 #   commands  - Sync .claude/commands/i/
 #   rules     - Sync .claude/rules/i/
 #   skills    - Sync .claude/skills/i/
+#   scripts   - Sync scripts/i/ (template scripts)
 #   docs      - Sync docs/i/ (phases, checklists, templates)
 #   validator - Sync validator skill and validation checklist
 #
@@ -22,6 +23,11 @@
 # Protected by design (not in /i/ paths):
 #   - docs/project-idea-intake.md  (your project idea - never overwritten)
 #   - CLAUDE.md                    (your project config - never overwritten)
+#   - docs/setup/                  (proprietary setup methodology - never synced)
+#   - .claude/commands/setup/      (proprietary setup commands - never synced)
+#   - .claude/skills/setup/        (proprietary setup skills - never synced)
+#   - .claude/agents/setup/        (proprietary setup agents - never synced)
+#   - scripts/setup/               (proprietary setup scripts - never synced)
 #   - Any files you create outside /i/ directories
 #
 
@@ -65,6 +71,11 @@ TEMPLATE_REPO_URL="https://github.com/pulzze/product-dev-template.git"
 PROTECTED_FILES=(
     "docs/project-idea-intake.md"
     "CLAUDE.md"
+    "docs/setup/"
+    ".claude/commands/setup/"
+    ".claude/skills/setup/"
+    ".claude/agents/setup/"
+    "scripts/setup/"
 )
 
 # Check if a file is protected
@@ -186,6 +197,7 @@ sync_all_paths() {
         ".claude/rules/i/"
         ".claude/skills/i/"
         ".claude/templates/i/"
+        "scripts/i/"
         "docs/i/"
     )
 
@@ -212,7 +224,7 @@ case $COMPONENT in
         print_warning "Syncing ALL template files. This may overwrite your customizations."
         echo ""
         echo "Files to delete:"
-        all_deleted=$(git diff --name-status HEAD template/main -- .claude/agents/i/ .claude/assets/i/ .claude/commands/i/ .claude/rules/i/ .claude/skills/i/ .claude/templates/i/ docs/i/ 2>/dev/null | grep '^D' | cut -f2 | head -30)
+        all_deleted=$(git diff --name-status HEAD template/main -- .claude/agents/i/ .claude/assets/i/ .claude/commands/i/ .claude/rules/i/ .claude/skills/i/ .claude/templates/i/ scripts/i/ docs/i/ 2>/dev/null | grep '^D' | cut -f2 | head -30)
         if [[ -n "$all_deleted" ]]; then
             echo "$all_deleted" | sed 's/^/  /'
         else
@@ -241,6 +253,9 @@ case $COMPONENT in
     skills)
         sync_component "skills" ".claude/skills/i/"
         ;;
+    scripts)
+        sync_component "scripts" "scripts/i/"
+        ;;
     docs)
         sync_component "phase documentation" "docs/i/phases/"
         sync_component "checklists" "docs/i/checklists/"
@@ -258,12 +273,13 @@ case $COMPONENT in
         echo "  3) Commands (.claude/commands/i/)"
         echo "  4) Rules (.claude/rules/i/)"
         echo "  5) Skills (.claude/skills/i/)"
-        echo "  6) Documentation (docs/i/) - phases, checklists, templates"
-        echo "  7) Validator only"
-        echo "  8) All (use with caution)"
-        echo "  9) Cancel"
+        echo "  6) Scripts (scripts/i/)"
+        echo "  7) Documentation (docs/i/) - phases, checklists, templates"
+        echo "  8) Validator only"
+        echo "  9) All (use with caution)"
+        echo "  0) Cancel"
         echo ""
-        read -p "Select option (1-9): " -n 1 -r
+        read -p "Select option (0-9): " -n 1 -r
         echo ""
         echo ""
 
@@ -273,20 +289,21 @@ case $COMPONENT in
             3) sync_component "commands" ".claude/commands/i/" ;;
             4) sync_component "rules" ".claude/rules/i/" ;;
             5) sync_component "skills" ".claude/skills/i/" ;;
-            6)
+            6) sync_component "scripts" "scripts/i/" ;;
+            7)
                 sync_component "phase documentation" "docs/i/phases/"
                 sync_component "checklists" "docs/i/checklists/"
                 sync_component "templates" "docs/i/templates/"
                 ;;
-            7)
+            8)
                 sync_component "validator skill" ".claude/skills/i/validator/"
                 sync_component "validation checklist" "docs/i/checklists/validation-checklist.md"
                 ;;
-            8)
+            9)
                 print_warning "Syncing ALL template files. This may overwrite your customizations."
                 echo ""
                 echo "Files to delete:"
-                all_deleted=$(git diff --name-status HEAD template/main -- .claude/agents/i/ .claude/assets/i/ .claude/commands/i/ .claude/rules/i/ .claude/skills/i/ .claude/templates/i/ docs/i/ 2>/dev/null | grep '^D' | cut -f2 | head -30)
+                all_deleted=$(git diff --name-status HEAD template/main -- .claude/agents/i/ .claude/assets/i/ .claude/commands/i/ .claude/rules/i/ .claude/skills/i/ .claude/templates/i/ scripts/i/ docs/i/ 2>/dev/null | grep '^D' | cut -f2 | head -30)
                 if [[ -n "$all_deleted" ]]; then
                     echo "$all_deleted" | sed 's/^/  /'
                 else
@@ -300,7 +317,7 @@ case $COMPONENT in
                     print_success "Synced all template files"
                 fi
                 ;;
-            9)
+            0)
                 print_info "Cancelled"
                 exit 0
                 ;;
@@ -313,7 +330,7 @@ case $COMPONENT in
     *)
         print_error "Unknown component: $COMPONENT"
         echo ""
-        echo "Valid components: all, agents, assets, commands, rules, skills, docs, validator"
+        echo "Valid components: all, agents, assets, commands, rules, skills, scripts, docs, validator"
         exit 1
         ;;
 esac

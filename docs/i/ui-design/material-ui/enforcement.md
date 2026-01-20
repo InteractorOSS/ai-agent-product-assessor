@@ -1,13 +1,12 @@
----
-paths: ["**/*.ex", "**/*.heex", "**/*.html", "**/*.css", "**/*.js", "**/*.ts", "**/*.tsx", "**/*.jsx"]
-alwaysApply: true
----
+# Material UI Design System - Framework-Specific Requirements
 
-# Material UI Design System - MANDATORY ENFORCEMENT
+**FOR APPLICATIONS USING MATERIAL UI DESIGN PATTERNS**
 
-**ALL applications built with this template MUST follow Material UI design patterns.**
+This document defines framework-specific requirements for applications implementing Material UI design patterns (AppBar, Drawer, etc.).
 
-This rule is auto-applied to ALL UI-related files. Non-compliance will result in inconsistent user experience across Interactor applications.
+**Universal design standards** are defined in `.claude/rules/i/ui-design.md` and apply to ALL UI work.
+
+**These Material UI patterns** apply when your application uses the 3-panel layout structure (AppBar + Left Drawer + Main Content).
 
 ---
 
