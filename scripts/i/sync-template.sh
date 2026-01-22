@@ -136,31 +136,51 @@ sync_component() {
 
     print_info "Syncing $component..."
 
-    # Show files that would be added/modified
+    # Get list of files in template (source of truth)
+    local template_files
+    template_files=$(git ls-tree -r --name-only template/main -- "$path" 2>/dev/null | sort)
+
+    # Get list of local files
+    local local_files=""
+    if [[ -d "$path" ]]; then
+        local_files=$(find "$path" -type f 2>/dev/null | sort)
+    fi
+
+    # Determine files to add/update (files in template)
     echo ""
-    echo "Files to add/update:"
-    local added_modified
-    added_modified=$(git diff --name-status HEAD template/main -- "$path" 2>/dev/null | grep -E '^[AM]' | cut -f2 | head -20)
-    if [[ -n "$added_modified" ]]; then
-        echo "$added_modified" | sed 's/^/  /'
+    echo "Files to add/update from template:"
+    if [[ -n "$template_files" ]]; then
+        echo "$template_files" | head -20 | sed 's/^/  /'
+        local template_count
+        template_count=$(echo "$template_files" | wc -l)
+        if [[ $template_count -gt 20 ]]; then
+            echo "  ... and $((template_count - 20)) more files"
+        fi
     else
         echo "  (none)"
     fi
 
-    # Show files that would be deleted
+    # Determine files to delete (local files not in template)
     echo ""
-    echo "Files to delete:"
-    local deleted
-    deleted=$(git diff --name-status HEAD template/main -- "$path" 2>/dev/null | grep '^D' | cut -f2 | head -20)
+    echo "Files to delete (not in template):"
+    local deleted=""
+    if [[ -n "$local_files" ]]; then
+        while IFS= read -r local_file; do
+            if [[ -n "$local_file" ]] && ! echo "$template_files" | grep -qxF "$local_file"; then
+                deleted="${deleted}${local_file}"$'\n'
+            fi
+        done <<< "$local_files"
+    fi
+
     if [[ -n "$deleted" ]]; then
-        echo "$deleted" | sed 's/^/  /'
+        echo "$deleted" | head -20 | sed 's/^/  /'
     else
         echo "  (none)"
     fi
     echo ""
 
     # Check if there are any changes
-    if [[ -z "$added_modified" && -z "$deleted" ]]; then
+    if [[ -z "$template_files" && -z "$deleted" ]]; then
         print_info "No changes to sync for $component"
         return 0
     fi
@@ -169,20 +189,26 @@ sync_component() {
     echo ""
 
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        # Remove deleted files first
+        # Remove files not in template first
         if [[ -n "$deleted" ]]; then
-            echo "$deleted" | while read -r file; do
-                if [[ -f "$file" ]]; then
+            echo "$deleted" | while IFS= read -r file; do
+                if [[ -n "$file" && -f "$file" ]]; then
                     rm -f "$file"
                     print_info "Deleted: $file"
                 fi
             done
         fi
 
-        # Then checkout additions/modifications
-        if [[ -n "$added_modified" ]]; then
+        # Checkout all files from template (creates dirs as needed)
+        if [[ -n "$template_files" ]]; then
             git checkout template/main -- "$path"
         fi
+
+        # Clean up empty directories
+        if [[ -d "$path" ]]; then
+            find "$path" -type d -empty -delete 2>/dev/null || true
+        fi
+
         print_success "Synced $component"
     else
         print_warning "Skipped $component"
@@ -201,20 +227,36 @@ sync_all_paths() {
         "docs/i/"
     )
 
-    # Remove deleted files first across all paths
+    # For each path, remove files not in template, then checkout from template
     for path in "${paths[@]}"; do
-        git diff --name-status HEAD template/main -- "$path" 2>/dev/null | grep '^D' | cut -f2 | while read -r file; do
-            if [[ -f "$file" ]]; then
-                rm -f "$file"
-                print_info "Deleted: $file"
-            fi
-        done
-    done
+        # Get template files for this path
+        local template_files
+        template_files=$(git ls-tree -r --name-only template/main -- "$path" 2>/dev/null | sort)
 
-    # Then checkout additions/modifications
-    for path in "${paths[@]}"; do
-        if git ls-tree -d template/main -- "$path" &>/dev/null; then
+        # Get local files
+        if [[ -d "$path" ]]; then
+            local local_files
+            local_files=$(find "$path" -type f 2>/dev/null | sort)
+
+            # Delete files not in template
+            if [[ -n "$local_files" ]]; then
+                while IFS= read -r local_file; do
+                    if [[ -n "$local_file" ]] && ! echo "$template_files" | grep -qxF "$local_file"; then
+                        rm -f "$local_file"
+                        print_info "Deleted: $local_file"
+                    fi
+                done <<< "$local_files"
+            fi
+        fi
+
+        # Checkout from template
+        if [[ -n "$template_files" ]]; then
             git checkout template/main -- "$path" 2>/dev/null || true
+        fi
+
+        # Clean up empty directories
+        if [[ -d "$path" ]]; then
+            find "$path" -type d -empty -delete 2>/dev/null || true
         fi
     done
 }
@@ -223,10 +265,23 @@ case $COMPONENT in
     all)
         print_warning "Syncing ALL template files. This may overwrite your customizations."
         echo ""
-        echo "Files to delete:"
-        all_deleted=$(git diff --name-status HEAD template/main -- .claude/agents/i/ .claude/assets/i/ .claude/commands/i/ .claude/rules/i/ .claude/skills/i/ .claude/templates/i/ scripts/i/ docs/i/ 2>/dev/null | grep '^D' | cut -f2 | head -30)
+        echo "Files to delete (local files not in template):"
+        all_deleted=""
+        for sync_path in .claude/agents/i/ .claude/assets/i/ .claude/commands/i/ .claude/rules/i/ .claude/skills/i/ .claude/templates/i/ scripts/i/ docs/i/; do
+            if [[ -d "$sync_path" ]]; then
+                template_files=$(git ls-tree -r --name-only template/main -- "$sync_path" 2>/dev/null | sort)
+                local_files=$(find "$sync_path" -type f 2>/dev/null | sort)
+                if [[ -n "$local_files" ]]; then
+                    while IFS= read -r local_file; do
+                        if [[ -n "$local_file" ]] && ! echo "$template_files" | grep -qxF "$local_file"; then
+                            all_deleted="${all_deleted}${local_file}"$'\n'
+                        fi
+                    done <<< "$local_files"
+                fi
+            fi
+        done
         if [[ -n "$all_deleted" ]]; then
-            echo "$all_deleted" | sed 's/^/  /'
+            echo "$all_deleted" | head -30 | sed 's/^/  /'
         else
             echo "  (none)"
         fi
@@ -302,10 +357,23 @@ case $COMPONENT in
             9)
                 print_warning "Syncing ALL template files. This may overwrite your customizations."
                 echo ""
-                echo "Files to delete:"
-                all_deleted=$(git diff --name-status HEAD template/main -- .claude/agents/i/ .claude/assets/i/ .claude/commands/i/ .claude/rules/i/ .claude/skills/i/ .claude/templates/i/ scripts/i/ docs/i/ 2>/dev/null | grep '^D' | cut -f2 | head -30)
+                echo "Files to delete (local files not in template):"
+                all_deleted=""
+                for sync_path in .claude/agents/i/ .claude/assets/i/ .claude/commands/i/ .claude/rules/i/ .claude/skills/i/ .claude/templates/i/ scripts/i/ docs/i/; do
+                    if [[ -d "$sync_path" ]]; then
+                        template_files=$(git ls-tree -r --name-only template/main -- "$sync_path" 2>/dev/null | sort)
+                        local_files=$(find "$sync_path" -type f 2>/dev/null | sort)
+                        if [[ -n "$local_files" ]]; then
+                            while IFS= read -r local_file; do
+                                if [[ -n "$local_file" ]] && ! echo "$template_files" | grep -qxF "$local_file"; then
+                                    all_deleted="${all_deleted}${local_file}"$'\n'
+                                fi
+                            done <<< "$local_files"
+                        fi
+                    fi
+                done
                 if [[ -n "$all_deleted" ]]; then
-                    echo "$all_deleted" | sed 's/^/  /'
+                    echo "$all_deleted" | head -30 | sed 's/^/  /'
                 else
                     echo "  (none)"
                 fi
