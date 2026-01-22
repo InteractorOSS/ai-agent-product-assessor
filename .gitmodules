@@ -1,6 +1,3 @@
 [submodule "account-server-docs"]
 	path = account-server-docs
 	url = https://github.com/pulzze/account-server-docs.git
-[submodule "interactor-docs"]
-	path = interactor-docs
-	url = https://github.com/pulzze/interactor-docs.git
