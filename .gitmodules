@@ -1,18 +1,6 @@
-[submodule ".claude/skills/i/interactor-auth"]
-	path = .claude/skills/i/interactor-auth
-	url = https://github.com/pulzze/interactor-auth-skill.git
-[submodule ".claude/skills/i/interactor-credentials"]
-	path = .claude/skills/i/interactor-credentials
-	url = https://github.com/pulzze/interactor-credentials-skill.git
-[submodule ".claude/skills/i/interactor-agents"]
-	path = .claude/skills/i/interactor-agents
-	url = https://github.com/pulzze/interactor-agents-skill.git
-[submodule ".claude/skills/i/interactor-sdk"]
-	path = .claude/skills/i/interactor-sdk
-	url = https://github.com/pulzze/interactor-sdk-skill.git
-[submodule ".claude/skills/i/interactor-workflows"]
-	path = .claude/skills/i/interactor-workflows
-	url = https://github.com/pulzze/interactor-workflows-skill.git
-[submodule ".claude/skills/i/interactor-webhooks"]
-	path = .claude/skills/i/interactor-webhooks
-	url = https://github.com/pulzze/interactor-webhooks-skill.git
+[submodule "account-server-docs"]
+	path = account-server-docs
+	url = https://github.com/pulzze/account-server-docs.git
+[submodule "interactor-docs"]
+	path = interactor-docs
+	url = https://github.com/pulzze/interactor-docs.git
